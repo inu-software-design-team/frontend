@@ -1,18 +1,17 @@
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import './App.css'
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+
+import './App.css';
 
 function App() {
-
-
   return (
-    <div className="w-full h-full flex flex-col bg-white">
-    <Router>
+    <div className="flex h-full w-full flex-col bg-white">
+      <Router>
         <Routes>
-            <Route />
+          <Route />
         </Routes>
-    </Router>
+      </Router>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
