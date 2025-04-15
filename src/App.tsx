@@ -5,9 +5,6 @@ import Signup from './pages/Signup';
 import Login from './pages/Login';
 
 function App() {
-
-
-  return (
     <div className="w-screen h-screen flex flex-col bg-white">
     <Router>
         <Routes>
@@ -15,9 +12,9 @@ function App() {
             <Route path={'/signup'} element={<Signup/>} />
             <Route path={'/login'} element={<Login/>} />
         </Routes>
-    </Router>
+      </Router>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

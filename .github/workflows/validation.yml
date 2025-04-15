@@ -1,0 +1,55 @@
+name: Validation
+
+on: [pull_request]
+
+jobs:
+  check-lint:
+    name: Check lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup environment
+        uses: ./.github/actions/setup-env
+
+      - name: Run lint
+        run: npm run lint
+
+      - name: Run format
+        run: npm run format
+
+  check-types:
+    name: Check types
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup environment
+        uses: ./.github/actions/setup-env
+
+      - name: Run build
+        run: npm run build
+
+      - name: Run check-types
+        run: npm run check-types
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup environment
+        uses: ./.github/actions/setup-env
+
+      - name: Run test
+        run: npm run test
