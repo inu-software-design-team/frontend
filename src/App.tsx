@@ -5,6 +5,7 @@ import Signup from './pages/Signup';
 import Login from './pages/Login';
 
 function App() {
+    return(
     <div className="w-screen h-screen flex flex-col bg-white">
     <Router>
         <Routes>
