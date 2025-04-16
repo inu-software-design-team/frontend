@@ -10,7 +10,6 @@ export default function Start() {
     <div className="w-full h-full flex flex-col items-center justify-center">
       {/* 로고 */}
       <Logo className="w-96" />
-      <div className="w-lg h-0 opacity-30 border-[0.2px] border-[#121212] mt-2" />
 
       {/* 버튼 */}
       <div className="w-full flex justify-center mt-12">
