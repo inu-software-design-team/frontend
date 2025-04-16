@@ -15,7 +15,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ko" className={pretendard.className}>
-      <body>{children}</body>
+      <body className="flex h-screen w-screen flex-col bg-[#F1F5F9]">
+        {children}
+      </body>
     </html>
   );
 }
