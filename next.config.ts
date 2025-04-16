@@ -26,7 +26,7 @@ const nextConfig: NextConfig = {
         test: /\.svg$/i,
         issuer: fileLoaderRule.issuer,
         resourceQuery: {
-          not: [...fileLoaderRule.resourceQuery.net, /url/],
+          not: [...(fileLoaderRule.resourceQuery?.net ?? []), /url/],
         },
         use: [
           {
