@@ -1,21 +1,19 @@
-import HomeBtn from "../assets/HomeBtn.svg?react"
-import GradeBtn from "../assets/GradeBtn.svg?react"
-import StudentInfoBtn from "../assets/StudentInfoBtn.svg?react"
-import MeetingBtn from "../assets/MeetingBtn.svg?react"
-import FeedbackBtn from "../assets/FeedbackBtn.svg?react"
+import {
+  FeedbackBtn,
+  GradeBtn,
+  HomeBtn,
+  MeetingBtn,
+  StudentInfoBtn,
+} from '@assets';
 
-
-const SideNav = () =>  {
-    return(
-        <div className="flex flex-col bg-white items-center w-48 h-screen">
-            <HomeBtn className=""/>
-            <GradeBtn className=""/>
-            <StudentInfoBtn className=""/>
-            <MeetingBtn className=""/>
-            <FeedbackBtn className=""/>
-        </div>
-
-    )    
+export default function SideNav() {
+  return (
+    <div className="flex h-screen w-48 flex-col items-center bg-white">
+      <HomeBtn className="" />
+      <GradeBtn className="" />
+      <StudentInfoBtn className="" />
+      <MeetingBtn className="" />
+      <FeedbackBtn className="" />
+    </div>
+  );
 }
-
-export default SideNav;
