@@ -3,6 +3,7 @@ name: Validation
 on: [pull_request]
 
 permissions:
+  contents: write
   pull-requests: write
 
 jobs:
@@ -56,3 +57,15 @@ jobs:
 
       - name: Run test
         run: npm run test
+
+  merge:
+    name: Merge
+    needs: [check-lint, check-types, test]
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.user.login == 'dependabot[bot]'
+    steps:
+      - name: Merge pull request
+        run: gh pr merge --auto --squash "$PR_URL" --delete-branch
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
