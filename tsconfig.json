@@ -20,8 +20,7 @@
       }
     ],
     "paths": {
-      "@public": ["../public"],
-      "@assets/*": ["assets/*"],
+      "@assets": ["assets"],
       "@components": ["components"],
       "@types": ["types"]
     }
