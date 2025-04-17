@@ -1,4 +1,4 @@
-import { HeaderImg, HeaderLogo, NavBtn, News } from '@public';
+import { HeaderImg, HeaderLogo, NavBtn, News } from '@assets';
 
 const Header = () => {
   return (

@@ -3,9 +3,12 @@
   "arrowParens": "avoid",
   "importOrder": [
     "^react(.*)$",
-    "^vite(.*)$",
+    "^next(.*)$",
     "<THIRD_PARTY_MODULES>",
     "(.css)$",
+    "^@assets",
+    "^@types",
+    "^@components",
     "^[./]"
   ],
   "importOrderSeparation": true,
