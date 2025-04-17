@@ -1,4 +1,6 @@
-import { useState, useEffect } from 'react';
+'use client';
+
+import { useEffect, useState } from 'react';
 
 interface InputProps {
   label: string;
@@ -35,11 +37,11 @@ const Input: React.FC<InputProps> = ({
   return (
     <div className={`flex flex-col ${className}`}>
       <div className="flex items-center">
-        <label className="font-semibold text-base mr-2">{label}</label>
+        <label className="mr-2 text-base font-semibold">{label}</label>
 
         {/* 에러 메시지가 있을 경우 라벨 옆에 표시 */}
         {isInvalid && (
-          <p className="text-[#FB2C36] text-[10px]">{errorMessage}</p>
+          <p className="text-[10px] text-[#FB2C36]">{errorMessage}</p>
         )}
       </div>
 
@@ -48,9 +50,11 @@ const Input: React.FC<InputProps> = ({
         value={value}
         onChange={onChange}
         placeholder={placeholder}
-        className={`text-xs bg-[#F1F5F9] border w-full h-9 rounded-md px-3 mt-2 ${
-          isInvalid ? 'border-[#FB2C36] text-[#121212]/40' : 'border-[#E2E8F0] text-[#121212]'
-        } focus:outline-none focus:ring-0`}
+        className={`mt-2 h-9 w-full rounded-md border bg-[#F1F5F9] px-3 text-xs ${
+          isInvalid
+            ? 'border-[#FB2C36] text-[#121212]/40'
+            : 'border-[#E2E8F0] text-[#121212]'
+        } focus:ring-0 focus:outline-none`}
       />
     </div>
   );
