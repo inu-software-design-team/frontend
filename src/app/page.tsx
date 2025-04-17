@@ -1,7 +1,8 @@
 'use client';
 
-import { Logo, 카카오 } from '@public';
 import { useRouter } from 'next/navigation';
+
+import { Logo, 카카오 } from '@assets';
 
 export default function Home() {
   const { push } = useRouter();

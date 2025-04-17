@@ -1,8 +1,10 @@
 'use client';
 
-import { Input } from '@components';
-import { Logo, SignupBtn } from '@public';
 import { useRouter } from 'next/navigation';
+
+import { Logo, SignupBtn } from '@assets';
+
+import { Input } from '@components';
 
 export default function Login() {
   const { push } = useRouter();
