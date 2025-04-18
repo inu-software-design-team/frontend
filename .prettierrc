@@ -3,6 +3,7 @@
   "arrowParens": "avoid",
   "importOrder": [
     "^@storybook(.*)$",
+    "^vitest",
     "^react(.*)$",
     "^next(.*)$",
     "<THIRD_PARTY_MODULES>",
