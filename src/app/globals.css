@@ -24,6 +24,36 @@
 
   /* fonts */
   --font-pretendard: var(--font-pretendard);
+
+  /* typography */
+  --text-heading1: var(--text-5xl);
+  --text-heading1--line-height: var(--leading-normral);
+  --text-heading2: 2.5rem;
+  --text-heading2--line-height: var(--leading-normral);
+  --text-heading3: 2rem;
+  --text-heading3--line-height: var(--leading-normral);
+  --text-heading4: 1.75rem;
+  --text-heading4--line-height: var(--leading-normal);
+  --text-heading5: var(--text-2xl);
+  --text-heading5--line-height: var(--leading-normal);
+  --text-heading6: varl(--text-xl);
+  --text-heading6--line-height: var(--leading-normal);
+
+  --text-title1: 2rem;
+  --text-title1--line-height: var(--leading-normral);
+  --text-title2: 1.75rem;
+  --text-title2--line-height: var(--leading-normral);
+  --text-title3: var(--text-2xl);
+  --text-title3--line-height: var(--leading-normral);
+  --text-title4: varl(--text-xl);
+  --text-title4--line-height: var(--leading-normral);
+
+  --text-body1: var(--text-lg);
+  --text-body1--line-height: var(--text-lg--line-height);
+  --text-body2: var(--text-base);
+  --text-body2--line-height: var(--text-base--line-height);
+  --text-body3: var(--text-sm);
+  --text-body3--line-height: var(--text-sm--line-height);
 }
 
 @utility bg-default {
