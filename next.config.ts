@@ -34,6 +34,7 @@ const nextConfig: NextConfig = {
             options: {
               typescript: true,
               ext: 'tsx',
+              svgo: false,
             },
           },
         ],
