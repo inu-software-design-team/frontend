@@ -25,3 +25,15 @@
   /* fonts */
   --font-pretendard: var(--font-pretendard);
 }
+
+@utility bg-default {
+  @apply bg-white;
+}
+
+@utility bg-secondary {
+  @apply bg-slate-100;
+}
+
+@utility bg-tertiary {
+  @apply bg-slate-200;
+}
