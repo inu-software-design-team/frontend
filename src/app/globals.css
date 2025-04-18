@@ -28,6 +28,9 @@
   /* opacity */
   --opacity-off: 38%;
 
+  /* box-shadow */
+  --shadow-drop: 0 2px 4px 0 rgba(0, 0, 0, 0.38);
+
   /* typography */
   --text-heading1: var(--text-5xl);
   --text-heading1--line-height: var(--leading-normral);
