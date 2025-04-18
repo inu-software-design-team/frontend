@@ -25,6 +25,9 @@
   /* fonts */
   --font-pretendard: var(--font-pretendard);
 
+  /* opacity */
+  --opacity-off: 38%;
+
   /* typography */
   --text-heading1: var(--text-5xl);
   --text-heading1--line-height: var(--leading-normral);
