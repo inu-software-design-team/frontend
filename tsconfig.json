@@ -20,9 +20,13 @@
       }
     ],
     "paths": {
-      "@assets": ["assets"],
-      "@components": ["components"],
-      "@types": ["types"]
+      "assets": ["assets"],
+      "assets/*": ["assets/*"],
+      "components": ["components"],
+      "components/*": ["components/*"],
+      "layouts": ["layouts"],
+      "types": ["types"],
+      "types/*": ["types/*"]
     }
   },
   "include": [
