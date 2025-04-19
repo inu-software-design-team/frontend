@@ -18,7 +18,7 @@ export default function Start() {
           {/* 로그인 버튼 */}
           <button
             className="flex w-72 items-center justify-center"
-            onClick={() => push('/login')}
+            onClick={() => push('/auth')}
           >
             <카카오 className="h-full w-full" />
           </button>
