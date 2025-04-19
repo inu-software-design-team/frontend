@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 
-import { Logo, 카카오 } from '@assets';
+import { Logo, 카카오 } from 'assets';
 
 export default function Start() {
   const { push } = useRouter();
