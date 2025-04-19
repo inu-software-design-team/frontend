@@ -2,9 +2,9 @@
 
 import { useState } from 'react';
 
-import { Logo } from '@assets';
+import { Logo } from 'assets';
 
-import { Input } from '@components';
+import { Input } from 'components';
 
 export default function Signup() {
   const [activeTab, setActiveTab] = useState<string>('Teacher');

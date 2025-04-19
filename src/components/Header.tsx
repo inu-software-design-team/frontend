@@ -1,4 +1,4 @@
-import { HeaderImg, HeaderLogo, NavBtn, News } from '@assets';
+import { HeaderImg, HeaderLogo, NavBtn, News } from 'assets';
 
 const Header = () => {
   return (

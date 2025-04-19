@@ -2,7 +2,7 @@ import { headers } from 'next/headers';
 
 import { Pretendard } from './fonts';
 
-import { Header, SideNav } from '@components';
+import { Header, SideNav } from 'components';
 
 import './globals.css';
 

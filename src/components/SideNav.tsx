@@ -4,7 +4,7 @@ import {
   HomeBtn,
   MeetingBtn,
   StudentInfoBtn,
-} from '@assets';
+} from 'assets';
 
 export default function SideNav() {
   return (
