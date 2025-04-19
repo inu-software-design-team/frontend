@@ -7,6 +7,7 @@ import ChevronDown from './chevron_down.svg';
 import CircleCheck from './circle_check.svg';
 import CircleError from './circle_error.svg';
 import Clock from './clock.svg';
+import Comment from './comment.svg';
 import Copy from './copy.svg';
 import Edit from './edit.svg';
 import Ellipsis from './ellipsis.svg';
@@ -36,6 +37,7 @@ export {
   CircleCheck,
   CircleError,
   Clock,
+  Comment,
   Copy,
   Edit,
   Ellipsis,
