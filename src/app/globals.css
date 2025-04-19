@@ -1,0 +1,75 @@
+@import 'tailwindcss';
+
+@theme {
+  /* colors */
+  --color-black-off: rgba(0, 0, 0, 0.38);
+  --color-white-off: rgba(255, 255, 255, 0.38);
+
+  --color-primary: #4b89dc;
+  --color-primary-hover: #427ac6;
+  --color-primary-light-hover: #e6f0fb;
+
+  --color-confirm: #00c950;
+  --color-confirm-hover: #00a63e;
+  --color-confirm-light-hover: #f0fdf4;
+  --color-danger: #fb2c36;
+  --color-danger-hover: #e7000b;
+  --color-danger-light-hover: #fef2f2;
+  --color-warning: #f0b100;
+  --color-warning-hover: #d08700;
+  --color-warning-light-hover: #fefce8;
+  --color-info: #2b7fff;
+  --color-info-hover: #155dfc;
+  --color-info-light-hover: #eff6ff;
+
+  /* fonts */
+  --font-pretendard: var(--font-pretendard);
+
+  /* opacity */
+  --opacity-off: 38%;
+
+  /* box-shadow */
+  --shadow-drop: 0 2px 4px 0 rgba(0, 0, 0, 0.38);
+
+  /* typography */
+  --text-heading1: var(--text-5xl);
+  --text-heading1--line-height: var(--leading-normral);
+  --text-heading2: 2.5rem;
+  --text-heading2--line-height: var(--leading-normral);
+  --text-heading3: 2rem;
+  --text-heading3--line-height: var(--leading-normral);
+  --text-heading4: 1.75rem;
+  --text-heading4--line-height: var(--leading-normal);
+  --text-heading5: var(--text-2xl);
+  --text-heading5--line-height: var(--leading-normal);
+  --text-heading6: varl(--text-xl);
+  --text-heading6--line-height: var(--leading-normal);
+
+  --text-title1: 2rem;
+  --text-title1--line-height: var(--leading-normral);
+  --text-title2: 1.75rem;
+  --text-title2--line-height: var(--leading-normral);
+  --text-title3: var(--text-2xl);
+  --text-title3--line-height: var(--leading-normral);
+  --text-title4: varl(--text-xl);
+  --text-title4--line-height: var(--leading-normral);
+
+  --text-body1: var(--text-lg);
+  --text-body1--line-height: var(--text-lg--line-height);
+  --text-body2: var(--text-base);
+  --text-body2--line-height: var(--text-base--line-height);
+  --text-body3: var(--text-sm);
+  --text-body3--line-height: var(--text-sm--line-height);
+}
+
+@utility bg-default {
+  @apply bg-white;
+}
+
+@utility bg-secondary {
+  @apply bg-slate-100;
+}
+
+@utility bg-tertiary {
+  @apply bg-slate-200;
+}

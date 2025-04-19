@@ -2,14 +2,17 @@
   "singleQuote": true,
   "arrowParens": "avoid",
   "importOrder": [
+    "^@storybook(.*)$",
+    "^vitest",
     "^react(.*)$",
     "^next(.*)$",
     "<THIRD_PARTY_MODULES>",
-    "(.css)$",
+    "fonts$",
     "^@assets",
     "^@types",
     "^@components",
-    "^[./]"
+    "^[./]",
+    "(.css)$"
   ],
   "importOrderSeparation": true,
   "importOrderSortSpecifiers": true,
