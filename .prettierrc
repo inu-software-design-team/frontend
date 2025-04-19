@@ -8,9 +8,9 @@
     "^next(.*)$",
     "<THIRD_PARTY_MODULES>",
     "fonts$",
-    "^@assets",
-    "^@types",
-    "^@components",
+    "^assets",
+    "^types",
+    "^components",
     "^[./]",
     "(.css)$"
   ],
