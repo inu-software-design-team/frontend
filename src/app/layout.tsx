@@ -2,7 +2,9 @@ import { headers } from 'next/headers';
 
 import { Pretendard } from './fonts';
 
-import { Header, SideNav } from 'components';
+import { Header } from 'layouts';
+
+import { SideNav } from 'components';
 
 import './globals.css';
 
@@ -18,7 +20,7 @@ export default async function RootLayout({
 
   return (
     <html lang="ko" className={Pretendard.variable}>
-      <body className="font-pretendard flex h-screen w-screen flex-col bg-[#F1F5F9]">
+      <body className="font-pretendard bg-secondary flex h-screen w-screen flex-col">
         {isMain && <Header />}
         {isMain && <SideNav />}
         {children}

@@ -76,6 +76,14 @@
   @apply bg-slate-200;
 }
 
+@utility border-secondary {
+  @apply border-slate-100;
+}
+
+@utility border-tertiary {
+  @apply border-slate-200;
+}
+
 @layer base {
   /* disabled 속성이 없는 모든 요소 */
   [data-status='disabled'] {
