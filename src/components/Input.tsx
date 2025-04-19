@@ -36,15 +36,14 @@ const Input: React.FC<InputProps> = ({
 
   return (
     <div className={`flex flex-col ${className}`}>
-      <div className="flex flex-row items-center">
+      <div className="flex items-center">
         <label className="mr-2 text-base font-semibold">{label}</label>
-        {/* 에러 메시지 */}
+
+        {/* 에러 메시지가 있을 경우 라벨 옆에 표시 */}
         {isInvalid && (
-          <p className="text-xs text-normal text-[#FB2C36] ml-auto">{errorMessage}</p>
+          <p className="text-[10px] text-[#FB2C36]">{errorMessage}</p>
         )}
       </div>
-
-     
       <input
         type={type}
         value={value}
@@ -56,8 +55,6 @@ const Input: React.FC<InputProps> = ({
             : 'border-[#E2E8F0] text-[#121212]'
         } focus:ring-0 focus:outline-none`}
       />
-      
-    
     </div>
   );
 };

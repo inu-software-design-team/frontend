@@ -12,7 +12,6 @@ export default function Start() {
       {/* 로고 */}
       <Logo className="w-96" />
 
-      {/* 버튼 */}
       <div className="mt-12 flex w-full justify-center">
         <div className="flex w-full justify-center gap-8">
           {/* 로그인 버튼 */}
