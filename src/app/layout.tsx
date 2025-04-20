@@ -13,8 +13,10 @@ export default async function RootLayout({
 }) {
   const headersList = await headers();
   const headerPathname = headersList.get('x-pathname') ?? '';
-  // 로그인 & 회원가입 API 연동 전 임시 설정
-  const isMain = !['/start', '/signup'].includes(headerPathname);
+
+  const isMain = !(
+    headerPathname === '/' || headerPathname.startsWith('/auth')
+  );
 
   return (
     <html lang="ko" className={Pretendard.variable}>
