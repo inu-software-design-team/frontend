@@ -1,12 +1,8 @@
-'use client';
+import Link from 'next/link';
 
-import { useRouter } from 'next/navigation';
-
-import { Logo, 카카오 } from '@assets';
+import { Logo, 카카오 } from 'assets';
 
 export default function Start() {
-  const { push } = useRouter();
-
   return (
     <div className="flex h-full w-full flex-col items-center justify-center">
       {/* 로고 */}
@@ -14,13 +10,10 @@ export default function Start() {
 
       <div className="mt-12 flex w-full justify-center">
         <div className="flex w-full justify-center gap-8">
-          {/* 로그인 버튼 */}
-          <button
-            className="flex w-72 items-center justify-center"
-            onClick={() => push('/auth')}
-          >
-            <카카오 className="h-full w-full" />
-          </button>
+          {/* 로그인 하이퍼링크 */}
+          <Link href="/auth" className="w-72">
+            <카카오 className="size-full" />
+          </Link>
         </div>
       </div>
     </div>
