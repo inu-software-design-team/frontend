@@ -7,11 +7,13 @@ import { Chart, Comment, Heart, Home, Layer, User } from 'assets/icons';
 
 import Icon from '../components/ui/Icon';
 
-const navItems: {
+interface NavItem {
   path: string;
   title: string;
   icon: React.ComponentPropsWithoutRef<typeof Icon>['src'];
-}[] = [
+}
+
+const navItems: NavItem[] = [
   { path: '/', title: '홈', icon: Home },
   { path: '/grade', title: '성적', icon: Chart },
   { path: '/student-info', title: '학생부', icon: User },
