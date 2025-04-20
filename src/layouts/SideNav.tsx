@@ -13,7 +13,7 @@ interface NavItem {
   icon: React.ComponentPropsWithoutRef<typeof Icon>['src'];
 }
 
-const navItems: NavItem[] = [
+export const navItems: NavItem[] = [
   { path: '/home', title: '홈', icon: Home },
   { path: '/grade', title: '성적', icon: Chart },
   { path: '/student-info', title: '학생부', icon: User },
