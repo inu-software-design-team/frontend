@@ -14,7 +14,7 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-  { path: '/', title: '홈', icon: Home },
+  { path: '/home', title: '홈', icon: Home },
   { path: '/grade', title: '성적', icon: Chart },
   { path: '/student-info', title: '학생부', icon: User },
   { path: '/feedback', title: '피드백', icon: Comment },
