@@ -9,6 +9,14 @@ runs:
       with:
         node-version: 20
 
+    - name: Fresh install
+      run: npm install
+      shell: bash
+
+    - name: Debug yaml
+      run: npm ls yaml || true
+      shell: bash
+
     - name: Install dependencies
       run: npm ci
       shell: bash
