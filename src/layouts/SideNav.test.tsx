@@ -1,6 +1,8 @@
 import { render, screen } from '@testing-library/react';
 
-import SideNav, { navItems } from './SideNav';
+import { NAV_ITEMS } from 'data';
+
+import SideNav from './SideNav';
 
 describe('SideNav 레이아웃 컴포넌트 테스트', () => {
   it('컴포넌트를 정상적으로 렌더링해야 합니다.', () => {
@@ -17,8 +19,8 @@ describe('SideNav 레이아웃 컴포넌트 테스트', () => {
       const icon = link.querySelector('svg');
 
       expect(icon).toBeInTheDocument();
-      expect(link).toHaveAttribute('href', navItems[index].path);
-      expect(link).toHaveTextContent(navItems[index].title);
+      expect(link).toHaveAttribute('href', NAV_ITEMS[index].path);
+      expect(link).toHaveTextContent(NAV_ITEMS[index].title);
     });
   });
 });

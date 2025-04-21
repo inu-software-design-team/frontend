@@ -9,6 +9,7 @@
     "<THIRD_PARTY_MODULES>",
     "fonts$",
     "^assets",
+    "^data",
     "^types",
     "^layouts",
     "^components",

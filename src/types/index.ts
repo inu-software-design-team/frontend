@@ -20,3 +20,11 @@ export type ElementSize = (typeof ELEMENT_SIZES)[number];
 export interface WithElementSize {
   size?: ElementSize;
 }
+
+export type IconComponent = React.FunctionComponent<
+  React.SVGProps<SVGSVGElement>
+>;
+export type WithIconComponent<K extends string = 'icon'> = Record<
+  K,
+  IconComponent
+>;
