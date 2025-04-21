@@ -24,6 +24,7 @@
       "assets/*": ["assets/*"],
       "components": ["components"],
       "components/*": ["components/*"],
+      "data": ["data"],
       "layouts": ["layouts"],
       "types": ["types"],
       "types/*": ["types/*"]
