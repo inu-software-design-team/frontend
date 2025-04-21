@@ -15,7 +15,7 @@
     "test:ui": "vitest --ui",
     "test:run": "vitest run",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build --stats-json"
+    "build-storybook": "storybook build -o storybook-static --stats-json"
   },
   "dependencies": {
     "next": "^15.3.1",
