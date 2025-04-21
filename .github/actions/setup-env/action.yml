@@ -1,5 +1,11 @@
 name: Setup Environment
-description: Common steps to set up Node.js and install dependencies
+description: Common steps to set up Node.js, cache and install dependencies
+
+inputs:
+  cache:
+    description: Enable cache
+    required: false
+    default: 'false'
 
 runs:
   using: 'composite'
@@ -9,6 +15,15 @@ runs:
       with:
         node-version: 20
 
+    - name: Cache dependencies
+      if: inputs.cache == 'true'
+      id: cache
+      uses: actions/cache@v4
+      with:
+        path: '**/node_modules'
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+
     - name: Install dependencies
+      if: steps.cache.outputs.cache-hit != 'true'
       run: npm ci
       shell: bash
