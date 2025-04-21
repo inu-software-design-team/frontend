@@ -1,4 +1,4 @@
-import { Header, SideNav } from 'layouts';
+import { Header, PageHeader, SideNav } from 'layouts';
 
 export default async function DashboardLayout({
   children,
@@ -9,7 +9,10 @@ export default async function DashboardLayout({
     <>
       <Header />
       <SideNav />
-      <main className="size-full">{children}</main>
+      <main className="size-full">
+        <PageHeader />
+        {children}
+      </main>
     </>
   );
 }
