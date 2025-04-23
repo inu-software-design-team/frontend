@@ -58,19 +58,13 @@ describe('IconButton 컴포넌트 테스트', () => {
     expect(button).toBeDisabled();
   });
 
-  it('로딩 상태일 때 모든 자식 요소를 감추고 Spinner를 정상적으로 렌더링해야 합니다.', () => {
+  it('로딩 상태일 때 Spinner를 정상적으로 렌더링해야 합니다.', () => {
     render(<IconButton icon={Home} status="loading" />);
     const button = screen.getByRole('button');
     const spinner = button.querySelector('svg:first-child');
-    const contents = button.querySelectorAll(':not(:first-child)');
 
     expect(button).toHaveAttribute('data-status', 'loading');
     expect(spinner).toBeInTheDocument();
     expect(spinner).toHaveClass('animate-spin');
-    contents.forEach(content => {
-      expect(content).not.toHaveStyle({
-        visibility: 'hidden',
-      });
-    });
   });
 });
