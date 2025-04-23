@@ -10,13 +10,13 @@ import IconButton from './IconButton';
 describe('IconButton 컴포넌트 테스트', () => {
   it('컴포넌트를 정상적으로 렌더링해야 합니다.', () => {
     render(<IconButton icon={Home} />);
-    const iconButton = screen.getByRole('button');
+    const button = screen.getByRole('button');
 
-    expect(iconButton).toBeInTheDocument();
+    expect(button).toBeInTheDocument();
   });
 
   it('props를 정상적으로 전달해야 합니다.', () => {
-    const { container } = render(
+    render(
       <IconButton
         icon={Home}
         status="active"
@@ -26,12 +26,12 @@ describe('IconButton 컴포넌트 테스트', () => {
         className="icon-button"
       />,
     );
-    const iconButton = screen.getByRole('button');
-    const icon = container.querySelector('svg');
+    const button = screen.getByRole('button');
+    const icon = button.querySelector('svg');
 
-    expect(iconButton).toHaveAttribute('data-status', 'active');
-    expect(iconButton).toHaveClass('bg-primary');
-    expect(iconButton).toHaveClass('icon-button');
+    expect(button).toHaveAttribute('data-status', 'active');
+    expect(button).toHaveClass('bg-primary');
+    expect(button).toHaveClass('icon-button');
 
     expect(icon).toHaveAttribute('width', '28');
     expect(icon).toHaveAttribute('height', '28');
@@ -56,5 +56,21 @@ describe('IconButton 컴포넌트 테스트', () => {
 
     expect(handleClick).not.toHaveBeenCalled();
     expect(button).toBeDisabled();
+  });
+
+  it('로딩 상태일 때 모든 자식 요소를 감추고 Spinner를 정상적으로 렌더링해야 합니다.', () => {
+    render(<IconButton icon={Home} status="loading" />);
+    const button = screen.getByRole('button');
+    const spinner = button.querySelector('svg:first-child');
+    const contents = button.querySelectorAll(':not(:first-child)');
+
+    expect(button).toHaveAttribute('data-status', 'loading');
+    expect(spinner).toBeInTheDocument();
+    expect(spinner).toHaveClass('animate-spin');
+    contents.forEach(content => {
+      expect(content).not.toHaveStyle({
+        visibility: 'hidden',
+      });
+    });
   });
 });
