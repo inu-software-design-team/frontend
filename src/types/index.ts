@@ -24,7 +24,6 @@ export interface WithElementSize {
 export type IconComponent = React.FunctionComponent<
   React.SVGProps<SVGSVGElement>
 >;
-export type WithIconComponent<K extends string = 'icon'> = Record<
-  K,
-  IconComponent
+export type WithIconComponent<K extends string = 'icon'> = Partial<
+  Record<K, IconComponent>
 >;
