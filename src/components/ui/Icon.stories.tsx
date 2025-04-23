@@ -23,16 +23,20 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {};
+export const Default: Story = {
+  args: {
+    className: 'stroke-current',
+  },
+};
 
 export const PrimaryColor: Story = {
   args: {
-    className: '*:stroke-primary',
+    className: 'stroke-primary',
   },
 };
 
 export const DangerColor: Story = {
   args: {
-    className: '*:stroke-danger',
+    className: 'stroke-danger',
   },
 };
