@@ -1,5 +1,8 @@
-interface IconProps extends React.ComponentPropsWithoutRef<'svg'> {
-  src: React.FC<React.SVGProps<SVGSVGElement>>;
+import type { WithIconComponent } from 'types';
+
+interface IconProps
+  extends Required<WithIconComponent<'src'>>,
+    React.ComponentPropsWithoutRef<'svg'> {
   size?: 14 | 16 | 18 | 20 | 24 | 28 | 32 | 40 | 48;
 }
 

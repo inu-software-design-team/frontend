@@ -29,6 +29,7 @@
   --opacity-off: 38%;
 
   /* box-shadow */
+  --shadow-border: 0 0 0 1px rgba(0, 0, 0, 1) inset;
   --shadow-drop: 0 2px 4px 0 rgba(0, 0, 0, 0.38);
 
   /* typography */

@@ -1,10 +1,12 @@
+import type { WithIconComponent } from 'types';
 import type { ButtonProps } from 'types/ui';
 
 import Icon from './Icon';
 import Spinner from './Spinner';
 
-interface IconButtonProps extends Omit<ButtonProps, 'children' | 'href'> {
-  icon: React.ComponentPropsWithoutRef<typeof Icon>['src'];
+interface IconButtonProps
+  extends Required<WithIconComponent>,
+    Omit<ButtonProps, 'children' | 'href'> {
   variant?: 'contained' | 'outlined' | 'none';
   shape?: 'square' | 'circle';
 }

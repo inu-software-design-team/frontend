@@ -3,43 +3,45 @@ import { vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import { Home } from 'assets/icons';
+import { Check } from 'assets/icons';
 
-import IconButton from './IconButton';
+import TextButton from './TextButton';
 
-describe('IconButton 컴포넌트 테스트', () => {
+describe('TextButton 컴포넌트 테스트', () => {
   it('컴포넌트를 정상적으로 렌더링해야 합니다.', () => {
-    render(<IconButton icon={Home} />);
-    const button = screen.getByRole('button');
+    const { container } = render(<TextButton label="text-button" />);
 
-    expect(button).toBeInTheDocument();
+    expect(container).toBeInTheDocument();
   });
 
   it('props를 정상적으로 전달해야 합니다.', () => {
-    render(
-      <IconButton
-        icon={Home}
+    const { container } = render(
+      <TextButton
+        label="text-button"
+        leftIcon={Check}
         status="active"
-        variant="contained"
+        variant="outlined"
         color="primary"
         size="lg"
-        className="icon-button"
+        spacing="loose"
+        className="text-button"
       />,
     );
     const button = screen.getByRole('button');
-    const icon = button.querySelector('svg');
+    const icon = container.querySelector('svg:first-child');
 
     expect(button).toHaveAttribute('data-status', 'active');
-    expect(button).toHaveClass('bg-primary');
-    expect(button).toHaveClass('icon-button');
-
-    expect(icon).toHaveAttribute('width', '28');
-    expect(icon).toHaveAttribute('height', '28');
+    expect(button).toHaveClass(
+      'shadow-border shadow-primary text-body1 gap-5 px-5 py-4 text-button',
+    );
+    expect(icon).toHaveAttribute('width', '18');
+    expect(icon).toHaveAttribute('height', '18');
+    expect(button).toHaveTextContent('text-button');
   });
 
   it('클릭 이벤트가 정상적으로 호출되어야 합니다.', async () => {
     const handleClick = vi.fn();
-    render(<IconButton icon={Home} onClick={handleClick} />);
+    render(<TextButton label="text-button" onClick={handleClick} />);
     const button = screen.getByRole('button');
 
     await userEvent.click(button);
@@ -49,7 +51,13 @@ describe('IconButton 컴포넌트 테스트', () => {
 
   it('비활성화 상태일 때 클릭 이벤트가 호출되지 않아야 합니다.', async () => {
     const handleClick = vi.fn();
-    render(<IconButton icon={Home} status="disabled" onClick={handleClick} />);
+    render(
+      <TextButton
+        label="text-button"
+        status="disabled"
+        onClick={handleClick}
+      />,
+    );
     const button = screen.getByRole('button');
 
     await userEvent.click(button);
@@ -59,7 +67,7 @@ describe('IconButton 컴포넌트 테스트', () => {
   });
 
   it('로딩 상태일 때 Spinner를 정상적으로 렌더링해야 합니다.', () => {
-    render(<IconButton icon={Home} status="loading" />);
+    render(<TextButton label="text-button" status="loading" />);
     const button = screen.getByRole('button');
     const spinner = button.querySelector('svg:first-child');
 
