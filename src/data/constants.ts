@@ -2,7 +2,7 @@ import { Chart, Comment, Heart, Home, Layer, User } from 'assets/icons';
 
 import type { WithIconComponent } from 'types';
 
-interface NavItem extends WithIconComponent {
+interface NavItem extends Required<WithIconComponent> {
   path: string;
   title: string;
 }

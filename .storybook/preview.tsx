@@ -5,6 +5,7 @@ import React from 'react';
 import { Pretendard } from '../src/app/fonts';
 
 import '../src/app/globals.css';
+import { ELEMENT_SIZES, ELEMENT_SPACINGS, ELEMENT_STATUS } from '../src/types';
 
 const preview: Preview = {
   parameters: {
@@ -23,7 +24,20 @@ const preview: Preview = {
       appDirectory: true,
     },
   },
-  tags: ['autodocs'],
+  argTypes: {
+    size: {
+      control: 'radio',
+      options: ELEMENT_SIZES,
+    },
+    status: {
+      control: 'select',
+      options: ELEMENT_STATUS,
+    },
+    spacing: {
+      control: 'radio',
+      options: ELEMENT_SPACINGS,
+    },
+  },
   decorators: [
     Story => (
       <div style={Pretendard.style}>
@@ -31,6 +45,7 @@ const preview: Preview = {
       </div>
     ),
   ],
+  tags: ['autodocs'],
 };
 
 export default preview;

@@ -3,8 +3,6 @@ import { fn } from '@storybook/test';
 
 import { Menu } from 'assets/icons';
 
-import { ELEMENT_SIZES, ELEMENT_SPACINGS, ELEMENT_STATUS } from 'types';
-
 import IconButton from './IconButton';
 
 const meta = {
@@ -22,10 +20,6 @@ const meta = {
     onClick: fn(),
   },
   argTypes: {
-    status: {
-      control: 'radio',
-      options: ELEMENT_STATUS,
-    },
     variant: {
       control: 'radio',
       options: ['none', 'contained', 'outlined'],
@@ -34,17 +28,9 @@ const meta = {
       control: 'radio',
       options: ['default', 'primary', 'danger'],
     },
-    spacing: {
-      control: 'radio',
-      options: ELEMENT_SPACINGS,
-    },
     shape: {
       control: 'radio',
       options: ['square', 'circle'],
-    },
-    size: {
-      control: 'radio',
-      options: ELEMENT_SIZES,
     },
   },
 } satisfies Meta<typeof IconButton>;
