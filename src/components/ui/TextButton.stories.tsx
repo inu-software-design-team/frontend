@@ -3,8 +3,6 @@ import { fn } from '@storybook/test';
 
 import { Check } from 'assets/icons';
 
-import { ELEMENT_SIZES, ELEMENT_SPACINGS, ELEMENT_STATUS } from 'types';
-
 import TextButton from './TextButton';
 
 const meta = {
@@ -21,18 +19,6 @@ const meta = {
     onClick: fn(),
   },
   argTypes: {
-    size: {
-      control: 'radio',
-      options: ELEMENT_SIZES,
-    },
-    status: {
-      control: 'select',
-      options: ELEMENT_STATUS,
-    },
-    spacing: {
-      control: 'radio',
-      options: ELEMENT_SPACINGS,
-    },
     variant: {
       control: 'radio',
       options: ['contained', 'outlined'],
