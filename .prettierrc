@@ -4,6 +4,7 @@
   "importOrder": [
     "^@storybook(.*)$",
     "^vitest",
+    "^@testing-library",
     "^react(.*)$",
     "^next(.*)$",
     "<THIRD_PARTY_MODULES>",
@@ -12,6 +13,7 @@
     "^data",
     "^types",
     "^layouts",
+    "^features",
     "^components",
     "^[./]",
     "(.css)$"

@@ -21,7 +21,7 @@ export default async function RootLayout({
         className={`font-pretendard bg-secondary h-screen w-screen ${
           !isMain
             ? 'flex flex-col'
-            : 'grid grid-cols-[auto_1fr] grid-rows-[auto_1fr] *:first:col-start-1 *:first:col-end-3'
+            : 'grid grid-cols-[auto_1fr] grid-rows-[4rem_calc(100vh-4rem)] *:first:col-start-1 *:first:col-end-3'
         }`}
       >
         {children}

@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 
 import { NAV_ITEMS } from 'data';
 
@@ -9,6 +9,7 @@ import { Icon } from 'components/ui';
 
 const SideNav = () => {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   return (
     <aside className="bg-default border-tertiary group box-border h-full w-60 space-y-4 border-r p-3 [.active]:w-16">
@@ -16,7 +17,10 @@ const SideNav = () => {
         {NAV_ITEMS.map(({ path, title, icon }) => (
           <Link
             key={path}
-            href={path}
+            href={{
+              pathname: path,
+              query: Object.fromEntries(searchParams.entries()),
+            }}
             className={`flex w-full items-center gap-x-3 rounded-md p-2 transition-colors group-[.active]:w-max ${path === pathname ? 'bg-primary stroke-white text-white' : 'hover:bg-secondary stroke-current text-black'}`}
           >
             <div className="p-0.5">
