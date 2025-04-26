@@ -23,10 +23,10 @@ export default function DashboardLayout({
       <SideNav />
       <main className="relative size-full">
         <PageHeader />
-        <section className="relative -top-28 flex h-[calc(100vh-64px-128px)] w-full px-8">
+        <section className="relative -top-28 flex h-[calc(100vh-64px-128px)] w-full gap-x-8 px-8">
           <StudentList initialData={dummyData} />
+          {children}
         </section>
-        {children}
       </main>
     </>
   );
