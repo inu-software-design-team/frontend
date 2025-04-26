@@ -25,6 +25,7 @@
       "components": ["components"],
       "components/*": ["components/*"],
       "data": ["data"],
+      "features/*": ["features/*"],
       "layouts": ["layouts"],
       "types": ["types"],
       "types/*": ["types/*"]
