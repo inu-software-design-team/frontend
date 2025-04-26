@@ -4,6 +4,7 @@
   "importOrder": [
     "^@storybook(.*)$",
     "^vitest",
+    "^@testing-library",
     "^react(.*)$",
     "^next(.*)$",
     "<THIRD_PARTY_MODULES>",
