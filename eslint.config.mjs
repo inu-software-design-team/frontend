@@ -15,7 +15,7 @@ const eslintConfig = [
       'no-restricted-imports': [
         'error',
         {
-          patterns: ['features/*/*'],
+          patterns: ['features/*/*', '!features/*/*/*'],
         },
       ],
     },
