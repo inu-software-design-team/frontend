@@ -1,3 +1,5 @@
+export * from './student';
+
 export const ELEMENT_STATUS = [
   'default',
   'active',
