@@ -12,6 +12,7 @@
     "^data",
     "^types",
     "^layouts",
+    "^features",
     "^components",
     "^[./]",
     "(.css)$"
