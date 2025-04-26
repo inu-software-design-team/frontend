@@ -6,11 +6,7 @@ export const middleware = async (request: NextRequest) => {
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set('x-pathname', pathname);
 
-  if (
-    pathname.startsWith('/dashboard') &&
-    pathname.endsWith('dashboard') &&
-    searchParams.size > 0
-  ) {
+  if (pathname === '/dashboard' && searchParams.size > 0) {
     return NextResponse.redirect(pathname);
   }
 
