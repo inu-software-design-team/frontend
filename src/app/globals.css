@@ -85,6 +85,14 @@
   @apply border-slate-200;
 }
 
+@utility shadow-secondary {
+  @apply shadow-slate-100;
+}
+
+@utility shadow-tertiary {
+  @apply shadow-slate-200;
+}
+
 @layer base {
   /* disabled 속성이 없는 모든 요소 */
   [data-status='disabled'] {
