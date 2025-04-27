@@ -46,7 +46,11 @@ const SelectBox = ({
           if (status === 'disabled') return;
 
           function onClickOutside(event: MouseEvent) {
-            if (node && !node.contains(event.target as Node | null))
+            if (
+              node &&
+              event.target instanceof Node &&
+              !node.contains(event.target)
+            )
               setIsDropdownOpen(false);
           }
 
@@ -56,7 +60,10 @@ const SelectBox = ({
         [status],
       )}
       onClick={e => {
-        if (status === 'disabled') return;
+        if (status === 'disabled') {
+          e.preventDefault();
+          return;
+        }
 
         setIsDropdownOpen(prev => !prev);
         props.onClick?.(e);
