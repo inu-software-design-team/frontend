@@ -36,3 +36,12 @@ jobs:
 
       - name: Test get variable exported by push-to-another-repository
         run: echo $DESTINATION_CLONED_DIRECTORY
+
+      # # 5. deploy-repo로 dispatch 이벤트 전송
+      # - name: Trigger deploy-repo dispatch
+      #   run: |
+      #     curl -X POST https://api.github.com/repos/inu-software-design-team/deploy/dispatches \
+      #       -H "Accept: application/vnd.github+json" \
+      #       -H "Authorization: Bearer ${{ secrets.TOKEN_DEPLOY }}" \
+      #       -H "Content-Type: application/json" \
+      #       -d '{"event_type":"deploy_trigger"}'
