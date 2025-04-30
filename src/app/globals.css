@@ -29,6 +29,7 @@
   --opacity-off: 38%;
 
   /* box-shadow */
+  --shadow-border: 0 0 0 1px rgba(0, 0, 0, 1) inset;
   --shadow-drop: 0 2px 4px 0 rgba(0, 0, 0, 0.38);
 
   /* typography */
@@ -62,6 +63,8 @@
   --text-body3--line-height: var(--text-sm--line-height);
 }
 
+@custom-variant active (&[data-status="active"]);
+
 @utility bg-default {
   @apply bg-white;
 }
@@ -72,4 +75,31 @@
 
 @utility bg-tertiary {
   @apply bg-slate-200;
+}
+
+@utility border-secondary {
+  @apply border-slate-100;
+}
+
+@utility border-tertiary {
+  @apply border-slate-200;
+}
+
+@layer base {
+  /* disabled 속성이 없는 모든 요소 */
+  [data-status='disabled'] {
+    @apply opacity-off! cursor-not-allowed! *:pointer-events-none!;
+  }
+
+  [data-status='loading'] {
+    @apply relative *:pointer-events-none!;
+
+    & > *:not(.loader) {
+      @apply invisible z-0;
+    }
+  }
+
+  button {
+    @apply disabled:opacity-off! cursor-pointer disabled:cursor-not-allowed! disabled:*:pointer-events-none!;
+  }
 }

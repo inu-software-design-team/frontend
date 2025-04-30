@@ -17,6 +17,8 @@ out/
 
 # 환경 설정 파일 제외
 .env
+.env.*
+.env.development
 
 # 임시 파일 제외
 *.log

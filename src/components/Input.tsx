@@ -23,16 +23,16 @@ const Input: React.FC<InputProps> = ({
   errorMessage,
   className,
 }) => {
-  const [isInvalid, setIsInvalid] = useState(false); // 유효성 검사를 위한 상태
+  const [isInvalid, setIsInvalid] = useState(false);
 
-  // 실시간으로 유효성 검사 수행
+
   useEffect(() => {
-    if (validate && value) {
-      setIsInvalid(errorMessage.length > 0); // 에러 메시지가 있으면 유효성 검사 실패로 간주
+    if (validate) {
+      setIsInvalid(errorMessage.length > 0); 
     } else {
-      setIsInvalid(false); // 에러 메시지가 없으면 유효성 검사 성공
+      setIsInvalid(false); 
     }
-  }, [value, validate, errorMessage]);
+  }, [validate, errorMessage]);
 
   return (
     <div className={`flex flex-col ${className}`}>
@@ -44,7 +44,6 @@ const Input: React.FC<InputProps> = ({
           <p className="text-[10px] text-[#FB2C36]">{errorMessage}</p>
         )}
       </div>
-
       <input
         type={type}
         value={value}
@@ -52,7 +51,7 @@ const Input: React.FC<InputProps> = ({
         placeholder={placeholder}
         className={`mt-2 h-9 w-full rounded-md border bg-[#F1F5F9] px-3 text-xs ${
           isInvalid
-            ? 'border-[#FB2C36] text-[#121212]/40'
+            ? 'border-[#FB2C36] text-[#121212]/38'
             : 'border-[#E2E8F0] text-[#121212]'
         } focus:ring-0 focus:outline-none`}
       />
