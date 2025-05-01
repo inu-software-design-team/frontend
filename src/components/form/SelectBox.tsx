@@ -4,15 +4,13 @@ import { useCallback, useEffect, useState } from 'react';
 
 import { Check, ChevronDown } from 'assets/icons';
 
-import type { ElementStatus } from 'types';
+import type { ElementStatus, WithElementSize } from 'types';
 
 import { Icon } from 'components/ui';
 
 interface SelectBoxProps
-  extends Omit<
-    React.ComponentPropsWithoutRef<'form'>,
-    'children' | 'onChange'
-  > {
+  extends WithElementSize,
+    Omit<React.ComponentPropsWithoutRef<'form'>, 'children' | 'onChange'> {
   status?: Exclude<ElementStatus, 'active' | 'loading'>;
   label: string;
   options: { id: string; value: string; default?: boolean }[];
@@ -20,9 +18,10 @@ interface SelectBoxProps
 }
 
 const SelectBox = ({
-  status = 'default',
   label,
   options,
+  status = 'default',
+  size = 'md',
   onChange,
   ...props
 }: SelectBoxProps) => {
@@ -68,17 +67,17 @@ const SelectBox = ({
         setIsDropdownOpen(prev => !prev);
         props.onClick?.(e);
       }}
-      className={`relative space-y-1 ${props.className ?? ''}`}
+      className={`relative w-full space-y-1 ${size === 'sm' ? '**:text-body3' : size === 'lg' ? '**:text-body1' : '**:text-body2'} ${props.className ?? ''}`}
     >
       <label
         htmlFor="select"
         onClick={e => e.stopPropagation()}
-        className="text-body3 block w-full"
+        className="block w-full"
       >
         {label}
       </label>
       <div
-        className={`shadow-border flex cursor-pointer items-center gap-x-4 rounded-md px-4 py-3 transition-shadow ${
+        className={`shadow-border bg-default flex cursor-pointer items-center gap-x-4 rounded-md px-4 py-3 transition-shadow ${
           isDropdownOpen ? '' : 'shadow-tertiary'
         }`}
       >
@@ -86,20 +85,20 @@ const SelectBox = ({
           readOnly
           id="select"
           disabled={status === 'disabled'}
-          value={options.find(({ id }) => id === selectedId)?.value}
-          className="pointer-events-none flex w-max outline-none"
+          value={options.find(({ id }) => id === selectedId)?.value ?? ''}
+          className="pointer-events-none w-full outline-none"
         />
         <Icon
           src={ChevronDown}
           size={16}
-          className={`transition-transform ${
+          className={`stroke-current transition-transform ${
             isDropdownOpen ? 'rotate-180' : ''
           }`}
         />
       </div>
       {options.length > 0 && (
         <ul
-          className={`shadow-drop absolute top-[calc(100%+0.5rem)] left-1/2 z-10 min-w-full -translate-x-1/2 space-y-1 rounded-md p-2 transition-[translate,_opacity] ${isDropdownOpen ? '' : 'pointer-events-none translate-y-1 opacity-0'}`}
+          className={`shadow-drop bg-default absolute top-[calc(100%+0.5rem)] left-1/2 z-10 min-w-full -translate-x-1/2 space-y-1 rounded-md p-2 transition-[translate,_opacity] ${isDropdownOpen ? '' : 'pointer-events-none translate-y-1 opacity-0'}`}
         >
           {options.map(({ id, value }) => (
             <li
