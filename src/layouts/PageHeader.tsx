@@ -1,7 +1,5 @@
 'use client';
 
-import { useMemo } from 'react';
-
 import { usePathname } from 'next/navigation';
 
 import { NAV_ITEMS } from 'data';
@@ -12,22 +10,17 @@ import { Icon } from 'components/ui';
 
 const PageHeader = () => {
   const pathname = usePathname();
-  const pageInfo = useMemo(
-    () =>
-      NAV_ITEMS.reduce<ElementType<typeof NAV_ITEMS> | null>(
-        (bestMatch, item) => {
-          if (pathname === item.path || pathname.startsWith(item.path)) {
-            if (!bestMatch || item.path.length > bestMatch.path.length)
-              return item;
-          }
-          return bestMatch;
-        },
-        null,
-      ),
-    [pathname],
+  const pageInfo = NAV_ITEMS.reduce<ElementType<typeof NAV_ITEMS>>(
+    (bestMatch, item) => {
+      if (pathname === item.path || pathname.startsWith(item.path)) {
+        if (!bestMatch || item.path.length > bestMatch.path.length) return item;
+      }
+      return bestMatch;
+    },
+    NAV_ITEMS[0],
   );
 
-  return !pageInfo ? null : (
+  return (
     <div className="bg-primary h-60 w-full p-8">
       <div className="flex items-center gap-x-4 stroke-white text-white">
         <Icon src={pageInfo.icon} size={32} />
