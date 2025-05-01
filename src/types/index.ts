@@ -1,5 +1,7 @@
 export * from './student';
 
+export type ElementType<T> = T extends (infer U)[] ? U : T;
+
 export const ELEMENT_STATUS = [
   'default',
   'active',

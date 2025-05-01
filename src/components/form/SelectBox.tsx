@@ -115,7 +115,7 @@ const SelectBox = ({
               <Icon
                 src={Check}
                 size={16}
-                className={id === selectedId ? '' : 'invisible'}
+                className={`stroke-current ${id === selectedId ? '' : 'invisible'}`}
               />
             </li>
           ))}
