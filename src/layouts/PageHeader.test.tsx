@@ -1,13 +1,15 @@
 import { vi } from 'vitest';
 
-import { usePathname } from 'next/navigation';
-
 import { render, screen } from '@testing-library/react';
+
+import { usePathname } from 'next/navigation';
 
 import PageHeader from './PageHeader';
 
 describe('PageHeader 레이아웃 컴포넌트 테스트', () => {
   it('컴포넌트를 정상적으로 렌더링해야 합니다.', () => {
+    vi.mocked(usePathname).mockReturnValue('/dashboard');
+
     const { container } = render(<PageHeader />);
 
     expect(container).toBeInTheDocument();
