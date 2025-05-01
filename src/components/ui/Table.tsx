@@ -1,5 +1,5 @@
 interface TableColumn<T> {
-  key: Extract<keyof T, 'id' | string>;
+  key: Extract<Exclude<keyof T, 'id'>, string>;
   label: string;
   headerAlign?: 'left' | 'center' | 'right';
   render?: (value: T[keyof T], row: T, index: number) => React.ReactNode;
@@ -20,12 +20,14 @@ const Table = <T extends TableData>({
 }: TableProps<T>) => {
   const effectiveColumns =
     columns ??
-    Object.keys(data[0] ?? {}).map(key => ({
-      key: key as Extract<keyof T, string>,
-      label: key,
-      headerAlign: 'center',
-      render: value => <>{value}</>,
-    }));
+    Object.keys(data[0] ?? {})
+      .filter(key => key !== 'id')
+      .map(key => ({
+        key: key as Extract<Exclude<keyof T, 'id'>, string>,
+        label: key,
+        headerAlign: 'center',
+        render: value => <>{value}</>,
+      }));
 
   return (
     <div
