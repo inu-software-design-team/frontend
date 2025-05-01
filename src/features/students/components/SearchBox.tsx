@@ -34,6 +34,7 @@ const SearchBox = ({ pathname }: SearchBoxProps) => {
           params.length === 0
             ? pathname
             : `${pathname}?name=${encodeURIComponent(params)}`,
+          { scroll: false },
         );
       }, 300);
       debouncedReplace(params);
@@ -71,7 +72,7 @@ const SearchBox = ({ pathname }: SearchBoxProps) => {
         onChange={onChangeInput}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
-        className={`size-full appearance-none outline-none placeholder:transition-opacity [&::-webkit-search-cancel-button]:appearance-none ${
+        className={`placeholder:text-black-off size-full appearance-none outline-none placeholder:transition-opacity [&::-webkit-search-cancel-button]:appearance-none ${
           isFocused ? '' : 'placeholder:opacity-off'
         }`}
       />

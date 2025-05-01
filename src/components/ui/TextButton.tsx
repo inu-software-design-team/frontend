@@ -40,11 +40,11 @@ const TextButton = ({
       onClick={e => {
         if (status === 'disabled' || status === 'loading') e.preventDefault();
         else {
-          if (href.length > 0) push(href);
+          if (href.length > 0) push(href, { scroll: false });
           props.onClick?.(e);
         }
       }}
-      className={`flex items-center justify-center rounded-md text-center transition-colors ${
+      className={`flex items-center justify-center rounded-md text-center transition-all ${
         variant === 'outlined'
           ? `bg-default shadow-border ${
               color === 'primary'

@@ -1,5 +1,5 @@
 interface TableColumn<T> {
-  key: Extract<keyof T, 'id' | string>;
+  key: Extract<Exclude<keyof T, 'id'>, string>;
   label: string;
   headerAlign?: 'left' | 'center' | 'right';
   render?: (value: T[keyof T], row: T, index: number) => React.ReactNode;
@@ -20,17 +20,19 @@ const Table = <T extends TableData>({
 }: TableProps<T>) => {
   const effectiveColumns =
     columns ??
-    Object.keys(data[0] ?? {}).map(key => ({
-      key: key as Extract<keyof T, string>,
-      label: key,
-      headerAlign: 'center',
-      render: value => <>{value}</>,
-    }));
+    Object.keys(data[0] ?? {})
+      .filter(key => key !== 'id')
+      .map(key => ({
+        key: key as Extract<Exclude<keyof T, 'id'>, string>,
+        label: key,
+        headerAlign: 'center',
+        render: value => <>{value}</>,
+      }));
 
   return (
     <div
       {...props}
-      className={`border-primary-light-hover w-full overflow-y-hidden rounded-md border ${props.className ?? ''}`}
+      className={`border-primary-light-hover w-full rounded-md border ${props.className ?? ''}`}
     >
       <table className="**:[tr]:border-primary-light-hover w-full **:[th,td]:px-4 **:[th,td]:py-3 **:not-last:[tr]:border-b">
         {effectiveColumns.length > 0 && (
@@ -64,9 +66,7 @@ const Table = <T extends TableData>({
                   key={key}
                   className="text-center text-pretty whitespace-pre"
                 >
-                  {render?.(row[key], row, rowIndex) ?? (
-                    <div className="flex flex-wrap">{row[key]}</div>
-                  )}
+                  {render?.(row[key], row, rowIndex) ?? row[key]}
                 </td>
               ))}
             </tr>

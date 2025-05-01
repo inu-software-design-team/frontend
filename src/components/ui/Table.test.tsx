@@ -41,9 +41,9 @@ describe('Table 컴포넌트 테스트', () => {
 
     rerender(<Table data={[]} columns={COLUMNS} />);
 
-    COLUMNS.forEach(column => {
+    COLUMNS.forEach(({ label }) => {
       const headerCell = screen.getByRole('columnheader', {
-        name: column.label,
+        name: label,
       });
       expect(headerCell).toBeInTheDocument();
     });
@@ -53,12 +53,14 @@ describe('Table 컴포넌트 테스트', () => {
   it('columns 전달 유무에 따라 열 제목이 적절히 표시되어야 합니다.', () => {
     const { rerender } = render(<Table data={DATA} />);
 
-    Object.keys(DATA[0]).forEach(key => {
-      const headerCell = screen.getByRole('columnheader', {
-        name: key,
+    Object.keys(DATA[0])
+      .filter(key => key !== 'id')
+      .forEach(key => {
+        const headerCell = screen.getByRole('columnheader', {
+          name: key,
+        });
+        expect(headerCell).toBeInTheDocument();
       });
-      expect(headerCell).toBeInTheDocument();
-    });
 
     rerender(<Table data={DATA} columns={COLUMNS} />);
 
@@ -136,16 +138,15 @@ describe('Table 컴포넌트 테스트', () => {
     const headers = screen.getAllByRole('columnheader');
 
     expect(headers.length).toBe(COLUMNS.length);
-    COLUMNS.forEach((column, index) => {
-      expect(headers[index]).toHaveTextContent(column.label);
+    COLUMNS.forEach(({ label }, index) => {
+      expect(headers[index]).toHaveTextContent(label);
     });
     DATA.forEach((item, rowIndex) => {
-      COLUMNS.forEach(column => {
-        const cellContent = item[column.key];
+      COLUMNS.forEach(({ key }) => {
+        const cellContent = item[key];
         const cells = screen.getAllByRole('cell');
         const cellIndex =
-          rowIndex * COLUMNS.length +
-          COLUMNS.findIndex(col => col.key === column.key);
+          rowIndex * COLUMNS.length + COLUMNS.findIndex(col => col.key === key);
 
         expect(cells[cellIndex]).toHaveTextContent(`${cellContent}`);
       });
