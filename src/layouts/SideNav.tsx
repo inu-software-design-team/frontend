@@ -12,16 +12,12 @@ import { Icon } from 'components/ui';
 function shouldHighlightNavItem(path: string, pathname: string) {
   return (
     path ===
-    NAV_ITEMS.reduce<ElementType<typeof NAV_ITEMS> | null>(
-      (bestMatch, item) => {
-        if (pathname === item.path || pathname.startsWith(item.path)) {
-          if (!bestMatch || item.path.length > bestMatch.path.length)
-            return item;
-        }
-        return bestMatch;
-      },
-      null,
-    )?.path
+    NAV_ITEMS.reduce<ElementType<typeof NAV_ITEMS>>((bestMatch, item) => {
+      if (pathname === item.path || pathname.startsWith(item.path)) {
+        if (!bestMatch || item.path.length > bestMatch.path.length) return item;
+      }
+      return bestMatch;
+    }, NAV_ITEMS[0])?.path
   );
 }
 
