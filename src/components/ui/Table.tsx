@@ -32,7 +32,7 @@ const Table = <T extends TableData>({
   return (
     <div
       {...props}
-      className={`border-primary-light-hover w-full overflow-y-hidden rounded-md border ${props.className ?? ''}`}
+      className={`border-primary-light-hover w-full rounded-md border ${props.className ?? ''}`}
     >
       <table className="**:[tr]:border-primary-light-hover w-full **:[th,td]:px-4 **:[th,td]:py-3 **:not-last:[tr]:border-b">
         {effectiveColumns.length > 0 && (
@@ -66,9 +66,7 @@ const Table = <T extends TableData>({
                   key={key}
                   className="text-center text-pretty whitespace-pre"
                 >
-                  {render?.(row[key], row, rowIndex) ?? (
-                    <div className="flex flex-wrap">{row[key]}</div>
-                  )}
+                  {render?.(row[key], row, rowIndex) ?? row[key]}
                 </td>
               ))}
             </tr>
