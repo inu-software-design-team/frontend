@@ -20,14 +20,16 @@ export default function DashboardLayout({
   return (
     <>
       <Header />
-      <SideNav />
-      <main className="relative size-full">
-        <PageHeader />
-        <section className="relative -top-28 flex h-[calc(100vh-64px-128px)] w-full gap-x-8 px-8">
-          <StudentList initialData={dummyData} />
-          {children}
-        </section>
-      </main>
+      <div className="flex w-full">
+        <SideNav />
+        <main className="w-full">
+          <PageHeader />
+          <section className="-mt-28 flex w-full gap-x-8 px-8">
+            <StudentList initialData={dummyData} />
+            {children}
+          </section>
+        </main>
+      </div>
     </>
   );
 }
