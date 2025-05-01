@@ -18,7 +18,7 @@ const Header = () => {
           onClick={e => {
             e.currentTarget.parentElement?.parentElement?.parentElement
               ?.querySelector('aside')
-              ?.classList.toggle('active');
+              ?.classList.toggle('minimized');
           }}
         />
         <HeaderLogo name="로고" />
