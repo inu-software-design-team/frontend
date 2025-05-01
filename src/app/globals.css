@@ -43,7 +43,7 @@
   --text-heading4--line-height: var(--leading-normal);
   --text-heading5: var(--text-2xl);
   --text-heading5--line-height: var(--leading-normal);
-  --text-heading6: varl(--text-xl);
+  --text-heading6: var(--text-xl);
   --text-heading6--line-height: var(--leading-normal);
 
   --text-title1: 2rem;
@@ -52,7 +52,7 @@
   --text-title2--line-height: var(--leading-normral);
   --text-title3: var(--text-2xl);
   --text-title3--line-height: var(--leading-normral);
-  --text-title4: varl(--text-xl);
+  --text-title4: var(--text-xl);
   --text-title4--line-height: var(--leading-normral);
 
   --text-body1: var(--text-lg);
@@ -83,6 +83,14 @@
 
 @utility border-tertiary {
   @apply border-slate-200;
+}
+
+@utility shadow-secondary {
+  @apply shadow-slate-100;
+}
+
+@utility shadow-tertiary {
+  @apply shadow-slate-200;
 }
 
 @layer base {

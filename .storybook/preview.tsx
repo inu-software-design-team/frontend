@@ -28,14 +28,26 @@ const preview: Preview = {
     size: {
       control: 'radio',
       options: ELEMENT_SIZES,
+      if: {
+        arg: 'size',
+        exists: true,
+      },
     },
     status: {
       control: 'select',
       options: ELEMENT_STATUS,
+      if: {
+        arg: 'status',
+        exists: true,
+      },
     },
     spacing: {
       control: 'radio',
       options: ELEMENT_SPACINGS,
+      if: {
+        arg: 'spacing',
+        exists: true,
+      },
     },
   },
   decorators: [

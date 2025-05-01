@@ -1,6 +1,18 @@
+import type { StudentInfo } from 'types';
+
 import { Header, PageHeader, SideNav } from 'layouts';
 
-export default async function DashboardLayout({
+import { StudentList } from 'features/students';
+
+const dummyData: StudentInfo[] = Array.from({ length: 20 }, (_, i) => ({
+  id: `101${(i + 1).toString().padStart(2, '0')}`,
+  grade: 1,
+  classNumber: 1,
+  number: i + 1,
+  name: `이름 ${i + 1}`,
+}));
+
+export default function DashboardLayout({
   children,
 }: {
   children: Readonly<React.ReactNode>;
@@ -8,11 +20,16 @@ export default async function DashboardLayout({
   return (
     <>
       <Header />
-      <SideNav />
-      <main className="size-full">
-        <PageHeader />
-        {children}
-      </main>
+      <div className="flex w-full">
+        <SideNav />
+        <main className="w-full">
+          <PageHeader />
+          <section className="-mt-28 flex w-full gap-x-8 px-8">
+            <StudentList initialData={dummyData} />
+            {children}
+          </section>
+        </main>
+      </div>
     </>
   );
 }

@@ -12,4 +12,15 @@ vi.mock('next/navigation', () => ({
     prefetch: vi.fn(),
     push: vi.fn(),
   }),
+  useSearchParams: () => ({
+    entries: vi.fn(() => []),
+    forEach: vi.fn(),
+    get: vi.fn(() => ''),
+    getAll: vi.fn(() => []),
+    has: vi.fn(() => false),
+    keys: vi.fn(() => []),
+    size: vi.fn(() => 0),
+    toString: vi.fn(() => ''),
+    values: vi.fn(() => []),
+  }),
 }));

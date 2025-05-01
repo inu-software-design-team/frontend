@@ -18,10 +18,8 @@ export default async function RootLayout({
   return (
     <html lang="ko" className={Pretendard.variable}>
       <body
-        className={`font-pretendard bg-secondary h-screen w-screen ${
-          !isMain
-            ? 'flex flex-col'
-            : 'grid grid-cols-[auto_1fr] grid-rows-[auto_1fr] *:first:col-start-1 *:first:col-end-3'
+        className={`font-pretendard bg-secondary ${
+          !isMain ? 'flex h-screen w-screen flex-col' : ''
         }`}
       >
         {children}

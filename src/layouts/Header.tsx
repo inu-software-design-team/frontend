@@ -9,7 +9,7 @@ const Header = () => {
   const username = 'User';
 
   return (
-    <header className="bg-default border-tertiary box-border! flex h-16 w-full items-center border-b px-3 py-2">
+    <header className="bg-default border-tertiary sticky top-0 right-0 left-0 z-50 box-border! flex h-16 w-full items-center border-b px-3 py-2">
       <div className="flex flex-1 items-center justify-start gap-x-4">
         <IconButton
           icon={Menu}
@@ -18,7 +18,7 @@ const Header = () => {
           onClick={e => {
             e.currentTarget.parentElement?.parentElement?.parentElement
               ?.querySelector('aside')
-              ?.classList.toggle('active');
+              ?.classList.toggle('minimized');
           }}
         />
         <HeaderLogo name="로고" />

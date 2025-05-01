@@ -9,10 +9,18 @@ import { Icon } from 'components/ui';
 const PageHeader = () => {
   const { replace } = useRouter();
   const pathname = usePathname();
-  const pageInfo = NAV_ITEMS.find(item => item.path === pathname);
+  const pageInfo = NAV_ITEMS.find(({ path }) => {
+    const secondSlashIndex = pathname.indexOf('/', 1);
+    if (secondSlashIndex === -1) return path === pathname;
+
+    const thirdSlashIndex = pathname.indexOf('/', pathname.indexOf('/', 1) + 1);
+    return thirdSlashIndex === -1
+      ? path === pathname
+      : path === pathname.substring(0, thirdSlashIndex);
+  });
 
   if (!pageInfo) {
-    replace('/404');
+    replace('/404', { scroll: false });
     return null;
   }
 

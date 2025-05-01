@@ -36,12 +36,12 @@ const IconButton = ({
               ? 'bg-danger hover:not-disabled:bg-danger-hover active:bg-danger-hover stroke-white'
               : 'bg-secondary hover:not-disabled:bg-tertiary active:bg-tertiary stroke-current'
           : variant === 'outlined'
-            ? `box-border border ${
+            ? `shadow-border ${
                 color === 'primary'
-                  ? 'border-primary hover:not-disabled:bg-primary-light-hover active:bg-primary-light-hover stroke-primary'
+                  ? 'shadow-primary hover:not-disabled:bg-primary-light-hover active:bg-primary-light-hover stroke-primary'
                   : color === 'danger'
-                    ? 'border-danger hover:not-disabled:bg-danger-light-hover active:bg-danger-light-hover stroke-danger'
-                    : 'hover:not-disabled:bg-secondary active:bg-secondary border-black stroke-current'
+                    ? 'shadow-danger hover:not-disabled:bg-danger-light-hover active:bg-danger-light-hover stroke-danger'
+                    : 'hover:not-disabled:bg-secondary active:bg-secondary stroke-current'
               }`
             : color === 'primary'
               ? 'hover:not-disabled:bg-primary-light-hover active:bg-primary-light-hover stroke-primary'
