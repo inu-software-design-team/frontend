@@ -12,17 +12,22 @@ ARG FRONTEND_ORIGIN
 RUN FRONTEND_ORIGIN=$FRONTEND_ORIGIN npm run build
 
 
+# 3단계:  next.js 실행 단계
+FROM node:18-alpine AS runner
 
+# 명령어를 실행할 디렉터리 지정
+WORKDIR /app
+ 
 
-# Step 2: Serve with Nginx (정적 파일 서빙)
-FROM nginx:stable-alpine
+# next.config.js에서 output을 standalone으로 설정하면 
+# 빌드에 필요한 최소한의 파일만 ./next/standalone로 출력이 된다.
+# standalone 결과물에는 public 폴더와 static 폴더 내용은 포함되지 않으므로, 따로 복사를 해준다.
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
+ 
+# 컨테이너의 수신 대기 포트를 3000으로 설정
+EXPOSE 3000
 
-# Next.js의 정적 파일을 Nginx로 복사 (out/ 폴더)
-COPY --from=build /app/out /usr/share/nginx/html
-
-# Nginx 설정파일 복사 (필요시)
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-# Nginx 포트 80 열기
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+# node로 애플리케이션 실행
+CMD ["node", "server.js"]
