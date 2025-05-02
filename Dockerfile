@@ -30,4 +30,4 @@ COPY --from=builder /app/.next/static ./.next/static
 EXPOSE 3000
 
 # node로 애플리케이션 실행
-CMD ["node", "index.js"]
+CMD ["node", "server.js"]
