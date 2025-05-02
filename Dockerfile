@@ -1,5 +1,5 @@
 # Step 1: Build Next.js app
-FROM node:18 AS build
+FROM node:18 AS builder
 WORKDIR /app
 
 # 의존성 설치
