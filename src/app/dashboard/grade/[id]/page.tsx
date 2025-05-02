@@ -148,14 +148,16 @@ export default async function Grade(props: { params: IdParams }) {
           <div className="bg-primary-light-hover aspect-[10/9]">차트</div>
           <ul className="w-full">
             {Object.entries(statsFromGradeData).map(
-              ([key, { label, value }]) => (
-                <li key={key} className="w-full py-4">
-                  <svg className="w-full">
-                    <line />
-                  </svg>
-                  <div className="flex w-full justify-between">
+              ([key, { label, value }], index) => (
+                <li key={key} className="w-full">
+                  {index !== 0 && (
+                    <hr className="border-primary-light-hover w-full" />
+                  )}
+                  <div className="flex w-full justify-between py-4">
                     <span className="text-body1">{label}</span>
-                    <strong className="text-title4">{value}</strong>
+                    <strong className="text-title4 text-primary">
+                      {value}
+                    </strong>
                   </div>
                 </li>
               ),

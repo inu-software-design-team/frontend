@@ -21,26 +21,26 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
-  render: props => (
-    <div className="stroke-current">
-      <Spinner {...props} />
+const SpinnerRender = ({
+  size,
+  ...props
+}: React.ComponentPropsWithoutRef<typeof Spinner> &
+  Pick<React.ComponentPropsWithoutRef<'div'>, 'className'>) => {
+  return (
+    <div {...props}>
+      <Spinner size={size} />
     </div>
-  ),
+  );
+};
+
+export const Default: Story = {
+  render: props => <SpinnerRender {...props} />,
 };
 
 export const PrimaryColor: Story = {
-  render: props => (
-    <div className="stroke-primary">
-      <Spinner {...props} />
-    </div>
-  ),
+  render: props => <SpinnerRender {...props} className="stroke-primary" />,
 };
 
 export const DangerColor: Story = {
-  render: props => (
-    <div className="stroke-danger">
-      <Spinner {...props} />
-    </div>
-  ),
+  render: props => <SpinnerRender {...props} className="stroke-danger" />,
 };

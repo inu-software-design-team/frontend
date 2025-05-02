@@ -5,16 +5,20 @@ import { usePathname, useSearchParams } from 'next/navigation';
 
 import { NAV_ITEMS } from 'data';
 
+import type { ElementType } from 'types';
+
 import { Icon } from 'components/ui';
 
 function shouldHighlightNavItem(path: string, pathname: string) {
-  const secondSlashIndex = pathname.indexOf('/', 1);
-  if (secondSlashIndex === -1) return path === pathname;
-
-  const thirdSlashIndex = pathname.indexOf('/', pathname.indexOf('/', 1) + 1);
-  return thirdSlashIndex === -1
-    ? path === pathname
-    : path === pathname.substring(0, thirdSlashIndex);
+  return (
+    path ===
+    NAV_ITEMS.reduce<ElementType<typeof NAV_ITEMS>>((bestMatch, item) => {
+      if (pathname === item.path || pathname.startsWith(item.path)) {
+        if (!bestMatch || item.path.length > bestMatch.path.length) return item;
+      }
+      return bestMatch;
+    }, NAV_ITEMS[0])?.path
+  );
 }
 
 const SideNav = () => {
