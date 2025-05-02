@@ -10,6 +10,16 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = [
+  {
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: ['features/*/*', '!features/*/*/*'],
+        },
+      ],
+    },
+  },
   ...compat.extends('next/core-web-vitals', 'next/typescript'),
 ];
 

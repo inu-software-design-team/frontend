@@ -48,7 +48,7 @@ export default function Info() {
     }
 
     // 성공적으로 처리 후 리디렉션
-    router.push('/teacher');
+    router.push('/dashboard', { scroll: false });
   };
 
   return (

@@ -1,20 +1,24 @@
 'use client';
 
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 
 import { NAV_ITEMS } from 'data';
+
+import type { ElementType } from 'types';
 
 import { Icon } from 'components/ui';
 
 const PageHeader = () => {
-  const { replace } = useRouter();
   const pathname = usePathname();
-  const pageInfo = NAV_ITEMS.find(item => item.path === pathname);
-
-  if (!pageInfo) {
-    replace('/404');
-    return null;
-  }
+  const pageInfo = NAV_ITEMS.reduce<ElementType<typeof NAV_ITEMS>>(
+    (bestMatch, item) => {
+      if (pathname === item.path || pathname.startsWith(item.path)) {
+        if (!bestMatch || item.path.length > bestMatch.path.length) return item;
+      }
+      return bestMatch;
+    },
+    NAV_ITEMS[0],
+  );
 
   return (
     <div className="bg-primary h-60 w-full p-8">

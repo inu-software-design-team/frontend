@@ -1,3 +1,7 @@
+export * from './student';
+
+export type ElementType<T> = T extends (infer U)[] ? U : T;
+
 export const ELEMENT_STATUS = [
   'default',
   'active',
@@ -27,3 +31,7 @@ export type IconComponent = React.FunctionComponent<
 export type WithIconComponent<K extends string = 'icon'> = Partial<
   Record<K, IconComponent>
 >;
+
+export type IdParams = Promise<{
+  id: string;
+}>;
