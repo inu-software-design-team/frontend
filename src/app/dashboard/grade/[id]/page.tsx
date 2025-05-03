@@ -2,8 +2,6 @@ import { Edit } from 'assets/icons';
 
 import type { IdParams } from 'types';
 
-import { DashboardContentBox } from 'layouts';
-
 import { SelectBox } from 'components/form';
 import { IconButton, Table } from 'components/ui';
 
@@ -112,7 +110,7 @@ export default async function Grade(props: { params: IdParams }) {
   console.log(id);
 
   return (
-    <DashboardContentBox>
+    <>
       <div className="flex w-full justify-between">
         <div className="flex w-full flex-col gap-y-1">
           <strong className="text-title4">이름</strong>
@@ -165,6 +163,6 @@ export default async function Grade(props: { params: IdParams }) {
           </ul>
         </div>
       </div>
-    </DashboardContentBox>
+    </>
   );
 }
