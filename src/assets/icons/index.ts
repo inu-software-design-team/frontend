@@ -1,3 +1,4 @@
+// 자동 생성된 파일입니다. 수정하지 마세요.
 import ArrowRight from './arrow_right.svg';
 import Bell from './bell.svg';
 import Calendar from './calendar.svg';
