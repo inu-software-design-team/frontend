@@ -2,7 +2,6 @@ import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   output: 'standalone',
-
   turbopack: {
     rules: {
       '*.svg': {
@@ -36,7 +35,15 @@ const nextConfig: NextConfig = {
             options: {
               typescript: true,
               ext: 'tsx',
-              svgo: false,
+              svgo: true,
+              svgoConfig: {
+                plugins: [
+                  {
+                    name: 'removeDimensions',
+                    active: true,
+                  },
+                ],
+              },
             },
           },
         ],

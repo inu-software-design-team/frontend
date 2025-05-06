@@ -119,7 +119,7 @@ describe('SelectBox 컴포넌트 테스트', () => {
     expect(onChangeMock).toHaveBeenCalledTimes(2);
   });
 
-  it('바활성화 상태일 때 선택 목록이 보여지거나 클릭/변경 이벤트가 호출되지 않아야 합니다.', async () => {
+  it('비활성화 상태일 때 선택 목록이 보여지거나 클릭/변경 이벤트가 호출되지 않아야 합니다.', async () => {
     render(
       <SelectBox
         label={LABEL}

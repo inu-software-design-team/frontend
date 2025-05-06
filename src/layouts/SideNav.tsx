@@ -5,14 +5,14 @@ import { usePathname, useSearchParams } from 'next/navigation';
 
 import { NAV_ITEMS } from 'data';
 
-import type { ElementType } from 'types';
+import type { ArrayElementType } from 'types';
 
 import { Icon } from 'components/ui';
 
 function shouldHighlightNavItem(path: string, pathname: string) {
   return (
     path ===
-    NAV_ITEMS.reduce<ElementType<typeof NAV_ITEMS>>((bestMatch, item) => {
+    NAV_ITEMS.reduce<ArrayElementType<typeof NAV_ITEMS>>((bestMatch, item) => {
       if (pathname === item.path || pathname.startsWith(item.path)) {
         if (!bestMatch || item.path.length > bestMatch.path.length) return item;
       }

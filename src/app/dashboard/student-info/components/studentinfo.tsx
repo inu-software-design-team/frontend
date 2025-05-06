@@ -1,9 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { DashboardContentBox } from 'layouts';
-import StudentBasicInfo from './studentbasicinfo';
+
 import StudentAttendance from './studentattendance';
+import StudentBasicInfo from './studentbasicinfo';
 import StudentRemarks from './studentremarks';
 
 export default function StudentInfo({ id }: { id: string }) {
@@ -14,19 +14,19 @@ export default function StudentInfo({ id }: { id: string }) {
   const number = parseInt(id?.substring(3)) || 0;
 
   return (
-    <DashboardContentBox>
-      <div className="flex w-full justify-between mb-4">
+    <>
+      <div className="mb-4 flex w-full justify-between">
         <div className="flex w-full flex-col gap-y-1">
           <strong className="text-title4">이름</strong>
           <p>{`${grade}학년 ${classNumber}반 ${number}번`}</p>
         </div>
       </div>
 
-      <div className="flex h-11 w-full flex-row justify-center items-center rounded-[6px] bg-[#F1F5F9] p-1">
+      <div className="flex h-11 w-full flex-row items-center justify-center rounded-[6px] bg-[#F1F5F9] p-1">
         {['기본 정보', '출결 현황', '특기 사항'].map((label, index) => (
           <button
             key={index}
-            className={`flex-1 py-1.5 px-2 ${
+            className={`flex-1 px-2 py-1.5 ${
               activeTab === index
                 ? 'rounded-[6px] bg-white text-black'
                 : 'text-black/40'
@@ -43,6 +43,6 @@ export default function StudentInfo({ id }: { id: string }) {
         {activeTab === 1 && <StudentAttendance id={id} />}
         {activeTab === 2 && <StudentRemarks id={id} />}
       </div>
-    </DashboardContentBox>
+    </>
   );
 }

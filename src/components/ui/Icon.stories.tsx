@@ -1,7 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { Home } from 'assets/icons';
-
 import Icon from './Icon';
 
 const meta = {
@@ -9,7 +7,7 @@ const meta = {
   tags: ['autodocs'],
   component: Icon,
   args: {
-    src: Home,
+    src: 'home',
     size: 20,
   },
   argTypes: {

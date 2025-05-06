@@ -3,8 +3,6 @@ import { vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import { Check } from 'assets/icons';
-
 import TextButton from './TextButton';
 
 describe('TextButton 컴포넌트 테스트', () => {
@@ -18,7 +16,7 @@ describe('TextButton 컴포넌트 테스트', () => {
     const { container } = render(
       <TextButton
         label="text-button"
-        leftIcon={Check}
+        leftIcon="check"
         status="active"
         variant="outlined"
         color="primary"
