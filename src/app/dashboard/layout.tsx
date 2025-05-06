@@ -21,22 +21,20 @@ export default async function DashboardLayout({
 }) {
   const sessionId = (await cookies()).get('connect.sid')?.value ?? '';
 
-  if (sessionId.length > 0) {
-    try {
-      const response = await fetch(
-        'http://localhost:4000/api/v1/users/csrf-token',
-        {
-          headers: {
-            Cookie: `connect.sid=${sessionId}`,
-          },
+  try {
+    const response = await fetch(
+      'http://localhost:4000/api/v1/users/csrf-token',
+      {
+        headers: {
+          Cookie: `connect.sid=${sessionId}`,
         },
-      );
+      },
+    );
 
-      const { csrfToken }: { csrfToken: string } = await response.json();
-      console.log(`csrf 토큰 : ${csrfToken}`);
-    } catch (error) {
-      console.error(error instanceof Error ? error.message : String(error));
-    }
+    const { csrfToken }: { csrfToken: string } = await response.json();
+    console.log(`csrf 토큰 : ${csrfToken}`);
+  } catch (error) {
+    console.error(error instanceof Error ? error.message : String(error));
   }
 
   return (
