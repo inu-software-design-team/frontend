@@ -52,6 +52,9 @@ export default function Info() {
       'http://localhost:4000/api/v1/users/register',
       {
         method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({
           role,
           linked: parseInt(linked),

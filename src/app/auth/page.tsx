@@ -53,30 +53,37 @@ export default function Auth() {
       return;
     }
 
-    const response = await fetch(
-      'http://localhost:4000/api/v1/users/check-id',
-      {
-        method: 'POST',
-        body: JSON.stringify({
-          role:
-            activeTab === 'Teacher'
-              ? 'teacher'
-              : activeTab === 'Student'
-                ? 'student'
-                : 'parent',
-          number: [parseInt(id)],
-          name,
-        }),
-      },
-    );
+    try {
+      const response = await fetch(
+        'http://localhost:4000/api/v1/users/check-id',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            role:
+              activeTab === 'Teacher'
+                ? 'teacher'
+                : activeTab === 'Student'
+                  ? 'student'
+                  : 'parent',
+            number: [parseInt(id)],
+            name,
+          }),
+        },
+      );
 
-    if (!response.ok) throw new Error(response.statusText);
+      if (!response.ok) throw new Error(response.statusText);
 
-    const { role, linked }: { role: string; linked: number } =
-      await response.json();
-    push(
-      `/auth/info?role=${role}&linked=${encodeURIComponent(linked)}&kakaoId=${encodeURIComponent(kakaoId)}`,
-    );
+      const { role, linked }: { role: string; linked: number } =
+        await response.json();
+      push(
+        `/auth/info?role=${role}&linked=${encodeURIComponent(linked)}&kakaoId=${encodeURIComponent(kakaoId)}`,
+      );
+    } catch (error) {
+      console.error(error instanceof Error ? error.message : String(error));
+    }
   };
 
   const isFormValid = () => {
