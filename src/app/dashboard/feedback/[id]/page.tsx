@@ -1,4 +1,4 @@
-import type { IdParams } from 'types';
+import type { AsyncIdParams } from 'types';
 
 import { DashboardContentBox } from 'layouts';
 
@@ -15,7 +15,7 @@ type RemarkData = {
   date: string;
 };
 
-export async function generateMetadata(props: { params: IdParams }) {
+export async function generateMetadata(props: { params: AsyncIdParams }) {
   const params = await props.params;
   const { id } = params;
 
@@ -72,7 +72,7 @@ const optionsFromGradeData = {
   },
 };
 
-export default async function FeedBack(props: { params: IdParams }) {
+export default async function FeedBack(props: { params: AsyncIdParams }) {
   const params = await props.params;
   const { id } = params;
 
