@@ -50,7 +50,7 @@ const StudentBasicInfo = ({ id }: Props) => {
           spacing="compact"
           className="ml-auto"
         />
-        <div className="mt-2 h-36 w-36">
+        <div className="mt-2 h-28 w-28">
           <ProfileImg className="h-full w-full" />
         </div>
 

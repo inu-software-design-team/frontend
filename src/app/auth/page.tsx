@@ -8,21 +8,6 @@ import { Input } from 'components';
 
 type Role = 'Teacher' | 'Student' | 'Parents';
 
-const dummyData: Record<Role, { id: string; name: string }[]> = {
-  Teacher: [
-    { id: 'T001', name: '김교사' },
-    { id: 'T002', name: '이교사' },
-  ],
-  Student: [
-    { id: 'S001', name: '홍길동' },
-    { id: 'S002', name: '김철수' },
-  ],
-  Parents: [
-    { id: 'P001', name: '박학부모' },
-    { id: 'P002', name: '최학부모' },
-  ],
-};
-
 export default function Auth() {
   const searchParams = useSearchParams();
   const kakaoId = searchParams.get('kakaoId') ?? '';
@@ -41,12 +26,21 @@ export default function Auth() {
 
   const { push, replace } = useRouter();
 
-  const isValidUser = (role: Role, id: string, name: string): boolean => {
-    const trimmedId = id.trim();
-    const trimmedName = name.trim();
-    return dummyData[role].some(
-      user => user.id === trimmedId && user.name === trimmedName,
-    );
+  const checkUserId = async (role: Role, id: string, name: string) => {
+    const res = await fetch('http://localhost:4000/api/v1/users/check-id', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ role, id, name }),
+    });
+
+    if (!res.ok) {
+      const error = await res.json();
+      throw new Error(error.message || '사용자 인증 실패');
+    }
+
+    return await res.json();
   };
 
   const handleSignup = async () => {
@@ -76,9 +70,12 @@ export default function Auth() {
       return;
     }
 
-    if (!isValidUser(activeTab, id, name)) {
-      setErrors({ id: '', name: '입력하신 정보가 존재하지 않습니다.' });
-      return;
+    try {
+      await checkUserId(activeTab, id, name);
+      setErrors({ id: '', name: '' });
+      router.push(`/auth/info?role=${activeTab}&id=${encodeURIComponent(id)}`);
+    } catch (error: any) {
+      setErrors({ id: '', name: error.message || '인증 실패' });
     }
 
     setErrors({ id: '', name: '' });
