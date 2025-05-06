@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import type { ElementStatus, WithElementSize } from 'types';
 
@@ -40,6 +40,24 @@ const SelectBox = ({
     <form
       {...props}
       data-status={status}
+      ref={useCallback(
+        (node: HTMLFormElement | null) => {
+          if (status === 'disabled') return;
+
+          function onClickOutside(event: MouseEvent) {
+            if (
+              node &&
+              event.target instanceof Node &&
+              !node.contains(event.target)
+            )
+              setIsDropdownOpen(false);
+          }
+
+          document.addEventListener('click', onClickOutside);
+          return () => document.removeEventListener('click', onClickOutside);
+        },
+        [status],
+      )}
       onClick={e => {
         if (status === 'disabled') {
           e.preventDefault();
@@ -57,6 +75,7 @@ const SelectBox = ({
         className={`shadow-border bg-default flex cursor-pointer items-center gap-x-4 rounded-md px-4 py-3 transition-shadow ${isDropdownOpen ? '' : 'shadow-tertiary'}`}
       >
         <input
+          disabled={status === 'disabled'}
           readOnly
           id="select"
           value={options.find(({ id }) => id === selectedId)?.value ?? ''}
