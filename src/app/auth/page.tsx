@@ -58,6 +58,9 @@ export default function Auth() {
         'http://localhost:4000/api/v1/users/check-id',
         {
           method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
           body: JSON.stringify({
             role:
               activeTab === 'Teacher'
