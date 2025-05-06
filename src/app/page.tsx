@@ -1,5 +1,3 @@
-import Link from 'next/link';
-
 import { Logo, 카카오 } from 'assets';
 
 export default function Start() {
@@ -11,12 +9,12 @@ export default function Start() {
       <div className="flex w-full justify-center">
         <div className="flex w-full justify-center gap-8">
           {/* 카카오 로그인 API 호출 */}
-          <Link
+          <a
             href="http://localhost:4000/api/v1/users/kakao/login"
             className="w-72"
           >
             <카카오 className="size-full" />
-          </Link>
+          </a>
         </div>
       </div>
     </div>
