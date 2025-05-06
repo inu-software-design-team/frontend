@@ -10,39 +10,19 @@ export const middleware = async (request: NextRequest) => {
   const cookieStore = await cookies();
   const sessionId = cookieStore.get('connect.sid')?.value ?? '';
 
-  if (sessionId.length > 0) {
-    try {
-      const response = await fetch(
-        'http://localhost:4000/api/v1/users/session-check',
-        {
-          headers: {
-            Cookie: cookieStore.toString(),
-          },
-        },
-      );
-
-      const res = await response.json();
-      console.log(res);
-    } catch (error) {
-      console.error(error instanceof Error ? error.message : String(error));
-    }
-  }
-
-  if (pathname === '/dashboard' && sessionId.length === 0) {
-    const cookieStore = await cookies();
-
+  if (pathname === '/dashboard' && sessionId.length > 0) {
     try {
       const response = await fetch(
         'http://localhost:4000/api/v1/users/csrf-token',
         {
           headers: {
-            Cookie: cookieStore.toString(),
+            Cookie: `connect.sid=${sessionId}`,
           },
         },
       );
 
-      const { csrfToken } = await response.json();
-      console.log(csrfToken);
+      const res = await response.json();
+      console.log(`csrf 토큰 응답 : ${res}`);
     } catch (error) {
       console.error(error instanceof Error ? error.message : String(error));
     }
