@@ -6,6 +6,7 @@ interface Props {
   id: string;
 }
 
+
 type RemarkData = {
   id: string;
   year: number;
@@ -30,7 +31,7 @@ const dummyGradeData: RemarkData[] = Array.from({ length: 4 }, (_, i) => {
   const day = 6 + i;
   const reasons = ['성적', '출결/태도'];
   const reason = reasons[i % reasons.length];
-  
+
   return {
     id: crypto.randomUUID(),
     year: 2025,
@@ -60,6 +61,7 @@ const optionsFromGradeData = {
       ...Array.from(new Set(dummyGradeData.map(d => d.semester.toString()))).map(
         value => ({ id: crypto.randomUUID(), value }),
       ),
+
     ],
   },
   subject: {
@@ -129,4 +131,3 @@ export default async function FeedBack(props: { params: IdParams }) {
     </DashboardContentBox>
   );
 };
-
