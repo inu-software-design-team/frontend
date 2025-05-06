@@ -116,11 +116,11 @@ export default async function FeedBack(props: { params: IdParams }) {
               <p className="text-[#4B89DC] mr-1.5">{item.reason}</p>
               <p className="text-lg font-semibold">ㆍ  {item.title}</p>
             </div>    
-            <p className="text-sm mt-6">{item.content}</p>
-            <div className="flex flex-row text-center items-center mt-8">
-              <p className="text-black/40 text-xs mr-4">작성자 </p>
-              <p className="text-sm"> {item.author}</p>
-              <p className="text-black/40 text-sm ml-auto">{item.date}</p>
+            <p className=" mt-6">{item.content}</p>
+            <div className="flex flex-row text-center items-center mt-8 text-sm">
+              <p className="text-black/40 mr-4">작성자 </p>
+              <p> {item.author}</p>
+              <p className="text-black/40 ml-auto">{item.date}</p>
             </div>      
           </div>
         </div>
