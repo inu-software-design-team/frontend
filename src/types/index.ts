@@ -25,13 +25,14 @@ export interface WithElementSize {
   size?: ElementSize;
 }
 
-export type IconComponent = React.FunctionComponent<
-  React.SVGProps<SVGSVGElement>
->;
-export type WithIconComponent<K extends string = 'icon'> = Partial<
-  Record<K, IconComponent>
->;
-
-export type IdParams = Promise<{
+export type IdParams = {
   id: string;
-}>;
+};
+export type AsyncIdParams = Promise<IdParams>;
+
+export type WithLinkNavigation = {
+  href?: {
+    pathname: string;
+    replace?: boolean;
+  };
+};
