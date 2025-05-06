@@ -81,7 +81,7 @@ export default async function FeedBack(props: { params: IdParams }) {
   const { id } = params;
   
   return (
-    <DashboardContentBox>
+    <>
     <div className="flex w-full justify-between mb-4">
       <div className="flex w-full flex-col gap-y-1">
         <strong className="text-title4">이름</strong>
@@ -128,6 +128,6 @@ export default async function FeedBack(props: { params: IdParams }) {
         </div>
       ))}
     </div>
-    </DashboardContentBox>
+    </>
   );
 };

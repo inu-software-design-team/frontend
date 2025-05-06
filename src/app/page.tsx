@@ -12,12 +12,6 @@ export default function Start() {
           <a href="http://localhost:4000/api/v1/users/kakao/login" className="w-72">
              <카카오 className="size-full" />
           </a>
-          <Link
-            href="http://localhost:4000/api/v1/users/kakao/login"
-            className="w-72"
-          >
-            <카카오 className="size-full" />
-          </Link>
         </div>
       </div>
     </div>
