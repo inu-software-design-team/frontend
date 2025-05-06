@@ -48,23 +48,20 @@ export default function Info() {
       return;
     }
 
-    const response = await fetch(
-      'http://localhost:4000/api/v1/users/register',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          role,
-          linked: parseInt(linked),
-          kakaoId,
-          email,
-          phone,
-          address,
-        }),
+    const response = await fetch('http://localhost:4000/api/v1/users/sign-up', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
       },
-    );
+      body: JSON.stringify({
+        role,
+        linked: parseInt(linked),
+        kakaoId,
+        email,
+        phone,
+        address,
+      }),
+    });
 
     if (!response.ok) throw new Error(response.statusText);
     // 성공적으로 처리 후 리디렉션
