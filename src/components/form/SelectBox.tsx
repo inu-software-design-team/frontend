@@ -2,8 +2,6 @@
 
 import { useCallback, useEffect, useState } from 'react';
 
-import { Check, ChevronDown } from 'assets/icons';
-
 import type { ElementStatus, WithElementSize } from 'types';
 
 import { Icon } from 'components/ui';
@@ -67,7 +65,7 @@ const SelectBox = ({
         setIsDropdownOpen(prev => !prev);
         props.onClick?.(e);
       }}
-      className={`relative w-full space-y-1 ${size === 'sm' ? '**:text-body3' : size === 'lg' ? '**:text-body1' : '**:text-body2'} ${props.className ?? ''}`}
+      className={`relative flex w-full flex-col gap-y-1 ${size === 'sm' ? '**:text-body3' : size === 'lg' ? '**:text-body1' : '**:text-body2'} ${props.className ?? ''}`}
     >
       <label
         htmlFor="select"
@@ -89,7 +87,7 @@ const SelectBox = ({
           className="pointer-events-none w-full outline-none"
         />
         <Icon
-          src={ChevronDown}
+          src="chevron_down"
           size={16}
           className={`stroke-current transition-transform ${
             isDropdownOpen ? 'rotate-180' : ''
@@ -113,7 +111,7 @@ const SelectBox = ({
             >
               {value}
               <Icon
-                src={Check}
+                src="check"
                 size={16}
                 className={`stroke-current ${id === selectedId ? '' : 'invisible'}`}
               />

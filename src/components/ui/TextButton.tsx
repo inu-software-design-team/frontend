@@ -2,15 +2,14 @@
 
 import { useRouter } from 'next/navigation';
 
-import type { WithIconComponent } from 'types';
-import type { ButtonProps } from 'types/ui';
+import type { ButtonProps, WithIconName } from 'types/ui';
 
 import Icon from './Icon';
 import Spinner from './Spinner';
 
 interface TextButtonProps
   extends ButtonProps,
-    WithIconComponent<'leftIcon' | 'rightIcon'> {
+    Partial<WithIconName<'leftIcon' | 'rightIcon'>> {
   label: string;
   variant?: 'contained' | 'outlined';
 }
@@ -24,11 +23,10 @@ const TextButton = ({
   variant = 'contained',
   color = 'default',
   spacing = 'normal',
-  href = '',
   ...props
 }: TextButtonProps) => {
   const iconSize = size === 'sm' ? 14 : size === 'lg' ? 18 : 16;
-  const { push } = useRouter();
+  const { push, replace } = useRouter();
 
   return (
     <button
@@ -38,11 +36,19 @@ const TextButton = ({
       disabled={status === 'disabled'}
       data-status={status}
       onClick={e => {
-        if (status === 'disabled' || status === 'loading') e.preventDefault();
-        else {
-          if (href.length > 0) push(href, { scroll: false });
-          props.onClick?.(e);
+        if (status === 'disabled' || status === 'loading') {
+          e.preventDefault();
+          return;
         }
+        props.onClick?.(e);
+
+        if (!props.href) return;
+
+        const { pathname } = props.href;
+        const shouldReplaceHistory = props.href.replace ?? false;
+
+        if (shouldReplaceHistory) replace(pathname);
+        else push(pathname);
       }}
       className={`flex items-center justify-center rounded-md text-center transition-all ${
         variant === 'outlined'

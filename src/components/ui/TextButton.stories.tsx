@@ -1,8 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { fn } from '@storybook/test';
 
-import { Check } from 'assets/icons';
-
 import TextButton from './TextButton';
 
 const meta = {
@@ -42,14 +40,14 @@ export const ContainedWithoutIcon: Story = {
 export const ContainedWithLeftIcon: Story = {
   args: {
     label: '왼쪽에 아이콘 있는 채우기 버튼',
-    leftIcon: Check,
+    leftIcon: 'check',
   },
 };
 
 export const ContainedWithRightIcon: Story = {
   args: {
     label: '오른쪽에 아이콘 있는 채우기 버튼',
-    rightIcon: Check,
+    rightIcon: 'check',
   },
 };
 
@@ -64,7 +62,7 @@ export const OutlinedWithLeftIcon: Story = {
   args: {
     label: '왼쪽에 아이콘 있는 라인 버튼',
     variant: 'outlined',
-    leftIcon: Check,
+    leftIcon: 'check',
   },
 };
 
@@ -72,6 +70,6 @@ export const OutlinedWithRightIcon: Story = {
   args: {
     label: '오른쪽에 아이콘 있는 라인 버튼',
     variant: 'outlined',
-    rightIcon: Check,
+    rightIcon: 'check',
   },
 };

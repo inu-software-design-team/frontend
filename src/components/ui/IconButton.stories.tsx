@@ -1,8 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { fn } from '@storybook/test';
 
-import { Menu } from 'assets/icons';
-
 import IconButton from './IconButton';
 
 const meta = {
@@ -15,7 +13,7 @@ const meta = {
     color: 'default',
     spacing: 'normal',
     shape: 'square',
-    icon: Menu,
+    icon: 'menu',
     size: 'md',
     onClick: fn(),
   },
