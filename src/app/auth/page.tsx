@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import { Input } from 'components';
 
@@ -24,6 +24,9 @@ const dummyData: Record<Role, { id: string; name: string }[]> = {
 };
 
 export default function Auth() {
+  const searchParams = useSearchParams();
+  const kakaoId = searchParams.get('kakaoId') ?? '';
+
   const [activeTab, setActiveTab] = useState<Role>('Teacher');
   const [teacherId, setTeacherId] = useState('');
   const [teacherName, setTeacherName] = useState('');
@@ -36,7 +39,7 @@ export default function Auth() {
     name: '',
   });
 
-  const router = useRouter();
+  const { push, replace } = useRouter();
 
   const isValidUser = (role: Role, id: string, name: string): boolean => {
     const trimmedId = id.trim();
@@ -46,7 +49,7 @@ export default function Auth() {
     );
   };
 
-  const handleSignup = () => {
+  const handleSignup = async () => {
     let id = '',
       name = '';
     const newErrors = { id: '', name: '' };
@@ -80,7 +83,30 @@ export default function Auth() {
 
     setErrors({ id: '', name: '' });
 
-    router.push(`/auth/info?role=${activeTab}&id=${encodeURIComponent(id)}`);
+    const response = await fetch(
+      'http://localhost:4000/api/v1/users/check-id',
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          role:
+            activeTab === 'Teacher'
+              ? 'teacher'
+              : activeTab === 'Student'
+                ? 'student'
+                : 'parent',
+          number: [parseInt(id)],
+          name,
+        }),
+      },
+    );
+
+    if (!response.ok) throw new Error(response.statusText);
+
+    const { role, linked }: { role: string; linked: number } =
+      await response.json();
+    push(
+      `/auth/info?role=${role}&linked=${encodeURIComponent(linked)}&kakaoId=${encodeURIComponent(kakaoId)}`,
+    );
   };
 
   const isFormValid = () => {
@@ -98,6 +124,10 @@ export default function Auth() {
     }
     return id && name;
   };
+
+  useEffect(() => {
+    if (kakaoId.length === 0) replace('/');
+  }, [kakaoId, replace]);
 
   return (
     <div className="flex h-[430px] w-md flex-col items-center rounded-[6px] border border-[#F1F5F9] bg-white p-4">

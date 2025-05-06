@@ -76,7 +76,7 @@ ${iconMapObject}
 
 const exportStatementsForDataIndex = [
   ...new Set([
-    "export * from './icon';",
+    "export * from './icon';\r",
     ...fs
       .readFileSync(DATA_INDEX_FILE)
       .toString()
