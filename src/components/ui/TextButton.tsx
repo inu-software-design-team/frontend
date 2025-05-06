@@ -26,7 +26,7 @@ const TextButton = ({
   ...props
 }: TextButtonProps) => {
   const iconSize = size === 'sm' ? 14 : size === 'lg' ? 18 : 16;
-  const { push } = useRouter();
+  const { push, replace } = useRouter();
 
   return (
     <button
@@ -36,11 +36,19 @@ const TextButton = ({
       disabled={status === 'disabled'}
       data-status={status}
       onClick={e => {
-        if (status === 'disabled' || status === 'loading') e.preventDefault();
-        else {
-          if (href.length > 0) push(href, { scroll: false });
-          props.onClick?.(e);
+        if (status === 'disabled' || status === 'loading') {
+          e.preventDefault();
+          return;
         }
+        props.onClick?.(e);
+
+        if (!props.href) return;
+
+        const { pathname } = props.href;
+        const shouldReplaceHistory = props.href.replace ?? false;
+
+        if (shouldReplaceHistory) replace(pathname);
+        else push(pathname);
       }}
       className={`flex items-center justify-center rounded-md text-center transition-all ${
         variant === 'outlined'
