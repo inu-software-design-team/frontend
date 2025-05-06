@@ -27,6 +27,9 @@ import Share from './share.svg';
 import Sort from './sort.svg';
 import User from './user.svg';
 import X from './x.svg';
+import ProfileImg from './profileimg.svg';
+import Call from './call.svg';
+import Address from './address.svg';
 
 export {
   ArrowRight,
@@ -58,4 +61,7 @@ export {
   Sort,
   User,
   X,
+  ProfileImg,
+  Call,
+  Address,
 };

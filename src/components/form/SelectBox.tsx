@@ -1,11 +1,8 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
-
+import { useState, useEffect, useCallback } from 'react';
 import { Check, ChevronDown } from 'assets/icons';
-
 import type { ElementStatus, WithElementSize } from 'types';
-
 import { Icon } from 'components/ui';
 
 interface SelectBoxProps
@@ -14,7 +11,7 @@ interface SelectBoxProps
   status?: Exclude<ElementStatus, 'active' | 'loading'>;
   label: string;
   options: { id: string; value: string; default?: boolean }[];
-  onChange?: (id: string) => void;
+  onChange?: (id: string) => void;  // id를 받도록 정의
 }
 
 const SelectBox = ({
@@ -33,67 +30,39 @@ const SelectBox = ({
   );
 
   useEffect(() => {
-    if (status !== 'disabled' && selectedId) onChange?.(selectedId);
+    if (status !== 'disabled' && selectedId) {
+      onChange?.(selectedId);  // 선택된 id를 부모 컴포넌트로 전달
+    }
   }, [status, selectedId, onChange]);
 
   return (
     <form
       {...props}
       data-status={status}
-      ref={useCallback(
-        (node: HTMLFormElement | null) => {
-          if (status === 'disabled') return;
-
-          function onClickOutside(event: MouseEvent) {
-            if (
-              node &&
-              event.target instanceof Node &&
-              !node.contains(event.target)
-            )
-              setIsDropdownOpen(false);
-          }
-
-          document.addEventListener('click', onClickOutside);
-          return () => document.removeEventListener('click', onClickOutside);
-        },
-        [status],
-      )}
       onClick={e => {
         if (status === 'disabled') {
           e.preventDefault();
           return;
         }
-
         setIsDropdownOpen(prev => !prev);
         props.onClick?.(e);
       }}
       className={`relative w-full space-y-1 ${size === 'sm' ? '**:text-body3' : size === 'lg' ? '**:text-body1' : '**:text-body2'} ${props.className ?? ''}`}
     >
-      <label
-        htmlFor="select"
-        onClick={e => e.stopPropagation()}
-        className="block w-full"
-      >
+      <label htmlFor="select" className="block w-full">
         {label}
       </label>
-      <div
-        className={`shadow-border bg-default flex cursor-pointer items-center gap-x-4 rounded-md px-4 py-3 transition-shadow ${
-          isDropdownOpen ? '' : 'shadow-tertiary'
-        }`}
-      >
+      <div className={`shadow-border bg-default flex cursor-pointer items-center gap-x-4 rounded-md px-4 py-3 transition-shadow ${isDropdownOpen ? '' : 'shadow-tertiary'}`}>
         <input
           readOnly
           id="select"
-          disabled={status === 'disabled'}
           value={options.find(({ id }) => id === selectedId)?.value ?? ''}
           className="pointer-events-none w-full outline-none"
         />
         <Icon
           src={ChevronDown}
           size={16}
-          className={`stroke-current transition-transform ${
-            isDropdownOpen ? 'rotate-180' : ''
-          }`}
+          className={`stroke-current transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`}
         />
       </div>
       {options.length > 0 && (
@@ -104,12 +73,8 @@ const SelectBox = ({
             <li
               key={id}
               id={id}
-              onClick={() => setSelectedId(id)}
-              className={`hover:bg-secondary flex w-full cursor-pointer items-center justify-between gap-x-2 rounded-md px-4 py-3 transition-colors ${
-                id === selectedId
-                  ? 'bg-secondary font-semibold'
-                  : 'hover:bg-secondary'
-              }`}
+              onClick={() => setSelectedId(id)}  // id를 setSelectedId로 설정
+              className={`hover:bg-secondary flex w-full cursor-pointer items-center justify-between gap-x-2 rounded-md px-4 py-3 transition-colors ${id === selectedId ? 'bg-secondary font-semibold' : 'hover:bg-secondary'}`}
             >
               {value}
               <Icon

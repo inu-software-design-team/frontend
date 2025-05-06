@@ -54,6 +54,8 @@
   --text-title3--line-height: var(--leading-normral);
   --text-title4: var(--text-xl);
   --text-title4--line-height: var(--leading-normral);
+  --text-title5: var(--text-lg);
+  --text-title5--line-height: var(--leading-normral);
 
   --text-body1: var(--text-lg);
   --text-body1--line-height: var(--text-lg--line-height);
