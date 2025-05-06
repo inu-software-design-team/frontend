@@ -47,9 +47,10 @@ const Table = <T extends TableData>({
                       headerAlign === 'left'
                         ? 'text-left'
                         : headerAlign === 'right'
-                          ? 'text-right'
-                          : 'text-center'
+                        ? 'text-right'
+                        : 'text-center'
                     }`}
+                    style={{ width: '150px' }} // 모든 열에 동일한 너비 적용
                   >
                     {label}
                   </th>
@@ -65,6 +66,7 @@ const Table = <T extends TableData>({
                 <td
                   key={key}
                   className="text-center text-pretty whitespace-pre"
+                  style={{ width: '150px' }} // 모든 열에 동일한 너비 적용
                 >
                   {render?.(row[key], row, rowIndex) ?? row[key]}
                 </td>
@@ -78,3 +80,4 @@ const Table = <T extends TableData>({
 };
 
 export default Table;
+

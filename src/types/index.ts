@@ -19,7 +19,7 @@ export interface WithElementSpacing {
   spacing?: ElementSpacing;
 }
 
-export const ELEMENT_SIZES = ['sm', 'md', 'lg'] as const;
+export const ELEMENT_SIZES = ['xs', 'sm', 'md', 'lg'] as const;
 export type ElementSize = (typeof ELEMENT_SIZES)[number];
 export interface WithElementSize {
   size?: ElementSize;
@@ -32,6 +32,6 @@ export type WithIconComponent<K extends string = 'icon'> = Partial<
   Record<K, IconComponent>
 >;
 
-export type IdParams = Promise<{
+export type IdParams = {
   id: string;
-}>;
+};
