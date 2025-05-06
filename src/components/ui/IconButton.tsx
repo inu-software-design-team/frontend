@@ -67,29 +67,38 @@ const IconButton = ({
                 ? 'hover:not-disabled:bg-danger-light-hover active:bg-danger-light-hover stroke-danger'
                 : 'hover:not-disabled:bg-secondary active:bg-secondary stroke-current'
       } ${
-        size === 'sm'
+        size === 'xs'
           ? spacing === 'compact'
-            ? 'p-1.5'
+            ? 'p-1'
             : spacing === 'loose'
-              ? 'p-3.5'
-              : 'p-2.5'
-          : size === 'lg'
-            ? spacing === 'compact'
               ? 'p-2.5'
+              : 'p-2'
+          : size === 'sm'
+            ? spacing === 'compact'
+              ? 'p-1.5'
               : spacing === 'loose'
-                ? 'p-4.5'
-                : 'p-3.5'
-            : spacing === 'compact'
-              ? 'p-2'
-              : spacing === 'loose'
-                ? 'p-4'
-                : 'p-3'
+                ? 'p-3.5'
+                : 'p-2.5'
+            : size === 'lg'
+              ? spacing === 'compact'
+                ? 'p-2.5'
+                : spacing === 'loose'
+                  ? 'p-4.5'
+                  : 'p-3.5'
+              : spacing === 'compact'
+                ? 'p-2'
+                : spacing === 'loose'
+                  ? 'p-4'
+                  : 'p-3'
       } ${
         shape === 'circle' ? 'rounded-full' : 'rounded-md'
       } ${props.className ?? ''}`}
     >
       {status === 'loading' && <Spinner />}
-      <Icon src={icon} size={size === 'sm' ? 20 : size === 'lg' ? 28 : 24} />
+      <Icon
+        src={icon}
+        size={size === 'xs' ? 16 : size === 'sm' ? 20 : size === 'lg' ? 28 : 24}
+      />
     </button>
   );
 };

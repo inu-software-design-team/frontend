@@ -19,7 +19,7 @@ export interface WithElementSpacing {
   spacing?: ElementSpacing;
 }
 
-export const ELEMENT_SIZES = ['sm', 'md', 'lg'] as const;
+export const ELEMENT_SIZES = ['xs', 'sm', 'md', 'lg'] as const;
 export type ElementSize = (typeof ELEMENT_SIZES)[number];
 export interface WithElementSize {
   size?: ElementSize;

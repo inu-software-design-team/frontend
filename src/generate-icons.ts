@@ -61,18 +61,18 @@ console.log(`✅ 아이콘 컴포넌트가 ${iconFiles.length}개 생성되었�
  */
 
 const importStatementsForMap = `import {
-    ${iconFiles.map(name => pascalCase(name)).join(',\n  ')},
-  } from 'assets/icons';`;
+  ${iconFiles.map(name => pascalCase(name)).join(',\n  ')},
+} from 'assets/icons';`;
 const iconMapObject = `export const ICONS = {
   ${iconFiles.map(name => `${/[-\s]/.test(name) ? `'${name}'` : name}: ${pascalCase(name)}`).join(',\n  ')}
 } as const;
 `;
 
 const dataIconContent = `// 자동 생성된 파일입니다. 수정하지 마세요.
-  ${importStatementsForMap}
+${importStatementsForMap}
   
-  ${iconMapObject}
-  `;
+${iconMapObject}
+`;
 
 const exportStatementsForDataIndex = Array.from(
   new Set([
@@ -108,11 +108,11 @@ const exportStatementsForType = [
 
 if (exportStatementsForType.length > 0) {
   const iconTypeContent = `${importStatementsForType}
-  
-    ${iconTypeOriginalContent}
-    // 자동 생성된 파일입니다. 수정하지 마세요.
-    ${exportStatementsForType.join('\n')}
-    `;
+
+${iconTypeOriginalContent}
+// 자동 생성된 파일입니다. 수정하지 마세요.
+${exportStatementsForType.join('\n')}
+`;
 
   fs.writeFileSync(ICON_TYPE_FILE, iconTypeContent);
   console.log(`✅ 아이콘 타입이 생성되었습니다.\n`);

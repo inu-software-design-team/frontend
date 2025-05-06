@@ -1,7 +1,9 @@
 // 자동 생성된 파일입니다. 수정하지 마세요.
+import Address from './address.svg';
 import ArrowRight from './arrow_right.svg';
 import Bell from './bell.svg';
 import Calendar from './calendar.svg';
+import Call from './call.svg';
 import Chart from './chart.svg';
 import Check from './check.svg';
 import ChevronDown from './chevron_down.svg';
@@ -22,6 +24,7 @@ import Loader from './loader.svg';
 import Mail from './mail.svg';
 import Menu from './menu.svg';
 import Plus from './plus.svg';
+import ProfileImg from './profile_img.svg';
 import Refresh from './refresh.svg';
 import Search from './search.svg';
 import Share from './share.svg';
@@ -30,9 +33,11 @@ import User from './user.svg';
 import X from './x.svg';
 
 export {
+  Address,
   ArrowRight,
   Bell,
   Calendar,
+  Call,
   Chart,
   Check,
   ChevronDown,
@@ -53,6 +58,7 @@ export {
   Mail,
   Menu,
   Plus,
+  ProfileImg,
   Refresh,
   Search,
   Share,

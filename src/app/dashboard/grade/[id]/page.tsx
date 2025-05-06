@@ -95,9 +95,7 @@ const optionsFromGradeData = {
 export async function generateMetadata({ params }: { params: AsyncIdParams }) {
   const { id } = await params;
 
-  return {
-    id,
-  };
+  console.log(id);
 }
 
 export default async function Grade({ params }: { params: AsyncIdParams }) {

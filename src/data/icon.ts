@@ -1,8 +1,10 @@
 // 자동 생성된 파일입니다. 수정하지 마세요.
-  import {
-    ArrowRight,
+import {
+  Address,
+  ArrowRight,
   Bell,
   Calendar,
+  Call,
   Chart,
   Check,
   ChevronDown,
@@ -23,18 +25,21 @@
   Mail,
   Menu,
   Plus,
+  ProfileImg,
   Refresh,
   Search,
   Share,
   Sort,
   User,
   X,
-  } from 'assets/icons';
+} from 'assets/icons';
   
-  export const ICONS = {
+export const ICONS = {
+  address: Address,
   arrow_right: ArrowRight,
   bell: Bell,
   calendar: Calendar,
+  call: Call,
   chart: Chart,
   check: Check,
   chevron_down: ChevronDown,
@@ -55,6 +60,7 @@
   mail: Mail,
   menu: Menu,
   plus: Plus,
+  profile_img: ProfileImg,
   refresh: Refresh,
   search: Search,
   share: Share,
@@ -63,4 +69,3 @@
   x: X
 } as const;
 
-  

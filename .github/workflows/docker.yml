@@ -31,7 +31,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: rlarltn/cosy:latest
+          tags: rlarltn/cosy_frontend:latest
 
       # 5. deploy-repo로 dispatch 이벤트 전송
       - name: Trigger deploy-repo dispatch
