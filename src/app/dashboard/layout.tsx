@@ -1,6 +1,6 @@
 import type { StudentInfo } from 'types';
 
-import { Header, PageHeader, SideNav } from 'layouts';
+import { DashboardContentBox, Header, PageHeader, SideNav } from 'layouts';
 
 import { StudentList } from 'features/students';
 
@@ -26,7 +26,7 @@ export default function DashboardLayout({
           <PageHeader />
           <section className="-mt-28 flex w-full gap-x-8 px-8">
             <StudentList initialData={dummyData} />
-            {children}
+            <DashboardContentBox>{children}</DashboardContentBox>
           </section>
         </main>
       </div>

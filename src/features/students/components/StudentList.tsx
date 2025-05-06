@@ -4,8 +4,6 @@ import { useCallback, useEffect, useState } from 'react';
 
 import { usePathname, useSearchParams } from 'next/navigation';
 
-import { Filter, Sort } from 'assets/icons';
-
 import type { StudentInfo } from 'types';
 
 import { IconButton } from 'components/ui';
@@ -52,13 +50,13 @@ const StudentList = ({ initialData = [] }: StudentListProps) => {
         <SearchBox pathname={pathname} />
         <div className="flex w-full justify-end gap-x-2">
           <IconButton
-            icon={Filter}
+            icon="filter"
             variant="outlined"
             color="primary"
             spacing="compact"
           />
           <IconButton
-            icon={Sort}
+            icon="sort"
             variant="outlined"
             color="primary"
             spacing="compact"

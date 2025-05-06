@@ -1,8 +1,4 @@
-import { Edit } from 'assets/icons';
-
-import type { IdParams } from 'types';
-
-import { DashboardContentBox } from 'layouts';
+import type { AsyncIdParams } from 'types';
 
 import { SelectBox } from 'components/form';
 import { IconButton, Table } from 'components/ui';
@@ -96,42 +92,45 @@ const optionsFromGradeData = {
   },
 };
 
-export async function generateMetadata(props: { params: IdParams }) {
-  const params = await props.params;
-  const { id } = params;
+export async function generateMetadata({ params }: { params: AsyncIdParams }) {
+  const { id } = await params;
 
-  return {
-    id,
-  };
+  console.log(id);
 }
 
-export default async function Grade(props: { params: IdParams }) {
-  const params = await props.params;
-  const { id } = params;
+export default async function Grade({ params }: { params: AsyncIdParams }) {
+  const { id } = await params;
 
   console.log(id);
 
   return (
-    <DashboardContentBox>
+    <>
       <div className="flex w-full justify-between">
         <div className="flex w-full flex-col gap-y-1">
           <strong className="text-title4">이름</strong>
           <p>{`${id[0]}학년 ${parseInt(id.substring(1, 3))}반 ${parseInt(id.substring(3))}번`}</p>
         </div>
         <IconButton
-          icon={Edit}
+          icon="edit"
           size="sm"
           variant="outlined"
           color="primary"
           spacing="compact"
+          href={{
+            pathname: `/dashboard/grade/${id}/manage`,
+          }}
         />
       </div>
       <div className="h-[calc(100vh-(4rem+8rem)-(2rem*2)-3.625rem-3rem)] w-full space-y-8 overflow-y-auto">
-        <div className="flex w-full">
+        <div className="flex w-full flex-wrap items-end justify-between">
           <div className="flex items-center gap-x-2 *:w-40">
-            <SelectBox size="sm" {...optionsFromGradeData.year} />
-            <SelectBox size="sm" {...optionsFromGradeData.semester} />
-            <SelectBox size="sm" {...optionsFromGradeData.subject} />
+            <SelectBox {...optionsFromGradeData.year} />
+            <SelectBox {...optionsFromGradeData.semester} />
+            <SelectBox {...optionsFromGradeData.subject} />
+          </div>
+          <div className="flex items-center gap-x-2">
+            <IconButton icon="filter" variant="outlined" color="primary" />
+            <IconButton icon="sort" variant="outlined" color="primary" />
           </div>
         </div>
         <Table
@@ -165,6 +164,6 @@ export default async function Grade(props: { params: IdParams }) {
           </ul>
         </div>
       </div>
-    </DashboardContentBox>
+    </>
   );
 }

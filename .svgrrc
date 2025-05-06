@@ -1,3 +1,8 @@
 {
-  "svgo": false
+  "svgo": true,
+  "svgoConfig": {
+    "plugins": [
+      "removeDimensions"
+    ]
+  }
 }

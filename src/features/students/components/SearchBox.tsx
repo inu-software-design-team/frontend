@@ -6,8 +6,6 @@ import { useRouter } from 'next/navigation';
 
 import { debounce } from 'es-toolkit';
 
-import { Search, X } from 'assets/icons';
-
 import { Icon, IconButton } from 'components/ui';
 
 interface SearchBoxProps {
@@ -54,7 +52,7 @@ const SearchBox = ({ pathname }: SearchBoxProps) => {
       }`}
     >
       <Icon
-        src={Search}
+        src="search"
         size={24}
         className="opacity-off block stroke-current"
       />
@@ -77,7 +75,7 @@ const SearchBox = ({ pathname }: SearchBoxProps) => {
         }`}
       />
       <IconButton
-        icon={X}
+        icon="x"
         size="sm"
         spacing="compact"
         shape="circle"

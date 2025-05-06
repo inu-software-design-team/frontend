@@ -47,60 +47,53 @@ const optionsFromGradeData = {
     label: '학기',
     options: [
       { id: crypto.randomUUID(), value: '전체' },
-      ...Array.from(new Set(dummyGradeData.map(d => d.semester.toString()))).map(
-        value => ({ id: crypto.randomUUID(), value }),
-      ),
+      ...Array.from(
+        new Set(dummyGradeData.map(d => d.semester.toString())),
+      ).map(value => ({ id: crypto.randomUUID(), value })),
     ],
   },
   subject: {
     label: '과목',
     options: [
       { id: crypto.randomUUID(), value: '전체' },
-      ...Array.from(new Set(dummyGradeData.map(d => d.subject))).map(subject => ({
-        id: crypto.randomUUID(),
-        value: subject,
-      })),
+      ...Array.from(new Set(dummyGradeData.map(d => d.subject))).map(
+        subject => ({
+          id: crypto.randomUUID(),
+          value: subject,
+        }),
+      ),
     ],
   },
 };
 
-const StudentRemarks = ({ id }: Props) => {
+const StudentRemarks = ({}: Props) => {
   return (
     <div className="flex flex-col">
-      <div className="flex flex-row w-full h-full items-center">
+      <div className="flex h-full w-full flex-row items-center">
         <div className="flex w-full">
           <div className="flex items-center gap-2">
-            <SelectBox
-              size="sm"
-              {...optionsFromGradeData.year}
-            />
-            <SelectBox
-              size="sm"
-              {...optionsFromGradeData.semester}
-            />
-            <SelectBox
-              size="sm"
-              {...optionsFromGradeData.subject}
-            />
+            <SelectBox size="sm" {...optionsFromGradeData.year} />
+            <SelectBox size="sm" {...optionsFromGradeData.semester} />
+            <SelectBox size="sm" {...optionsFromGradeData.subject} />
           </div>
         </div>
       </div>
       {dummyGradeData.map(item => (
-        <div 
-          key={item.id}  // Apply key here to the outer div
-          className="flex flex-col w-full rounded-[6px] p-4 border border-[#E6F0FB] mt-4"
+        <div
+          key={item.id} // Apply key here to the outer div
+          className="mt-4 flex w-full flex-col rounded-[6px] border border-[#E6F0FB] p-4"
         >
           <div className="mb-4">
-            <div className="flex flex-row text-center items-center">
-              <p className="text-[#4B89DC] mr-1.5">{item.subject}</p>
-              <p className="text-lg font-semibold">ㆍ  {item.title}</p>
-            </div>    
-            <p className="text-sm mt-6">{item.content}</p>
-            <div className="flex flex-row text-center items-center mt-8">
-              <p className="text-black/40 text-xs mr-4">작성자 </p>
+            <div className="flex flex-row items-center text-center">
+              <p className="mr-1.5 text-[#4B89DC]">{item.subject}</p>
+              <p className="text-lg font-semibold">ㆍ {item.title}</p>
+            </div>
+            <p className="mt-6 text-sm">{item.content}</p>
+            <div className="mt-8 flex flex-row items-center text-center">
+              <p className="mr-4 text-xs text-black/40">작성자 </p>
               <p className="text-sm"> {item.author}</p>
-              <p className="text-black/40 text-sm ml-auto">{item.date}</p>
-            </div>      
+              <p className="ml-auto text-sm text-black/40">{item.date}</p>
+            </div>
           </div>
         </div>
       ))}

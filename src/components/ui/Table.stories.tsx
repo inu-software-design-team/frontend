@@ -1,7 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { Clock } from 'assets/icons';
-
 import Icon from './Icon';
 import Table from './Table';
 
@@ -70,7 +68,7 @@ export const CustomRender: Story = {
         ) : (
           <div className="flex items-center justify-center gap-2">
             {value}
-            <Icon src={Clock} size={16} />
+            <Icon src="clock" size={16} />
           </div>
         ),
     })),

@@ -1,7 +1,5 @@
 import Link from 'next/link';
 
-import { CircleUser } from 'assets/icons';
-
 import { Icon } from 'components/ui';
 
 interface StudentCardProps {
@@ -31,7 +29,7 @@ const StudentCard = ({
       className={`flex w-full items-center gap-4 gap-x-4 rounded-md px-4 py-3 transition-colors ${pathname.includes(id) ? 'bg-primary-light-hover text-primary-hover stroke-primary-hover' : 'hover:not-[data-status="disabled"]:bg-secondary stroke-current'}`}
     >
       <Icon
-        src={CircleUser}
+        src="circle_user"
         size={48}
         className={pathname.includes(id) ? '*:first:fill-primary-hover' : ''}
       />

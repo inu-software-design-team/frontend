@@ -2,13 +2,17 @@ import type {
   WithElementSize,
   WithElementSpacing,
   WithElementStatus,
+  WithLinkNavigation,
 } from '..';
 
 export interface ButtonProps
-  extends Omit<React.ComponentPropsWithoutRef<'button'>, 'disabled'>,
+  extends Omit<
+      React.ComponentPropsWithoutRef<'button'>,
+      'children' | 'disabled'
+    >,
     WithElementStatus,
     WithElementSize,
-    WithElementSpacing {
+    WithElementSpacing,
+    WithLinkNavigation {
   color?: 'default' | 'primary' | 'danger';
-  href?: string;
 }

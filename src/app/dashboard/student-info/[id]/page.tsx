@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+
 import StudentInfo from '../components/studentinfo';
 
 export default function Page({ params }: { params: Promise<{ id: string }> }) {
@@ -9,14 +10,14 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
   // React.use to await params
   useEffect(() => {
     async function fetchParams() {
-      const resolvedParams = await params; 
-      setStudentId(resolvedParams.id); 
+      const resolvedParams = await params;
+      setStudentId(resolvedParams.id);
     }
     fetchParams();
-  }, [params]); 
+  }, [params]);
 
   if (!studentId) {
-    return null; 
+    return null;
   }
 
   return <StudentInfo id={studentId} />;
