@@ -55,7 +55,7 @@ export default function Info() {
       },
       body: JSON.stringify({
         role,
-        linked: parseInt(linked),
+        linked: [parseInt(linked)],
         kakaoId,
         email,
         phone,
