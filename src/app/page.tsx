@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { Logo, 카카오 } from 'assets';
 
 export default function Start() {
+  const { push } = useRouter();
+
   return (
     <div className="flex h-full w-full flex-col items-center justify-center gap-y-12">
       {/* 로고 */}
