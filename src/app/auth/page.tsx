@@ -26,23 +26,6 @@ export default function Auth() {
 
   const { push, replace } = useRouter();
 
-  const checkUserId = async (role: Role, id: string, name: string) => {
-    const res = await fetch('http://localhost:4000/api/v1/users/check-id', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ role, id, name }),
-    });
-
-    if (!res.ok) {
-      const error = await res.json();
-      throw new Error(error.message || '사용자 인증 실패');
-    }
-
-    return await res.json();
-  };
-
   const handleSignup = async () => {
     let id = '',
       name = '';
@@ -69,20 +52,6 @@ export default function Auth() {
       setErrors(newErrors);
       return;
     }
-
-    try {
-      await checkUserId(activeTab, id, name);
-      setErrors({ id: '', name: '' });
-      push(`/auth/info?role=${activeTab}&id=${encodeURIComponent(id)}`);
-    } catch (error: unknown) {
-      setErrors({
-        id: '',
-        name:
-          error instanceof Error ? error.message : String(error) || '인증 실패',
-      });
-    }
-
-    setErrors({ id: '', name: '' });
 
     const response = await fetch(
       'http://localhost:4000/api/v1/users/check-id',
