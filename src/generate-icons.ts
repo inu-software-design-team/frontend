@@ -74,8 +74,8 @@ ${importStatementsForMap}
 ${iconMapObject}
 `;
 
-const exportStatementsForDataIndex = Array.from(
-  new Set([
+const exportStatementsForDataIndex = [
+  ...new Set([
     "export * from './icon';",
     ...fs
       .readFileSync(DATA_INDEX_FILE)
@@ -83,7 +83,7 @@ const exportStatementsForDataIndex = Array.from(
       .split('\n')
       .filter(line => line),
   ]),
-).toSorted();
+];
 const dataIndexContent = `${exportStatementsForDataIndex.join('\n')}\n`;
 
 fs.writeFileSync(DATA_ICON_FILE, dataIconContent);
