@@ -73,9 +73,13 @@ export default function Auth() {
     try {
       await checkUserId(activeTab, id, name);
       setErrors({ id: '', name: '' });
-      router.push(`/auth/info?role=${activeTab}&id=${encodeURIComponent(id)}`);
-    } catch (error: any) {
-      setErrors({ id: '', name: error.message || '인증 실패' });
+      push(`/auth/info?role=${activeTab}&id=${encodeURIComponent(id)}`);
+    } catch (error: unknown) {
+      setErrors({
+        id: '',
+        name:
+          error instanceof Error ? error.message : String(error) || '인증 실패',
+      });
     }
 
     setErrors({ id: '', name: '' });
