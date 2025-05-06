@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 import { Logo, 카카오 } from 'assets';
 
 export default function Start() {
