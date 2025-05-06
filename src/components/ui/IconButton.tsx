@@ -1,11 +1,10 @@
-import type { WithIconComponent } from 'types';
-import type { ButtonProps } from 'types/ui';
+import type { ButtonProps, WithIconName } from 'types/ui';
 
 import Icon from './Icon';
 import Spinner from './Spinner';
 
 interface IconButtonProps
-  extends Required<WithIconComponent>,
+  extends WithIconName<'icon'>,
     Omit<ButtonProps, 'children' | 'href'> {
   variant?: 'contained' | 'outlined' | 'none';
   shape?: 'square' | 'circle';

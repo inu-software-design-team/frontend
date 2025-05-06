@@ -1,8 +1,8 @@
-import type { WithIconComponent } from 'types';
+import type { WithIconName } from 'types/ui';
 
 import { Icon } from 'components/ui';
 
-interface DashboardIntroBoxProps extends Required<WithIconComponent> {
+interface DashboardIntroBoxProps extends WithIconName<'icon'> {
   description: string;
 }
 

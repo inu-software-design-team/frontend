@@ -2,15 +2,14 @@
 
 import { useRouter } from 'next/navigation';
 
-import type { WithIconComponent } from 'types';
-import type { ButtonProps } from 'types/ui';
+import type { ButtonProps, WithIconName } from 'types/ui';
 
 import Icon from './Icon';
 import Spinner from './Spinner';
 
 interface TextButtonProps
   extends ButtonProps,
-    WithIconComponent<'leftIcon' | 'rightIcon'> {
+    Partial<WithIconName<'leftIcon' | 'rightIcon'>> {
   label: string;
   variant?: 'contained' | 'outlined';
 }
@@ -24,7 +23,6 @@ const TextButton = ({
   variant = 'contained',
   color = 'default',
   spacing = 'normal',
-  href = '',
   ...props
 }: TextButtonProps) => {
   const iconSize = size === 'sm' ? 14 : size === 'lg' ? 18 : 16;
