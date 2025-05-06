@@ -27,6 +27,7 @@ export default async function DashboardLayout({
       {
         headers: {
           Cookie: `connect.sid=${sessionId}`,
+          credentials: 'include',
         },
       },
     );
