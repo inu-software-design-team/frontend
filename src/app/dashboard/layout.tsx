@@ -25,9 +25,9 @@ export default async function DashboardLayout({
     const response = await fetch(
       'http://localhost:4000/api/v1/users/csrf-token',
       {
+        credentials: 'include',
         headers: {
           Cookie: `connect.sid=${sessionId}`,
-          credentials: 'include',
         },
       },
     );
