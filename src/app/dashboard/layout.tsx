@@ -24,7 +24,7 @@ export default async function DashboardLayout({
   if (sessionId.length > 0) {
     try {
       const response = await fetch(
-        'http://localhost:4000/api/v1/users/csrf-token',
+        'http://backend:4000/api/v1/users/csrf-token',
         {
           credentials: 'include',
         },
