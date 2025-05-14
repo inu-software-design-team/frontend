@@ -2,7 +2,13 @@ import { cookies } from 'next/headers';
 
 import type { StudentInfo } from 'types';
 
-import { DashboardContentBox, Header, PageHeader, SideNav } from 'layouts';
+import {
+  DashboardContentBox,
+  getNavConfig,
+  Header,
+  PageHeader,
+  SideNav,
+} from 'layouts';
 
 import { StudentList } from 'features/students';
 
@@ -43,8 +49,8 @@ export default async function DashboardLayout({
   return (
     <>
       <Header />
-      <div className="flex w-full">
-        <SideNav />
+      <div className="grid w-full grid-cols-[minmax(0,_max-content)_1fr] max-lg:grid-cols-1">
+        <SideNav initialNavConfig={await getNavConfig()} />
         <main className="w-full">
           <PageHeader />
           <section className="-mt-28 flex w-full gap-x-8 px-8">

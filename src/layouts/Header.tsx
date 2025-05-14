@@ -3,6 +3,7 @@
 import { HeaderLogo } from 'assets';
 
 import IconButton from '../components/ui/IconButton';
+import { getNavConfig, setNavConfig } from './actions';
 
 const Header = () => {
   const username = 'User';
@@ -14,10 +15,15 @@ const Header = () => {
           icon="menu"
           spacing="compact"
           size="md"
-          onClick={e => {
+          onClick={async e => {
             e.currentTarget.parentElement?.parentElement?.parentElement
               ?.querySelector('aside')
               ?.classList.toggle('minimized');
+
+            const savedNavConfig = await getNavConfig();
+            await setNavConfig(
+              savedNavConfig === 'minimized' ? 'default' : 'minimized',
+            );
           }}
         />
         <HeaderLogo name="로고" className="h-full" />
