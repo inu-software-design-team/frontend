@@ -7,13 +7,13 @@ const DashboardContentBox = ({ children }: React.PropsWithChildren) => {
   const shouldShowContentBox = pathname !== '/dashboard';
 
   return (
-    <div
-      className={`shadow-drop bg-default sticky top-16 left-0 flex h-[calc(100vh-4rem-8rem)] w-full flex-col gap-12 rounded-md p-8 ${
-        !shouldShowContentBox ? 'hidden' : ''
-      }`}
-    >
-      {children}
-    </div>
+    shouldShowContentBox && (
+      <div
+        className={`shadow-drop bg-default sticky top-16 left-0 flex h-[calc(100vh-4rem-8rem)] w-full max-w-7xl flex-col gap-12 rounded-md p-8 max-sm:rounded-b-none`}
+      >
+        {children}
+      </div>
+    )
   );
 };
 

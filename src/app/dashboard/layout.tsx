@@ -49,11 +49,11 @@ export default async function DashboardLayout({
   return (
     <>
       <Header />
-      <div className="grid w-full grid-cols-[minmax(0,_max-content)_1fr] max-lg:grid-cols-1">
+      <div className="grid w-full grid-cols-[minmax(0,_max-content)_1fr] max-xl:grid-cols-1">
         <SideNav initialNavConfig={await getNavConfig()} />
         <main className="w-full">
           <PageHeader />
-          <section className="-mt-28 flex w-full gap-x-8 px-8">
+          <section className="-mt-28 flex w-full justify-center gap-x-8 sm:px-4 md:px-8">
             <ToggleButton />
             <StudentList initialData={dummyData} />
             <DashboardContentBox>{children}</DashboardContentBox>
