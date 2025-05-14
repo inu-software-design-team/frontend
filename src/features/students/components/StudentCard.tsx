@@ -26,7 +26,7 @@ const StudentCard = ({
     <Link
       scroll={false}
       href={`${basePathname}/${id}`}
-      className={`flex w-full items-center gap-4 gap-x-4 rounded-md px-4 py-3 transition-colors ${pathname.includes(id) ? 'bg-primary-light-hover text-primary-hover stroke-primary-hover' : 'hover:not-[data-status="disabled"]:bg-secondary stroke-current'}`}
+      className={`flex w-full flex-wrap items-center gap-x-4 gap-y-2 rounded-md px-4 py-3 transition-colors ${pathname.includes(id) ? 'bg-primary-light-hover text-primary-hover stroke-primary-hover' : 'hover:not-[data-status="disabled"]:bg-secondary stroke-current'}`}
     >
       <Icon
         src="circle_user"
