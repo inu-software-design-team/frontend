@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { usePathname, useSearchParams } from 'next/navigation';
 
@@ -16,9 +16,10 @@ interface StudentListProps {
 }
 
 const StudentList = ({ initialData = [] }: StudentListProps) => {
+  const ref = useRef<HTMLElement>(null);
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const nameParams = decodeURIComponent(searchParams.get('name') ?? '');
+  const nameParams = searchParams.get('name') ?? '';
   const shouldShowStudentList = pathname !== '/dashboard';
   const [studentList, setStudentList] = useState<StudentInfo[]>([
     ...initialData,
@@ -36,16 +37,55 @@ const StudentList = ({ initialData = [] }: StudentListProps) => {
   );
 
   useEffect(() => {
+    if (shouldShowStudentList) ref.current?.classList.remove('show');
+  }, [shouldShowStudentList, pathname]);
+
+  useEffect(() => {
     updateStudentList(nameParams);
   }, [updateStudentList, nameParams]);
 
   return (
     <article
-      className={`bg-default shadow-drop border-tertiary flex size-full min-h-[calc(100vh-4rem-8rem)] max-w-[25rem] flex-col rounded-md border p-8 ${!shouldShowStudentList ? 'hidden' : ''}`}
+      ref={useCallback(
+        (node: HTMLElement | null) => {
+          ref.current = node;
+
+          if (!shouldShowStudentList) return;
+
+          function updateMinimized() {
+            if (window.innerWidth < 1280) node?.classList.add('minimized');
+            else node?.classList.remove('minimized');
+          }
+
+          window.addEventListener('resize', updateMinimized);
+
+          return () => window.removeEventListener('resize', updateMinimized);
+        },
+        [shouldShowStudentList],
+      )}
+      id="student-list"
+      className={`bg-default shadow-drop border-tertiary flex size-full min-h-[calc(100vh-4rem-8rem)] max-w-[25rem] flex-col rounded-md border p-8 ${
+        !shouldShowStudentList
+          ? 'hidden'
+          : 'max-xl:fixed max-xl:top-16 max-xl:left-full max-xl:z-30 max-xl:h-[calc(100vh-4rem)] max-xl:translate-x-full max-xl:rounded-r-none max-xl:transition-transform max-[25rem]:rounded-none max-xl:[.show]:-translate-x-full'
+      }`}
     >
-      <h2 className="text-title4 mb-12 font-semibold">
-        학생 목록 <small>{`(${studentList.length})`}</small>
-      </h2>
+      <div className="mb-12 flex w-full justify-between">
+        <h2 className="text-title4 font-semibold">
+          학생 목록 <small>{`(${studentList.length})`}</small>
+        </h2>
+        <IconButton
+          icon="x"
+          size="sm"
+          spacing="compact"
+          className="xl:hidden"
+          onClick={e => {
+            e.currentTarget.parentElement?.parentElement?.classList.remove(
+              'show',
+            );
+          }}
+        />
+      </div>
       <div className="flex w-full flex-col gap-y-2">
         <SearchBox pathname={pathname} />
         <div className="flex w-full justify-end gap-x-2">
@@ -64,7 +104,7 @@ const StudentList = ({ initialData = [] }: StudentListProps) => {
         </div>
       </div>
       <div
-        className={`mt-4 grid size-full min-h-[calc(100vh-(4rem+8rem)-(2rem*2)-(1.875rem+3rem)-(3rem+0.5rem+2.5rem)-1rem)] gap-y-2 ${
+        className={`mt-4 grid size-full min-h-[calc(100vh-(4rem+8rem)-(2rem*2)-(1.875rem+3rem)-(3rem+0.5rem+2.5rem)-1rem)] gap-y-2 overflow-y-auto ${
           studentList.length > 0
             ? 'auto-rows-max grid-cols-1'
             : 'place-items-center'

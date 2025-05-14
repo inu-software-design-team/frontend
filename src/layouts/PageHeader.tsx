@@ -22,7 +22,7 @@ const PageHeader = () => {
 
   return (
     <div className="bg-primary h-60 w-full p-8">
-      <div className="flex items-center gap-x-4 stroke-white text-white">
+      <div className="mx-auto flex w-full max-w-[calc(25rem+2rem+80rem)] items-center gap-x-4 stroke-white text-white">
         <Icon src={pageInfo.icon} size={32} />
         <h1 className="text-heading3 font-bold">{pageInfo.title}</h1>
       </div>
