@@ -2,9 +2,15 @@ import { cookies } from 'next/headers';
 
 import type { StudentInfo } from 'types';
 
-import { DashboardContentBox, Header, PageHeader, SideNav } from 'layouts';
+import {
+  DashboardContentBox,
+  getNavConfig,
+  Header,
+  PageHeader,
+  SideNav,
+} from 'layouts';
 
-import { StudentList } from 'features/students';
+import { StudentList, ToggleButton } from 'features/students';
 
 const dummyData: StudentInfo[] = Array.from({ length: 20 }, (_, i) => ({
   id: `101${(i + 1).toString().padStart(2, '0')}`,
@@ -43,11 +49,12 @@ export default async function DashboardLayout({
   return (
     <>
       <Header />
-      <div className="flex w-full">
-        <SideNav />
+      <div className="grid w-full grid-cols-[minmax(0,_max-content)_1fr] max-xl:grid-cols-1">
+        <SideNav initialNavConfig={await getNavConfig()} />
         <main className="w-full">
           <PageHeader />
-          <section className="-mt-28 flex w-full gap-x-8 px-8">
+          <section className="-mt-28 flex w-full justify-center gap-x-8 sm:px-4 md:px-8">
+            <ToggleButton />
             <StudentList initialData={dummyData} />
             <DashboardContentBox>{children}</DashboardContentBox>
           </section>

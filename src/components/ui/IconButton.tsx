@@ -59,13 +59,13 @@ const IconButton = ({
                   ? 'shadow-primary hover:not-disabled:bg-primary-light-hover active:bg-primary-light-hover stroke-primary'
                   : color === 'danger'
                     ? 'shadow-danger hover:not-disabled:bg-danger-light-hover active:bg-danger-light-hover stroke-danger'
-                    : 'hover:not-disabled:bg-secondary active:bg-secondary stroke-current'
+                    : 'hover:not-disabled:bg-secondary bg-default active:bg-secondary stroke-current'
               }`
             : color === 'primary'
               ? 'hover:not-disabled:bg-primary-light-hover active:bg-primary-light-hover stroke-primary'
               : color === 'danger'
                 ? 'hover:not-disabled:bg-danger-light-hover active:bg-danger-light-hover stroke-danger'
-                : 'hover:not-disabled:bg-secondary active:bg-secondary stroke-current'
+                : 'hover:not-disabled:bg-secondary bg-default active:bg-secondary stroke-current'
       } ${
         size === 'xs'
           ? spacing === 'compact'

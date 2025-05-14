@@ -1,3 +1,5 @@
+export * from './actions';
+
 export { default as DashboardContentBox } from './DashboardContentBox';
 export { default as DashboardIntroBox } from './DashboardIntroBox';
 export { default as Header } from './Header';

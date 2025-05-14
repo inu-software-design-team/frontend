@@ -6,6 +6,9 @@ const meta = {
   title: 'Layouts/SideNav',
   tags: ['autodocs'],
   component: SideNav,
+  args: {
+    initialNavConfig: null,
+  },
   parameters: {
     layout: 'fullscreen',
   },
@@ -15,9 +18,9 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  render: () => (
+  render: ({ ...props }) => (
     <div className="h-screen">
-      <SideNav />
+      <SideNav {...props} />
     </div>
   ),
 };

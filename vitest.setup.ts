@@ -2,6 +2,21 @@ import { vi } from 'vitest';
 
 import '@testing-library/jest-dom';
 
+vi.mock('next/headers', () => ({
+  cookies: async () => ({
+    delete: vi.fn(),
+    get: vi.fn(() => ({
+      name: '',
+      value: '',
+    })),
+    getAll: vi.fn(() => []),
+    has: vi.fn(() => true),
+    set: vi.fn(),
+    size: vi.fn(() => 0),
+    toString: vi.fn(() => ''),
+  }),
+}));
+
 vi.mock('next/navigation', () => ({
   usePathname: vi.fn(),
   useRouter: () => ({
