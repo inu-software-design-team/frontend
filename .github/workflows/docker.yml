@@ -5,6 +5,9 @@ on:
     branches:
       - main # 기본 브랜치
 
+permissions:
+  contents: read
+
 jobs:
   build:
     runs-on: ubuntu-latest
