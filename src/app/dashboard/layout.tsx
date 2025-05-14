@@ -10,7 +10,7 @@ import {
   SideNav,
 } from 'layouts';
 
-import { StudentList } from 'features/students';
+import { StudentList, ToggleButton } from 'features/students';
 
 const dummyData: StudentInfo[] = Array.from({ length: 20 }, (_, i) => ({
   id: `101${(i + 1).toString().padStart(2, '0')}`,
@@ -54,6 +54,7 @@ export default async function DashboardLayout({
         <main className="w-full">
           <PageHeader />
           <section className="-mt-28 flex w-full gap-x-8 px-8">
+            <ToggleButton />
             <StudentList initialData={dummyData} />
             <DashboardContentBox>{children}</DashboardContentBox>
           </section>
