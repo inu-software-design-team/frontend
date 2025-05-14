@@ -9,7 +9,7 @@ const Header = () => {
   const username = 'User';
 
   return (
-    <header className="bg-default border-tertiary sticky top-0 right-0 left-0 z-50 box-border! flex h-16 w-full items-center border-b px-3 py-2">
+    <header className="bg-default border-tertiary sticky top-0 right-0 left-0 z-50 box-border! flex h-16 w-full items-center gap-x-4 border-b px-3 py-2">
       <div className="flex h-full flex-1 items-center justify-start gap-x-4">
         <IconButton
           icon="menu"
@@ -28,13 +28,13 @@ const Header = () => {
         />
         <HeaderLogo name="로고" className="h-full" />
       </div>
-      <div className="flex flex-1 items-center justify-end gap-x-4 px-4">
+      <div className="flex flex-1 items-center justify-end gap-x-4 pr-4">
         <IconButton icon="bell" size="md" spacing="compact" shape="circle" />
         <div className="flex items-center gap-x-2 p-1">
           <div className="text-primary-hover bg-primary-light-hover flex size-8 items-center justify-center rounded-full">
             {username[0].toUpperCase()}
           </div>
-          <div className="text-body2 text-black-off whitespace-nowrap">
+          <div className="text-body2 text-black-off whitespace-nowrap max-md:hidden">
             <span className="text-black">{username}</span> 님
           </div>
         </div>
