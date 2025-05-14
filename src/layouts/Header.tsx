@@ -15,10 +15,8 @@ const Header = () => {
           icon="menu"
           spacing="compact"
           size="md"
-          onClick={async e => {
-            e.currentTarget.parentElement?.parentElement?.parentElement
-              ?.querySelector('aside')
-              ?.classList.toggle('minimized');
+          onClick={async () => {
+            document.querySelector('aside')?.classList.toggle('minimized');
 
             const savedNavConfig = await getNavConfig();
             await setNavConfig(
