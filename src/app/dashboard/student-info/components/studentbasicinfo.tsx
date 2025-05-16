@@ -265,7 +265,7 @@ const StudentBasicInfo = ({ id }: Props) => {
         <div className="mt-5 flex w-full flex-col rounded-[6px] border border-[#E6F0FB] p-4">
             <p className="font-medium"> 가족 관계 </p>
           {/* 부 정보 */}
-          <div className="mt-5 flex flex-row justify-start" >
+          <div className="mt-5 flex flex-row justify-start gap-20" >
             <div className="mt-5 flex flex-col">
               <div className="flex flex-col">
                 <p className="text-xs text-black/40"> 관계 </p>              
@@ -281,7 +281,7 @@ const StudentBasicInfo = ({ id }: Props) => {
             </div>
             <div className="mt-5 flex flex-col">
               <div className="flex flex-col">
-                <p className="text-xs"> 성명 </p>
+                <p className="text-xs text-black/40"> 성명 </p>
                   <p className="mt-1 text-sm text-black"> {father.name} </p>
               </div>
               <div className="mt-5 flex flex-col">
@@ -293,7 +293,7 @@ const StudentBasicInfo = ({ id }: Props) => {
 
           {/* 모 정보 */}
           <div className="mt-5 h-0 w-full border-[0.5px] border-[#E6F0FB]" />
-          <div className="mt-5 flex flex-row" >
+          <div className="mt-5 flex flex-row gap-20" >
             <div className="mt-5 flex flex-col">
               <div className="flex flex-col">
                 <p className="text-xs text-black/40"> 관계 </p>
