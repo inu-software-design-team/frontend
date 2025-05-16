@@ -1,8 +1,11 @@
+import React from 'react';
+
 interface TableColumn<T> {
   key: Extract<Exclude<keyof T, 'id'>, string>;
   label: string;
   headerAlign?: 'left' | 'center' | 'right';
   render?: (value: T[keyof T], row: T, index: number) => React.ReactNode;
+  width?: string | number; // 너비 옵션 추가
 }
 
 type TableData = Record<string, React.ReactNode> & { id: string };
@@ -27,6 +30,7 @@ const Table = <T extends TableData>({
         label: key,
         headerAlign: 'center',
         render: value => <>{value}</>,
+        width: '150px', // 기본 너비 지정
       }));
 
   return (
@@ -39,7 +43,7 @@ const Table = <T extends TableData>({
           <thead>
             <tr>
               {effectiveColumns.map(
-                ({ key, label, headerAlign = 'center' }) => (
+                ({ key, label, headerAlign = 'center', width }) => (
                   <th
                     key={key}
                     scope="col"
@@ -50,7 +54,7 @@ const Table = <T extends TableData>({
                           ? 'text-right'
                           : 'text-center'
                     }`}
-                    style={{ width: '150px' }} // 모든 열에 동일한 너비 적용
+                    style={{ width }}
                   >
                     {label}
                   </th>
@@ -62,11 +66,11 @@ const Table = <T extends TableData>({
         <tbody>
           {data.map((row, rowIndex) => (
             <tr key={row.id}>
-              {effectiveColumns.map(({ key, render }) => (
+              {effectiveColumns.map(({ key, render, width }) => (
                 <td
                   key={key}
                   className="text-center text-pretty whitespace-pre"
-                  style={{ width: '150px' }} // 모든 열에 동일한 너비 적용
+                  style={{ width }}
                 >
                   {render?.(row[key], row, rowIndex) ?? row[key]}
                 </td>
