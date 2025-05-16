@@ -143,9 +143,9 @@ export default async function Grade({ params }: { params: AsyncIdParams }) {
             { key: 'level', label: '등급' },
           ]}
         />
-        <div className="grid w-full grid-cols-[25rem_auto] items-center gap-4">
+        <div className="grid w-full grid-cols-1 items-center justify-center gap-4 md:grid-cols-2">
           <div className="bg-primary-light-hover aspect-[10/9]">차트</div>
-          <ul className="w-full">
+          <ul className="mx-auto w-full max-w-[25rem]">
             {Object.entries(statsFromGradeData).map(
               ([key, { label, value }], index) => (
                 <li key={key} className="w-full">
@@ -153,7 +153,9 @@ export default async function Grade({ params }: { params: AsyncIdParams }) {
                     <hr className="border-primary-light-hover w-full" />
                   )}
                   <div className="flex w-full justify-between py-4">
-                    <span className="text-body1">{label}</span>
+                    <span className="text-body1 whitespace-nowrap">
+                      {label}
+                    </span>
                     <strong className="text-title4 text-primary">
                       {value}
                     </strong>
