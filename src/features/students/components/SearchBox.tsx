@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import { debounce } from 'es-toolkit';
 
@@ -14,6 +14,7 @@ interface SearchBoxProps {
 
 const SearchBox = ({ pathname }: SearchBoxProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
+  const searchParams = useSearchParams();
   const { replace } = useRouter();
   const [searchText, setSearchText] = useState<string>('');
   const [isFocused, setIsFocused] = useState<boolean>(false);
@@ -28,16 +29,22 @@ const SearchBox = ({ pathname }: SearchBoxProps) => {
   const updateSearchParams = useCallback(
     (params: string) => {
       const debouncedReplace = debounce((params: string) => {
+        const updatedParams = new URLSearchParams({
+          ...Object.fromEntries(
+            searchParams.entries().filter(([key]) => key !== 'name'),
+          ),
+          ...(params.length === 0 ? {} : { name: params }),
+        });
+
         replace(
-          params.length === 0
+          updatedParams.size === 0
             ? pathname
-            : `${pathname}?name=${encodeURIComponent(params)}`,
-          { scroll: false },
+            : `${pathname}?${updatedParams.toString()}`,
         );
       }, 300);
       debouncedReplace(params);
     },
-    [pathname, replace],
+    [searchParams, pathname, replace],
   );
 
   useEffect(() => {
@@ -46,7 +53,7 @@ const SearchBox = ({ pathname }: SearchBoxProps) => {
 
   return (
     <form
-      onSubmit={(e: React.FormEvent<HTMLFormElement>) => e.preventDefault()}
+      onSubmit={e => e.preventDefault()}
       className={`flex h-12 w-full items-center gap-2 border-b py-1 transition-colors ${
         isFocused ? 'border-black' : 'border-tertiary'
       }`}
