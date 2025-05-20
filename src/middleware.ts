@@ -7,7 +7,7 @@ export const middleware = async (request: NextRequest) => {
   requestHeaders.set('x-pathname', pathname);
 
   if (pathname === '/dashboard' && searchParams.size > 0) {
-    return NextResponse.redirect(pathname);
+    return NextResponse.redirect(new URL('/dashboard', request.url));
   }
 
   return NextResponse.next({

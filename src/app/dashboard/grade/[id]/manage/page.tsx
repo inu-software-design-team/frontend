@@ -1,4 +1,4 @@
-import type { AsyncIdParams } from 'types';
+import type { IdParams } from 'types';
 
 import { IconButton, Table, TextButton } from 'components/ui';
 
@@ -28,7 +28,7 @@ const dummyGradeData = Array.from({ length: 5 }, (_, i) => {
 export default async function GradeManage({
   params,
 }: {
-  params: AsyncIdParams;
+  params: Promise<IdParams>;
 }) {
   const { id } = await params;
 
