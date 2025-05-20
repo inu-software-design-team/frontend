@@ -1,4 +1,4 @@
-import type { AsyncIdParams } from 'types';
+import type { IdParams, SearchParams } from 'types';
 
 import { SelectBox } from 'components/form';
 import { IconButton, Table } from 'components/ui';
@@ -92,16 +92,27 @@ const optionsFromGradeData = {
   },
 };
 
-export async function generateMetadata({ params }: { params: AsyncIdParams }) {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<IdParams>;
+}) {
   const { id } = await params;
 
   console.log(id);
 }
 
-export default async function Grade({ params }: { params: AsyncIdParams }) {
+export default async function Grade({
+  params,
+  searchParams,
+}: {
+  params: Promise<IdParams>;
+  searchParams: Promise<SearchParams>;
+}) {
   const { id } = await params;
+  const { year } = await searchParams;
 
-  console.log(id);
+  console.log(year);
 
   return (
     <>
@@ -136,13 +147,18 @@ export default async function Grade({ params }: { params: AsyncIdParams }) {
         <Table
           data={dummyGradeData}
           columns={[
-            { key: 'year', label: '연도' },
+            {
+              key: 'year',
+              label: '연도',
+              render: value => <div className="w-250">{value}년</div>,
+            },
             { key: 'semester', label: '학기' },
             { key: 'subject', label: '과목' },
             { key: 'score', label: '점수' },
             { key: 'level', label: '등급' },
           ]}
         />
+        {/* <ViewTable grades={getGrades()} /> */}
         <div className="grid w-full grid-cols-1 items-center justify-center gap-4 md:grid-cols-2">
           <div className="bg-primary-light-hover aspect-[10/9]">차트</div>
           <ul className="mx-auto w-full max-w-[25rem]">

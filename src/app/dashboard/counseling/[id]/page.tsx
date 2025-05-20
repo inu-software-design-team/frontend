@@ -1,4 +1,4 @@
-import type { AsyncIdParams } from 'types';
+import type { IdParams } from 'types';
 
 import { SelectBox } from 'components/form';
 
@@ -15,7 +15,7 @@ type RemarkData = {
   nextPlan: string;
 };
 
-export async function generateMetadata(props: { params: AsyncIdParams }) {
+export async function generateMetadata(props: { params: Promise<IdParams> }) {
   const params = await props.params;
   const { id } = params;
 
@@ -74,7 +74,7 @@ const optionsFromGradeData = {
   },
 };
 
-export default async function Counseling(props: { params: AsyncIdParams }) {
+export default async function Counseling(props: { params: Promise<IdParams> }) {
   const { id } = await props.params;
 
   return (
