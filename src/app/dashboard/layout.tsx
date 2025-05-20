@@ -1,6 +1,4 @@
-import { cookies } from 'next/headers';
-
-import type { StudentInfo } from 'types';
+import { StudentInfo } from 'types';
 
 import {
   DashboardContentBox,
@@ -10,41 +8,25 @@ import {
   SideNav,
 } from 'layouts';
 
-import { StudentList, ToggleButton } from 'features/students';
-
-const dummyData: StudentInfo[] = Array.from({ length: 20 }, (_, i) => ({
-  id: `101${(i + 1).toString().padStart(2, '0')}`,
-  grade: 1,
-  classNumber: 1,
-  number: i + 1,
-  name: `이름 ${i + 1}`,
-}));
+import {
+  getStudentList,
+  getYearList,
+  StudentList,
+  ToggleButton,
+} from 'features/students';
 
 export default async function DashboardLayout({
   children,
 }: {
   children: Readonly<React.ReactNode>;
 }) {
-  const sessionId = (await cookies()).get('connect.sid')?.value ?? '';
-
-  if (sessionId.length > 0) {
-    try {
-      const response = await fetch(
-        'http://backend:4000/api/v1/users/csrf-token',
-        {
-          credentials: 'include',
-        },
-      );
-
-      if (!response.ok)
-        throw new Error(`${response.status} ${response.statusText}`);
-
-      const { csrfToken }: { csrfToken: string } = await response.json();
-      console.log(`CSRF 토큰 요청 성공 : ${csrfToken}`);
-    } catch (error) {
-      console.error(error instanceof Error ? error.message : String(error));
-    }
-  }
+  const years = await getYearList();
+  const students: StudentInfo[] =
+    years.length === 0
+      ? []
+      : await getStudentList({
+          year: years[0].year,
+        });
 
   return (
     <>
@@ -53,9 +35,9 @@ export default async function DashboardLayout({
         <SideNav initialNavConfig={await getNavConfig()} />
         <main className="w-full">
           <PageHeader />
-          <section className="-mt-28 flex w-full justify-center gap-x-8 sm:px-4 md:px-8">
+          <section className="-mt-28 grid w-full grid-cols-1 justify-center gap-x-8 sm:px-4 md:px-8 xl:grid-cols-[minmax(0,_25rem)_minmax(0,_1fr)]">
             <ToggleButton />
-            <StudentList initialData={dummyData} />
+            <StudentList years={years} students={students} />
             <DashboardContentBox>{children}</DashboardContentBox>
           </section>
         </main>
