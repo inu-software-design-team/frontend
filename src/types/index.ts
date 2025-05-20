@@ -1,11 +1,42 @@
 export * from './student';
 
+// Globals
 export type StrictOmit<T, K extends keyof T> = {
-  [P in keyof T]: P extends K ? never : T[P];
+  [P in Exclude<keyof T, K>]: T[P];
 };
-export type StrictExtract<T, K extends keyof T> = K;
+export type KeysOf<T, K extends keyof T> = K;
 export type ArrayElementType<T> = T extends (infer U)[] ? U : T;
+export type HTMLTagToElement<T extends React.ElementType> =
+  React.ComponentPropsWithRef<T> extends { ref?: React.Ref<infer R> }
+    ? R
+    : never;
+export type IdParams = {
+  id: string;
+};
+export type SearchParams = {
+  [key: string]: string | string[] | undefined;
+};
 
+// Polymorphic
+type AsProp<T extends React.ElementType> = {
+  as?: T;
+};
+export type PolymorphicRef<T extends React.ElementType> =
+  React.ComponentPropsWithRef<T>['ref'];
+export type PolymorphicPropsWithoutRef<
+  T extends React.ElementType,
+  P = unknown,
+> = AsProp<T> &
+  P &
+  Partial<StrictOmit<React.ComponentPropsWithoutRef<T>, keyof (AsProp<T> & P)>>;
+export type PolymorphicPropsWithRef<
+  T extends React.ElementType,
+  P = unknown,
+> = {
+  ref?: PolymorphicRef<T>;
+} & PolymorphicPropsWithoutRef<T, P>;
+
+// Elements
 export const ELEMENT_STATUS = [
   'default',
   'active',
@@ -28,15 +59,6 @@ export type ElementSize = (typeof ELEMENT_SIZES)[number];
 export interface WithElementSize {
   size?: ElementSize;
 }
-
-export type IdParams = {
-  id: string;
-};
-export type AsyncIdParams = Promise<IdParams>;
-export type SearchParams = {
-  [key: string]: string | string[] | undefined;
-};
-export type AsyncSearchParams = Promise<SearchParams>;
 
 export type WithLinkNavigation = {
   href?: {
