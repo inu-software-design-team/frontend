@@ -41,8 +41,8 @@ const SelectBox = ({
   }, [onChangeMenuOpen, isMenuOpen]);
 
   useEffect(() => {
-    onChangeSelectedId?.(selectedId);
-  }, [onChangeSelectedId, selectedId]);
+    if (status !== 'disabled') onChangeSelectedId?.(selectedId);
+  }, [status, onChangeSelectedId, selectedId]);
 
   return (
     <DropdownMenu
