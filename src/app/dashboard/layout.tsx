@@ -1,3 +1,5 @@
+import { StudentInfo } from 'types';
+
 import {
   DashboardContentBox,
   getNavConfig,
@@ -6,7 +8,12 @@ import {
   SideNav,
 } from 'layouts';
 
-import { getYearList, StudentList, ToggleButton } from 'features/students';
+import {
+  getStudentList,
+  getYearList,
+  StudentList,
+  ToggleButton,
+} from 'features/students';
 
 export default async function DashboardLayout({
   children,
@@ -14,6 +21,12 @@ export default async function DashboardLayout({
   children: Readonly<React.ReactNode>;
 }) {
   const years = await getYearList();
+  const students: StudentInfo[] =
+    years.length === 0
+      ? []
+      : await getStudentList({
+          year: years[0].year,
+        });
 
   return (
     <>
@@ -24,7 +37,7 @@ export default async function DashboardLayout({
           <PageHeader />
           <section className="-mt-28 grid w-full grid-cols-1 justify-center gap-x-8 sm:px-4 md:px-8 xl:grid-cols-[minmax(0,_25rem)_minmax(0,_1fr)]">
             <ToggleButton />
-            <StudentList years={years} />
+            <StudentList years={years} students={students} />
             <DashboardContentBox>{children}</DashboardContentBox>
           </section>
         </main>
