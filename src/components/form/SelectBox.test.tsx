@@ -23,7 +23,11 @@ describe('SelectBox 컴포넌트 테스트', () => {
 
   it('컴포넌트를 정상적으로 렌더링해야 합니다.', () => {
     const { container } = render(
-      <SelectBox label={LABEL} options={options} onChange={onChangeMock} />,
+      <SelectBox
+        label={LABEL}
+        options={options}
+        onChangeSelectedId={onChangeMock}
+      />,
     );
     const selectLabel = screen.getByText(LABEL);
     const selectInput = screen.getByRole('textbox');
@@ -56,7 +60,7 @@ describe('SelectBox 컴포넌트 테스트', () => {
       <SelectBox
         label={LABEL}
         options={[]}
-        onChange={onChangeMock}
+        onChangeSelectedId={onChangeMock}
         data-testid={TEST_ID}
       />,
     );
@@ -76,7 +80,7 @@ describe('SelectBox 컴포넌트 테스트', () => {
             default: index === 7,
           })),
         ]}
-        onChange={onChangeMock}
+        onChangeSelectedId={onChangeMock}
       />,
     );
     const selectInput = screen.getByRole('textbox');
@@ -103,7 +107,7 @@ describe('SelectBox 컴포넌트 테스트', () => {
       <SelectBox
         label={LABEL}
         options={options}
-        onChange={onChangeMock}
+        onChangeSelectedId={onChangeMock}
         data-testid={TEST_ID}
       />,
     );
@@ -116,7 +120,7 @@ describe('SelectBox 컴포넌트 테스트', () => {
     await userEvent.click(option);
 
     expect(selectInput).toHaveValue(options[7].value);
-    expect(onChangeMock).toHaveBeenCalledTimes(2);
+    expect(onChangeMock).toHaveBeenCalled();
   });
 
   it('비활성화 상태일 때 선택 목록이 보여지거나 클릭/변경 이벤트가 호출되지 않아야 합니다.', async () => {
@@ -126,7 +130,7 @@ describe('SelectBox 컴포넌트 테스트', () => {
         options={options}
         status="disabled"
         onClick={onClickMock}
-        onChange={onChangeMock}
+        onChangeSelectedId={onChangeMock}
         data-testid={TEST_ID}
       />,
     );

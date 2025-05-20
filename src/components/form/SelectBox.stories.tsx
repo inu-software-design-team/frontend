@@ -19,7 +19,7 @@ const meta = {
       })),
     ],
     onClick: fn(),
-    onChange: fn(),
+    onChangeSelectedId: fn(),
   },
   argTypes: {
     status: {
