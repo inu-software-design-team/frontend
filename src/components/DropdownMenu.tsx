@@ -4,7 +4,6 @@ import { useCallback, useEffect, useState } from 'react';
 
 import type {
   ElementStatus,
-  HTMLTagToElement,
   PolymorphicPropsWithRef,
   WithElementSize,
 } from 'types';
@@ -38,6 +37,9 @@ const DropdownMenu = <T extends React.ElementType = 'div'>({
 }: DropdownMenuProps<T>) => {
   const Component = as ?? 'div';
   const [isDropdownMenuOpen, setIsDropdownMenuOpen] = useState(false);
+  const [dropdownAlign, setDropdownAlign] = useState<
+    'left' | 'center' | 'right'
+  >('left');
   const [selectedId, setSelectedId] = useState(
     status === 'disabled' || options.length === 0
       ? ''
@@ -45,31 +47,22 @@ const DropdownMenu = <T extends React.ElementType = 'div'>({
   );
 
   useEffect(() => {
-    if (
-      status !== 'disabled' &&
-      options.length > 0 &&
-      !options.some(option => option.id === selectedId)
-    )
-      setSelectedId(
-        options.find(option => option.default)?.id ?? options[0].id,
-      );
-  }, [status, options, selectedId]);
+    if (status !== 'disabled') onChangeMenuOpen?.(isDropdownMenuOpen);
+  }, [status, onChangeMenuOpen, isDropdownMenuOpen]);
 
   useEffect(() => {
     if (status !== 'disabled') onChangeSelectedId?.(selectedId);
   }, [status, onChangeSelectedId, selectedId]);
 
-  useEffect(() => {
-    onChangeMenuOpen?.(isDropdownMenuOpen);
-  }, [onChangeMenuOpen, isDropdownMenuOpen]);
-
   return (
     <Component
       {...props}
       data-status={status}
-      ref={useCallback<(node: HTMLTagToElement<T> | null) => void>(
-        node => {
+      ref={useCallback(
+        (node: HTMLElement | null) => {
           if (status === 'disabled') return;
+
+          const ac = new AbortController();
 
           function onClickOutside(event: MouseEvent) {
             if (
@@ -79,9 +72,24 @@ const DropdownMenu = <T extends React.ElementType = 'div'>({
             )
               setIsDropdownMenuOpen(false);
           }
+          function onResize() {
+            if (node)
+              setDropdownAlign(
+                node.offsetLeft + node.clientWidth / 2 <= window.innerWidth / 3
+                  ? 'left'
+                  : node.offsetLeft + node.clientWidth / 2 >=
+                      (window.innerWidth * 2) / 3
+                    ? 'right'
+                    : 'center',
+              );
+          }
 
-          document.addEventListener('click', onClickOutside);
-          return () => document.removeEventListener('click', onClickOutside);
+          onResize();
+
+          document.addEventListener('click', onClickOutside, ac);
+          window.addEventListener('resize', onResize, ac);
+
+          return () => ac.abort();
         },
         [status],
       )}
@@ -105,7 +113,13 @@ const DropdownMenu = <T extends React.ElementType = 'div'>({
       {children}
       {options.length > 0 && (
         <ul
-          className={`shadow-drop bg-default absolute top-[calc(100%+0.5rem)] left-0 z-10 w-full min-w-50 space-y-1 rounded-md p-2 transition-[translate,_opacity] ${
+          className={`shadow-drop bg-default absolute top-[calc(100%+0.5rem)] z-10 w-full min-w-50 space-y-1 rounded-md p-2 transition-[translate,_opacity] ${
+            dropdownAlign === 'left'
+              ? 'left-0'
+              : dropdownAlign === 'right'
+                ? 'right-0'
+                : 'left-1/2 -translate-x-1/2'
+          } ${
             isDropdownMenuOpen
               ? ''
               : 'pointer-events-none translate-y-1 opacity-0'

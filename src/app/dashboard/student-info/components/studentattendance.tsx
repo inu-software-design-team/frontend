@@ -1,4 +1,7 @@
+'use client';
+
 import { useState } from 'react';
+
 import { SelectBox } from 'components/form';
 import { IconButton, Table } from 'components/ui';
 
@@ -63,7 +66,9 @@ const optionsFromGradeData = {
     label: '연도',
     options: [
       { id: crypto.randomUUID(), value: '전체' },
-      ...Array.from(new Set(dummyGradeData.map(({ year }) => year.toString()))).map(value => ({
+      ...Array.from(
+        new Set(dummyGradeData.map(({ year }) => year.toString())),
+      ).map(value => ({
         id: crypto.randomUUID(),
         value,
       })),
@@ -73,7 +78,9 @@ const optionsFromGradeData = {
     label: '학기',
     options: [
       { id: crypto.randomUUID(), value: '전체' },
-      ...Array.from(new Set(dummyGradeData.map(({ semester }) => semester.toString()))).map(value => ({
+      ...Array.from(
+        new Set(dummyGradeData.map(({ semester }) => semester.toString())),
+      ).map(value => ({
         id: crypto.randomUUID(),
         value,
       })),
@@ -112,20 +119,25 @@ const StudentAttendance = ({}: Props) => {
     setCheckedItems(prev => ({ ...prev, [id]: !prev[id] }));
   };
 
-  const handleChange = (id: string, field: keyof Omit<AttendanceRecord, 'id' | 'year' | 'semester' | 'file'>, value: string) => {
+  const handleChange = (
+    id: string,
+    field: keyof Omit<AttendanceRecord, 'id' | 'year' | 'semester' | 'file'>,
+    value: string,
+  ) => {
     setEditData(prev =>
-      prev.map(item => (item.id === id ? { ...item, [field]: value } : item))
+      prev.map(item => (item.id === id ? { ...item, [field]: value } : item)),
     );
   };
 
   const handleSave = () => {
     setData(prev =>
-      prev.map(item =>
-        checkedItems[item.id]
-          ? editData.find(edited => edited.id === item.id) ?? item
-          : item
-      )
-      .concat(editData.filter(edited => !prev.some(d => d.id === edited.id)))
+      prev
+        .map(item =>
+          checkedItems[item.id]
+            ? (editData.find(edited => edited.id === item.id) ?? item)
+            : item,
+        )
+        .concat(editData.filter(edited => !prev.some(d => d.id === edited.id))),
     );
     setIsEditMode(false);
     setCheckedItems({});
@@ -165,19 +177,27 @@ const StudentAttendance = ({}: Props) => {
 
       <div className="mt-4 mb-4 flex h-full w-full flex-row items-center gap-3">
         <div className="flex h-20 w-1/4 flex-col items-center justify-center rounded-[6px] bg-[#F0FDF4]">
-          <p className="text-xl font-bold text-[#00A63E]">{stateCount['출석']}</p>
+          <p className="text-xl font-bold text-[#00A63E]">
+            {stateCount['출석']}
+          </p>
           <p className="mt-1 text-xs text-black/48">출석일수</p>
         </div>
         <div className="flex h-20 w-1/4 flex-col items-center justify-center rounded-[6px] bg-[#FEFCE8]">
-          <p className="text-xl font-bold text-[#D08700]">{stateCount['지각']}</p>
+          <p className="text-xl font-bold text-[#D08700]">
+            {stateCount['지각']}
+          </p>
           <p className="mt-1 text-xs text-black/48">지각</p>
         </div>
         <div className="flex h-20 w-1/4 flex-col items-center justify-center rounded-[6px] bg-[#EFF6FF]">
-          <p className="text-xl font-bold text-[#155DFC]">{stateCount['조퇴']}</p>
+          <p className="text-xl font-bold text-[#155DFC]">
+            {stateCount['조퇴']}
+          </p>
           <p className="mt-1 text-xs text-black/48">조퇴</p>
         </div>
         <div className="flex h-20 w-1/4 flex-col items-center justify-center rounded-[6px] bg-[#FEF2F2]">
-          <p className="text-xl font-bold text-[#E7000B]">{stateCount['결석']}</p>
+          <p className="text-xl font-bold text-[#E7000B]">
+            {stateCount['결석']}
+          </p>
           <p className="mt-1 text-xs text-black/48">결석</p>
         </div>
       </div>
@@ -199,7 +219,7 @@ const StudentAttendance = ({}: Props) => {
                 type="date"
                 value={item.date}
                 onChange={e => handleChange(item.id, 'date', e.target.value)}
-                className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
+                className="w-full rounded border border-gray-300 px-2 py-1 text-sm"
               />
             ) : (
               item.date
@@ -209,7 +229,7 @@ const StudentAttendance = ({}: Props) => {
               <select
                 value={item.state}
                 onChange={e => handleChange(item.id, 'state', e.target.value)}
-                className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
+                className="w-full rounded border border-gray-300 px-2 py-1 text-sm"
               >
                 {states.map(stateOption => (
                   <option key={stateOption} value={stateOption}>
@@ -218,7 +238,9 @@ const StudentAttendance = ({}: Props) => {
                 ))}
               </select>
             ) : (
-              <span className={`px-3 py-2 text-center ${getStateClass(item.state)}`}>
+              <span
+                className={`px-3 py-2 text-center ${getStateClass(item.state)}`}
+              >
                 {item.state}
               </span>
             ),
@@ -228,7 +250,7 @@ const StudentAttendance = ({}: Props) => {
                 type="text"
                 value={item.reason}
                 onChange={e => handleChange(item.id, 'reason', e.target.value)}
-                className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
+                className="w-full rounded border border-gray-300 px-2 py-1 text-sm"
               />
             ) : (
               item.reason
@@ -255,12 +277,12 @@ const StudentAttendance = ({}: Props) => {
         className="mt-2"
       />
 
-     {isEditMode && (
-        <div className="flex flex-row mt-4 mb-2 gap-3">
+      {isEditMode && (
+        <div className="mt-4 mb-2 flex flex-row gap-3">
           <div className="flex flex-1 justify-start">
             <button
               onClick={handleAdd}
-              className="w-35 h-10 rounded-[6px] border bg-[#4B89DC] text-xs text-white"
+              className="h-10 w-35 rounded-[6px] border bg-[#4B89DC] text-xs text-white"
             >
               + 새 출결 사항 추가
             </button>
@@ -269,13 +291,13 @@ const StudentAttendance = ({}: Props) => {
           <div className="flex flex-1 justify-center gap-3">
             <button
               onClick={handleSave}
-              className="w-30 h-10 rounded-[6px] border border-black bg-white px-2 py-1 text-xs"
+              className="h-10 w-30 rounded-[6px] border border-black bg-white px-2 py-1 text-xs"
             >
               저장
             </button>
             <button
               onClick={handleCancel}
-              className="w-30 h-10 rounded-[6px] bg-[#FB2C36] text-white px-2 py-1 text-xs"
+              className="h-10 w-30 rounded-[6px] bg-[#FB2C36] px-2 py-1 text-xs text-white"
             >
               취소
             </button>
@@ -284,7 +306,6 @@ const StudentAttendance = ({}: Props) => {
           <div className="flex flex-1" />
         </div>
       )}
-
     </div>
   );
 };
