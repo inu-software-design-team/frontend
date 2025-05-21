@@ -37,8 +37,8 @@ const SelectBox = ({
   );
 
   useEffect(() => {
-    onChangeMenuOpen?.(isMenuOpen);
-  }, [onChangeMenuOpen, isMenuOpen]);
+    if (status !== 'disabled') onChangeMenuOpen?.(isMenuOpen);
+  }, [status, onChangeMenuOpen, isMenuOpen]);
 
   useEffect(() => {
     if (status !== 'disabled') onChangeSelectedId?.(selectedId);
