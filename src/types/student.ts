@@ -1,17 +1,16 @@
 import type { StrictOmit } from 'types';
 
 export interface ClassInfo {
-  class_id: string;
+  classId: string;
   grade: number;
   class: number;
 }
 
 export interface StudentInfo {
   id: string;
-  student_id: string;
+  studentId: number;
   name: string;
-  class_info: StrictOmit<ClassInfo, 'class_id'> & {
+  classInfo: StrictOmit<ClassInfo, 'classId'> & {
     id: string;
   };
 }
-export type StudentInfoWithoutId = StrictOmit<StudentInfo, 'id'>;
