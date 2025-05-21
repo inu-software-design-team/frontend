@@ -1,4 +1,8 @@
+import type { Metadata } from 'next';
+
 import type { IdParams, SearchParams } from 'types';
+
+import { getStudent, StudentProfile } from 'features/students';
 
 import { SelectBox } from 'components/form';
 import { IconButton, Table } from 'components/ui';
@@ -94,12 +98,23 @@ const optionsFromGradeData = {
 
 export async function generateMetadata({
   params,
+  searchParams,
 }: {
   params: Promise<IdParams>;
-}) {
+  searchParams: Promise<SearchParams>;
+}): Promise<Metadata> {
   const { id } = await params;
+  const { studentYear } = await searchParams;
 
-  console.log(id);
+  const { name, classInfo } = await getStudent({
+    year: Number(studentYear),
+    studentId: Number(id),
+  });
+
+  return {
+    title: `${classInfo.grade}-${classInfo.class} ${name} | 성적`,
+    description: `${classInfo.grade}학년 ${classInfo.class}반 ${name} 학생의 성적 페이지 입니다.`,
+  };
 }
 
 export default async function Grade({
@@ -110,17 +125,12 @@ export default async function Grade({
   searchParams: Promise<SearchParams>;
 }) {
   const { id } = await params;
-  const { year } = await searchParams;
-
-  console.log(year);
+  const { studentYear } = await searchParams;
 
   return (
     <>
       <div className="flex w-full justify-between">
-        <div className="flex w-full flex-col gap-y-1">
-          <strong className="text-title4">이름</strong>
-          <p>{`${id[0]}학년 ${parseInt(id.substring(1, 3))}반 ${parseInt(id.substring(3))}번`}</p>
-        </div>
+        <StudentProfile year={Number(studentYear)} studentId={Number(id)} />
         <IconButton
           icon="edit"
           size="sm"

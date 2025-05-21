@@ -4,7 +4,7 @@ import { cookies } from 'next/headers';
 
 import { FETCH_PREFIX_TEACHER } from 'data';
 
-import type { ClassInfo, StrictOmit, StudentInfo } from 'types';
+import type { ClassInfo, SnakeCaseKeys, StrictOmit, StudentInfo } from 'types';
 
 export const getYearList = async (): Promise<
   { id: string; year: number }[]
@@ -43,15 +43,36 @@ export const getStudentList = async ({
   const {
     data: { studentsList },
   }: {
-    data: ClassInfo & {
-      studentsList: (StrictOmit<StudentInfo, 'class_info'> & {
-        class_id: StudentInfo['class_info'];
+    data: SnakeCaseKeys<ClassInfo> & {
+      studentsList: (SnakeCaseKeys<StrictOmit<StudentInfo, 'classInfo'>> & {
+        class_id: StudentInfo['classInfo'];
       })[];
     };
   } = await response.json();
 
-  return studentsList.map(item => ({
-    ...item,
-    class_info: item.class_id,
+  return studentsList.map(({ id, student_id, name, class_id }) => ({
+    id,
+    name,
+    studentId: student_id,
+    classInfo: {
+      id: class_id.id,
+      grade: class_id.grade,
+      class: class_id.class,
+    },
   }));
+};
+
+export const getStudent = async ({
+  year,
+  studentId,
+}: {
+  year: number;
+  studentId: number;
+}) => {
+  const student = (await getStudentList({ year })).find(
+    student => student.studentId === studentId,
+  );
+  if (!student)
+    throw new Error(`학번이 ${studentId}인 학생을 찾을 수 없습니다.`);
+  return student;
 };
