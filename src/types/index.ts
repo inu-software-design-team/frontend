@@ -6,10 +6,6 @@ export type StrictOmit<T, K extends keyof T> = {
 };
 export type KeysOf<T, K extends keyof T> = K;
 export type ArrayElementType<T> = T extends (infer U)[] ? U : T;
-export type HTMLTagToElement<T extends React.ElementType> =
-  React.ComponentPropsWithRef<T> extends { ref?: React.Ref<infer R> }
-    ? R
-    : never;
 export type IdParams = {
   id: string;
 };
