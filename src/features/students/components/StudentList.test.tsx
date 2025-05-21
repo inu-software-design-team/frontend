@@ -18,9 +18,9 @@ describe('학생 목록 표시 및 검색 기능 테스트', () => {
   );
   const students = Array.from({ length: 3 }, (_, i) => ({
     id: `${i + 1}`,
-    student_id: `${i + 1}`,
+    studentId: i + 1,
     name: `학생 ${i + 1}`,
-    class_info: {
+    classInfo: {
       id: `${i + 1}`,
       grade: 1,
       class: 1,
@@ -52,10 +52,10 @@ describe('학생 목록 표시 및 검색 기능 테스트', () => {
     const studentItems = screen.getAllByRole('link');
 
     studentItems.forEach((item, index) => {
-      const studentId = students[index].student_id;
+      const studentId = students[index].studentId;
       const name = students[index].name;
-      const grade = students[index].class_info.grade;
-      const classNumber = students[index].class_info.class;
+      const grade = students[index].classInfo.grade;
+      const classNumber = students[index].classInfo.class;
 
       expect(item).toBeInTheDocument();
       expect(item).toHaveAttribute('href', `/dashboard/grade/${studentId}`);
