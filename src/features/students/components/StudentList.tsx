@@ -24,8 +24,8 @@ const StudentList = ({ years, students }: StudentListProps) => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const shouldShowStudentList = pathname !== '/dashboard';
-  const yearParam = searchParams.get('year') ?? '';
-  const nameParam = searchParams.get('name') ?? '';
+  const yearParam = searchParams.get('studentYear') ?? '';
+  const nameParam = searchParams.get('studentName') ?? '';
 
   const [studentList, setStudentList] = useState<StudentInfo[]>(students);
   const yearList = useMemo(
@@ -121,7 +121,7 @@ const StudentList = ({ years, students }: StudentListProps) => {
                 replace(
                   `${pathname}?${new URLSearchParams({
                     ...Object.fromEntries(searchParams.entries()),
-                    year: selectedYear,
+                    studentYear: selectedYear,
                   }).toString()}`,
                   {
                     scroll: false,

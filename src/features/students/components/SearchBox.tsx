@@ -13,11 +13,11 @@ interface SearchBoxProps {
 }
 
 const SearchBox = ({ pathname }: SearchBoxProps) => {
-  const inputRef = useRef<HTMLInputElement>(null);
-  const searchParams = useSearchParams();
   const { replace } = useRouter();
-  const [searchText, setSearchText] = useState<string>('');
-  const [isFocused, setIsFocused] = useState<boolean>(false);
+  const searchParams = useSearchParams();
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [searchText, setSearchText] = useState('');
+  const [isFocused, setIsFocused] = useState(false);
 
   const onChangeInput = useCallback<React.ChangeEventHandler<HTMLInputElement>>(
     e => {
@@ -27,22 +27,22 @@ const SearchBox = ({ pathname }: SearchBoxProps) => {
   );
 
   const updateSearchParams = useCallback(
-    (params: string) => {
-      const debouncedReplace = debounce((params: string) => {
-        const updatedParams = new URLSearchParams({
+    (param: string) => {
+      const debouncedReplace = debounce((param: string) => {
+        const queryParams = new URLSearchParams({
           ...Object.fromEntries(
-            searchParams.entries().filter(([key]) => key !== 'name'),
+            searchParams.entries().filter(([key]) => key !== 'studentName'),
           ),
-          ...(params.length === 0 ? {} : { name: params }),
+          ...(param.length === 0 ? {} : { studentName: param }),
         });
 
         replace(
-          updatedParams.size === 0
+          queryParams.size === 0
             ? pathname
-            : `${pathname}?${updatedParams.toString()}`,
+            : `${pathname}?${queryParams.toString()}`,
         );
       }, 300);
-      debouncedReplace(params);
+      debouncedReplace(param);
     },
     [searchParams, pathname, replace],
   );
