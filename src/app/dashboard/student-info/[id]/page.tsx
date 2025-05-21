@@ -4,7 +4,7 @@ import { redirect } from 'next/navigation';
 
 import type { IdParams, SearchParams } from 'types';
 
-import { getStudent } from 'features/students';
+import { getStudent, StudentProfile } from 'features/students';
 
 import StudentAttendance from '../components/studentattendance';
 import StudentBasicInfo from '../components/studentbasicinfo';
@@ -59,7 +59,9 @@ export default async function Page({
 
   return (
     <>
-      <div className="mb-4 flex w-full justify-between"></div>
+      <div className="mb-4 flex w-full justify-between">
+        <StudentProfile year={Number(studentYear)} studentId={Number(id)} />
+      </div>
       <div className="flex h-11 w-full flex-row items-center justify-center rounded-[6px] bg-[#F1F5F9] p-1">
         {TABS.map(({ label }, index) => (
           <Link

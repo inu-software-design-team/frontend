@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 
 import type { IdParams, SearchParams } from 'types';
 
-import { getStudent } from 'features/students';
+import { getStudent, StudentProfile } from 'features/students';
 
 import { SelectBox } from 'components/form';
 
@@ -104,7 +104,9 @@ export default async function Counseling({
 
   return (
     <>
-      <div className="mb-4 flex w-full justify-between"></div>
+      <div className="mb-4 flex w-full justify-between">
+        <StudentProfile year={Number(studentYear)} studentId={Number(id)} />
+      </div>
       <div className="flex flex-col overflow-y-auto">
         <div className="flex w-full flex-row items-center">
           <div className="flex w-full">

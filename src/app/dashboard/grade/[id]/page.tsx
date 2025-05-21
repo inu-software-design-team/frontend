@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 
 import type { IdParams, SearchParams } from 'types';
 
-import { getStudent } from 'features/students';
+import { getStudent, StudentProfile } from 'features/students';
 
 import { SelectBox } from 'components/form';
 import { IconButton, Table } from 'components/ui';
@@ -130,6 +130,7 @@ export default async function Grade({
   return (
     <>
       <div className="flex w-full justify-between">
+        <StudentProfile year={Number(studentYear)} studentId={Number(id)} />
         <IconButton
           icon="edit"
           size="sm"
