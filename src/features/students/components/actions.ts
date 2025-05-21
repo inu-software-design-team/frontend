@@ -61,3 +61,18 @@ export const getStudentList = async ({
     },
   }));
 };
+
+export const getStudent = async ({
+  year,
+  studentId,
+}: {
+  year: number;
+  studentId: number;
+}) => {
+  const student = (await getStudentList({ year })).find(
+    student => student.studentId === studentId,
+  );
+  if (!student)
+    throw new Error(`학번이 ${studentId}인 학생을 찾을 수 없습니다.`);
+  return student;
+};
