@@ -1,4 +1,8 @@
-import type { IdParams } from 'types';
+import type { Metadata } from 'next';
+
+import type { IdParams, SearchParams } from 'types';
+
+import { getStudent } from 'features/students';
 
 import { SelectBox } from 'components/form';
 
@@ -13,11 +17,25 @@ type RemarkData = {
   date: string;
 };
 
-export async function generateMetadata(props: { params: Promise<IdParams> }) {
-  const params = await props.params;
-  const { id } = params;
+export async function generateMetadata({
+  params,
+  searchParams,
+}: {
+  params: Promise<IdParams>;
+  searchParams: Promise<SearchParams>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  const { studentYear } = await searchParams;
 
-  console.log(id);
+  const { name, classInfo } = await getStudent({
+    year: Number(studentYear),
+    studentId: Number(id),
+  });
+
+  return {
+    title: `${classInfo.grade}-${classInfo.class} ${name} | 피드백`,
+    description: `${classInfo.grade}학년 ${classInfo.class}반 ${name} 학생의 피드백 페이지 입니다.`,
+  };
 }
 
 const dummyGradeData: RemarkData[] = Array.from({ length: 4 }, (_, i) => {
@@ -70,19 +88,19 @@ const optionsFromGradeData = {
   },
 };
 
-export default async function FeedBack(props: { params: Promise<IdParams> }) {
-  const params = await props.params;
-  const { id } = params;
+export default async function FeedBack({
+  params,
+  searchParams,
+}: {
+  params: Promise<IdParams>;
+  searchParams: Promise<SearchParams>;
+}) {
+  const { id } = await params;
+  const { studentYear } = await searchParams;
 
   return (
     <>
-      <div className="mb-4 flex w-full justify-between">
-        <div className="flex w-full flex-col gap-y-1">
-          <strong className="text-title4">이름</strong>
-          <p>{`${id[0]}학년 ${parseInt(id.substring(1, 3))}반 ${parseInt(id.substring(3))}번`}</p>
-        </div>
-      </div>
-
+      <div className="mb-4 flex w-full justify-between"></div>
       <div className="flex flex-col overflow-y-auto">
         <div className="flex w-full flex-row items-center">
           <div className="flex w-full">
