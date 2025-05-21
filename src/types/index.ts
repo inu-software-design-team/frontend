@@ -6,6 +6,14 @@ export type StrictOmit<T, K extends keyof T> = {
 };
 export type KeysOf<T, K extends keyof T> = K;
 export type ArrayElementType<T> = T extends (infer U)[] ? U : T;
+export type SnakeCase<S extends string> = S extends `${infer Head}${infer Tail}`
+  ? Tail extends Uncapitalize<Tail>
+    ? `${Lowercase<Head>}${SnakeCase<Tail>}`
+    : `${Lowercase<Head>}_${SnakeCase<Tail>}`
+  : S;
+export type SnakeCaseKeys<T> = {
+  [K in keyof T as SnakeCase<Extract<K, string>>]: T[K];
+};
 export type IdParams = {
   id: string;
 };
