@@ -15,20 +15,15 @@ describe('SelectBox 컴포넌트 테스트', () => {
   }));
 
   const onClickMock = vi.fn();
-  const onChangeMock = vi.fn();
+  const onChangeMenuOpenMock = vi.fn();
+  const onChangeSelectedIdMock = vi.fn();
 
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
   it('컴포넌트를 정상적으로 렌더링해야 합니다.', () => {
-    const { container } = render(
-      <SelectBox
-        label={LABEL}
-        options={options}
-        onChangeSelectedId={onChangeMock}
-      />,
-    );
+    const { container } = render(<SelectBox label={LABEL} options={options} />);
     const selectLabel = screen.getByText(LABEL);
     const selectInput = screen.getByRole('textbox');
     const chevronDownIcon = container.querySelector('input ~ svg');
@@ -60,7 +55,8 @@ describe('SelectBox 컴포넌트 테스트', () => {
       <SelectBox
         label={LABEL}
         options={[]}
-        onChangeSelectedId={onChangeMock}
+        onChangeMenuOpen={onChangeMenuOpenMock}
+        onChangeSelectedId={onChangeSelectedIdMock}
         data-testid={TEST_ID}
       />,
     );
@@ -80,7 +76,7 @@ describe('SelectBox 컴포넌트 테스트', () => {
             default: index === 7,
           })),
         ]}
-        onChangeSelectedId={onChangeMock}
+        onChangeSelectedId={onChangeSelectedIdMock}
       />,
     );
     const selectInput = screen.getByRole('textbox');
@@ -89,7 +85,15 @@ describe('SelectBox 컴포넌트 테스트', () => {
   });
 
   it('컴포넌트를 클릭하면 선택 목록이 보였다가 보이지 않았다가 해야합니다.', async () => {
-    render(<SelectBox label={LABEL} options={options} data-testid={TEST_ID} />);
+    render(
+      <SelectBox
+        label={LABEL}
+        options={options}
+        data-testid={TEST_ID}
+        onClick={onClickMock}
+        onChangeMenuOpen={onChangeMenuOpenMock}
+      />,
+    );
     const selectBox = screen.getByTestId(TEST_ID);
     const optionList = screen.getByRole('list');
 
@@ -100,6 +104,9 @@ describe('SelectBox 컴포넌트 테스트', () => {
 
     await userEvent.click(selectBox);
     expect(optionList).toHaveClass(HIDDEN_CLASS);
+
+    expect(onClickMock).toHaveBeenCalledTimes(2); // 열기 + 닫기
+    expect(onChangeMenuOpenMock).toHaveBeenCalledTimes(3); // 처음 + 열기 + 닫기
   });
 
   it('선택 목록에서 요소를 선택하면 변경 이벤트가 호출되어야 합니다.', async () => {
@@ -107,7 +114,9 @@ describe('SelectBox 컴포넌트 테스트', () => {
       <SelectBox
         label={LABEL}
         options={options}
-        onChangeSelectedId={onChangeMock}
+        onClick={onClickMock}
+        onChangeMenuOpen={onChangeMenuOpenMock}
+        onChangeSelectedId={onChangeSelectedIdMock}
         data-testid={TEST_ID}
       />,
     );
@@ -120,7 +129,10 @@ describe('SelectBox 컴포넌트 테스트', () => {
     await userEvent.click(option);
 
     expect(selectInput).toHaveValue(options[7].value);
-    expect(onChangeMock).toHaveBeenCalled();
+
+    expect(onClickMock).toHaveBeenCalledTimes(2); // 열기 + 선택
+    expect(onChangeMenuOpenMock).toHaveBeenCalledTimes(3); // 처음 + 열기 + 선택
+    expect(onChangeSelectedIdMock).toHaveBeenCalledTimes(2); // 처음 + 선택
   });
 
   it('비활성화 상태일 때 선택 목록이 보여지거나 클릭/변경 이벤트가 호출되지 않아야 합니다.', async () => {
@@ -130,7 +142,8 @@ describe('SelectBox 컴포넌트 테스트', () => {
         options={options}
         status="disabled"
         onClick={onClickMock}
-        onChangeSelectedId={onChangeMock}
+        onChangeMenuOpen={onChangeMenuOpenMock}
+        onChangeSelectedId={onChangeSelectedIdMock}
         data-testid={TEST_ID}
       />,
     );
@@ -145,13 +158,21 @@ describe('SelectBox 컴포넌트 테스트', () => {
     expect(optionList).toHaveClass(HIDDEN_CLASS);
 
     expect(onClickMock).not.toHaveBeenCalled();
-    expect(onChangeMock).not.toHaveBeenCalled();
+    expect(onChangeMenuOpenMock).not.toHaveBeenCalled();
+    expect(onChangeSelectedIdMock).not.toHaveBeenCalled();
   });
 
   it('외부 요소를 클릭하면 선택 목록이 보이지 않아야 합니다.', async () => {
     render(
       <div>
-        <SelectBox label={LABEL} options={options} data-testid={TEST_ID} />
+        <SelectBox
+          label={LABEL}
+          options={options}
+          data-testid={TEST_ID}
+          onClick={onClickMock}
+          onChangeMenuOpen={onChangeMenuOpenMock}
+          onChangeSelectedId={onChangeSelectedIdMock}
+        />
         <button data-testid="outside">Outside</button>
       </div>,
     );
@@ -164,5 +185,9 @@ describe('SelectBox 컴포넌트 테스트', () => {
 
     await userEvent.click(outside);
     expect(optionList).toHaveClass(HIDDEN_CLASS);
+
+    expect(onClickMock).toHaveBeenCalledTimes(1); // 열기
+    expect(onChangeMenuOpenMock).toHaveBeenCalledTimes(3); // 처음 + 열기 + 닫기(외부 클릭)
+    expect(onChangeSelectedIdMock).toHaveBeenCalledTimes(1); // 처음
   });
 });
