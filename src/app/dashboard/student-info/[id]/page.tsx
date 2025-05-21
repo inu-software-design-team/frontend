@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
 import type { IdParams, SearchParams } from 'types';
@@ -53,18 +54,32 @@ export default async function Page({
       `/dashboard/student-info/${id}?studentYear=${studentYear}&tabName=${encodeURIComponent(TABS[0].label)}`,
     );
 
-  // React.use to await params
-  useEffect(() => {
-    async function fetchParams() {
-      const resolvedParams = await params;
-      setStudentId(resolvedParams.id);
-    }
-    fetchParams();
-  }, [params]);
+  const activeTab =
+    TABS.find(tab => tab.label === decodeURIComponent(tabName)) ?? TABS[0];
 
-  if (!studentId) {
-    return null;
-  }
-
-  return <StudentInfo id={studentId} />;
+  return (
+    <>
+      <div className="mb-4 flex w-full justify-between"></div>
+      <div className="flex h-11 w-full flex-row items-center justify-center rounded-[6px] bg-[#F1F5F9] p-1">
+        {TABS.map(({ label }, index) => (
+          <Link
+            key={index}
+            scroll={false}
+            prefetch
+            href={`/dashboard/student-info/${id}?studentYear=${studentYear}&tabName=${encodeURIComponent(label)}`}
+            className={`flex-1 px-2 py-1.5 text-center ${
+              label === activeTab.label
+                ? 'rounded-[6px] bg-white text-black'
+                : 'text-black/40'
+            }`}
+          >
+            {label}
+          </Link>
+        ))}
+      </div>
+      <div className="h-full w-full overflow-y-auto">
+        <activeTab.item id={id} />
+      </div>
+    </>
+  );
 }
