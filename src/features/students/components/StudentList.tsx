@@ -28,6 +28,11 @@ const StudentList = ({ years, students }: StudentListProps) => {
   const nameParam = searchParams.get('name') ?? '';
 
   const [studentList, setStudentList] = useState<StudentInfo[]>(students);
+  const yearList = useMemo(
+    () => years,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
+  );
   const filteredStudentList = useMemo(
     () =>
       nameParam.length === 0
@@ -97,12 +102,13 @@ const StudentList = ({ years, students }: StudentListProps) => {
           <SelectBox
             label="연도"
             size="sm"
-            options={years.map(({ id, year }) => ({
+            options={yearList.map(({ id, year }) => ({
               id,
               value: year.toString(),
+              default: year.toString() === yearParam,
             }))}
             onChangeSelectedId={id => {
-              const selectedYear = years
+              const selectedYear = yearList
                 .find(year => year.id === id)
                 ?.year.toString();
 
@@ -154,7 +160,14 @@ const StudentList = ({ years, students }: StudentListProps) => {
           </p>
         ) : (
           filteredStudentList.map(({ id, ...props }) => (
-            <StudentCard key={id} pathname={pathname} {...props} />
+            <StudentCard
+              key={id}
+              pathname={pathname}
+              year={
+                yearParam.length === 0 ? yearList[0].year.toString() : yearParam
+              }
+              {...props}
+            />
           ))
         )}
       </div>
