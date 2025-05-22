@@ -97,7 +97,12 @@ export const getGradeList = async ({
     );
   }
 
-  return gradeList;
+  return gradeList.toSorted((a, b) => {
+    if (a.year !== b.year) return b.year - a.year;
+    if (a.semester !== b.semester) return a.semester - b.semester;
+    if (a.term !== b.term) return a.term < b.term ? 1 : -1;
+    return 0;
+  });
 };
 
 export const getOptionsForGrade = async ({
