@@ -6,7 +6,7 @@ import { FETCH_PREFIX_TEACHER } from 'data';
 
 import type { ClassInfo, SnakeCaseKeys, StrictOmit, StudentInfo } from 'types';
 
-export const getYearList = async (): Promise<
+export const getYearListForStudent = async (): Promise<
   { id: string; year: number }[]
 > => {
   const response = await fetch(`${FETCH_PREFIX_TEACHER}/studentsList`, {
@@ -16,7 +16,6 @@ export const getYearList = async (): Promise<
   });
 
   if (!response.ok) throw new Error(response.statusText);
-
   const { yearSelection }: { yearSelection: number[] } = await response.json();
 
   return yearSelection

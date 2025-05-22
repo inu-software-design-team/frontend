@@ -10,7 +10,7 @@ import {
 
 import {
   getStudentList,
-  getYearList,
+  getYearListForStudent,
   StudentList,
   ToggleButton,
 } from 'features/students';
@@ -20,7 +20,7 @@ export default async function DashboardLayout({
 }: {
   children: Readonly<React.ReactNode>;
 }) {
-  const years = await getYearList();
+  const years = await getYearListForStudent();
   const students: StudentInfo[] =
     years.length === 0
       ? []
