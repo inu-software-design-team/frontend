@@ -64,19 +64,18 @@ const Table = <T extends TableData>({
           </thead>
         )}
         <tbody>
-          {data.map((row, rowIndex) => (
-            <tr key={row.id}>
-              {effectiveColumns.map(({ key, render, width }) => (
-                <td
-                  key={key}
-                  className="text-center text-pretty whitespace-pre"
-                  style={{ width }}
-                >
-                  {render?.(row[key], row, rowIndex) ?? row[key]}
-                </td>
-              ))}
-            </tr>
-          ))}
+          {data.map((row, rowIndex) => {
+            const key = row.id || `row-${rowIndex}`; // id 없으면 인덱스로 fallback
+            return (
+              <tr key={key}>
+                {effectiveColumns.map(({ key: colKey, render, width }) => (
+                  <td key={colKey} style={{ width }} className="text-center text-pretty whitespace-pre">
+                    {render?.(row[colKey], row, rowIndex) ?? row[colKey]}
+                  </td>
+                ))}
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </div>
