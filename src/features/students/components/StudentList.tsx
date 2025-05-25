@@ -9,12 +9,12 @@ import { StudentInfo } from 'types';
 import { SelectBox } from 'components/form';
 import { IconButton } from 'components/ui';
 
-import { getStudentList, getYearList } from './actions';
+import { getStudentList, getYearListForStudent } from './actions';
 import SearchBox from './SearchBox';
 import StudentCard from './StudentCard';
 
 interface StudentListProps {
-  years: Awaited<ReturnType<typeof getYearList>>;
+  years: Awaited<ReturnType<typeof getYearListForStudent>>;
   students: Awaited<ReturnType<typeof getStudentList>>;
 }
 
@@ -47,7 +47,7 @@ const StudentList = ({ years, students }: StudentListProps) => {
     if (yearParam.length === 0) setStudentList(students);
     else
       getStudentList({
-        year: parseInt(yearParam),
+        year: Number(yearParam),
       }).then(students => setStudentList(students));
   }, [yearParam, students, years, shouldShowStudentList]);
 
@@ -115,7 +115,7 @@ const StudentList = ({ years, students }: StudentListProps) => {
               if (
                 shouldShowStudentList &&
                 selectedYear &&
-                selectedYear?.length > 0 &&
+                selectedYear.length > 0 &&
                 yearParam !== selectedYear
               )
                 replace(

@@ -10,7 +10,7 @@ import { DropdownMenu } from '..';
 
 interface SelectBoxProps
   extends WithElementSize,
-    Omit<React.ComponentPropsWithoutRef<'form'>, 'children' | 'onChange'>,
+    Omit<React.ComponentPropsWithoutRef<'div'>, 'children' | 'onChange'>,
     Pick<
       Parameters<typeof DropdownMenu>[0],
       'onChangeSelectedId' | 'onChangeMenuOpen'
@@ -47,7 +47,6 @@ const SelectBox = ({
   return (
     <DropdownMenu
       {...props}
-      as="form"
       options={options}
       status={status}
       size={size}
