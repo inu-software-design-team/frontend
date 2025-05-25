@@ -117,9 +117,11 @@ export default async function Grade({
         />
       </div>
       <div className="h-[calc(100vh-(4rem+8rem)-(2rem*2)-3.625rem-3rem)] w-full space-y-8 overflow-y-auto">
-        <div className="w-full space-y-8 overflow-x-scroll">
+        <div className="w-full space-y-8">
           <TableController options={options} />
-          <Table data={filteredGrades} columns={GRADE_COLUMNS} />
+          <div className="w-full overflow-x-auto">
+            <Table data={filteredGrades} columns={GRADE_COLUMNS} />
+          </div>
         </div>
         <div className="grid w-full grid-cols-1 items-center justify-center gap-4 md:grid-cols-2">
           <div className="bg-primary-light-hover aspect-[10/9]">차트</div>

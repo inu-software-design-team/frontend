@@ -1,5 +1,3 @@
-import React from 'react';
-
 interface TableColumn<T> {
   key: Extract<Exclude<keyof T, 'id'>, string>;
   label: string;
@@ -11,7 +9,7 @@ interface TableColumn<T> {
 type TableData = Record<string, React.ReactNode> & { id: string };
 
 interface TableProps<T extends TableData>
-  extends React.ComponentPropsWithoutRef<'div'> {
+  extends React.ComponentPropsWithRef<'div'> {
   columns?: TableColumn<T>[];
   data: T[];
 }
