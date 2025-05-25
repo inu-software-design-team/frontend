@@ -1,5 +1,12 @@
 import type { Metadata } from 'next';
 
+import type { IdParams, SearchParams } from 'types';
+
+import { getStudent, StudentProfile } from 'features/students';
+
+import { SelectBox } from 'components/form';
+import { IconButton, Table } from 'components/ui';
+
 import { GRADE_COLUMNS, SUBJECTS, TERMS } from 'data';
 
 import type { IdParams, SearchParams } from 'types';
