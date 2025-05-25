@@ -2,6 +2,20 @@ import { SUBJECTS, TERMS } from 'data';
 
 import type { StrictOmit } from 'types';
 
+export interface ClassInfo {
+  classId: string;
+  grade: number;
+  class: number;
+}
+export interface StudentInfo {
+  id: string;
+  studentId: number;
+  name: string;
+  classInfo: StrictOmit<ClassInfo, 'classId'> & {
+    id: string;
+  };
+}
+
 export type Subject = keyof typeof SUBJECTS;
 export type GradeItem = {
   id: string;
@@ -12,18 +26,3 @@ export type GradeItem = {
   score: number;
   level: number;
 };
-
-export interface ClassInfo {
-  classId: string;
-  grade: number;
-  class: number;
-}
-
-export interface StudentInfo {
-  id: string;
-  studentId: number;
-  name: string;
-  classInfo: StrictOmit<ClassInfo, 'classId'> & {
-    id: string;
-  };
-}

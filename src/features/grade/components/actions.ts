@@ -1,5 +1,6 @@
 'use server';
 
+import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 
 import { FETCH_PREFIX_TEACHER, GRADE_COLUMNS, SUBJECTS, TERMS } from 'data';
@@ -8,12 +9,10 @@ import type { GradeItem, StudentInfo, Subject } from 'types';
 
 import { SelectBox } from 'components/form';
 
+import { getLevelFromScore } from '../utils';
+
 type Semester = 'firstSemester' | 'lastSemester';
 type Term = 'midterm' | 'finalterm';
-
-function getLevelFromScore(score: number): number {
-  return score === 100 ? 1 : score < 10 ? 9 : Math.ceil((100 - score) / 10);
-}
 
 export const getYearListForGrade = async ({
   studentId,
@@ -99,8 +98,12 @@ export const getGradeList = async ({
 
   return gradeList.toSorted((a, b) => {
     if (a.year !== b.year) return b.year - a.year;
-    if (a.semester !== b.semester) return a.semester - b.semester;
+    if (a.semester !== b.semester) return b.semester - a.semester;
     if (a.term !== b.term) return a.term < b.term ? 1 : -1;
+    if (a.subject !== b.subject) {
+      const keys = Object.keys(SUBJECTS);
+      return keys.indexOf(a.subject) - keys.indexOf(b.subject);
+    }
     return 0;
   });
 };
@@ -155,4 +158,81 @@ export const getOptionsForGrade = async ({
       })),
     ],
   };
+};
+
+export const createGrade = async ({
+  studentId,
+  grade: { year, semester, term, subject, score },
+}: Pick<StudentInfo, 'studentId'> & {
+  grade: GradeItem;
+}): Promise<void> => {
+  const response = await fetch(`${FETCH_PREFIX_TEACHER}/grades/${studentId}`, {
+    method: 'POST',
+    headers: {
+      Cookie: (await cookies()).toString(),
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      year,
+      semester: (semester === 1
+        ? 'firstSemester'
+        : 'lastSemester') satisfies Semester,
+      term: (term === 'mid' ? 'midterm' : 'finalterm') satisfies Term,
+      subject,
+      score,
+    }),
+  });
+
+  if (!response.ok) throw new Error(response.statusText);
+};
+
+export const updateGrade = async ({
+  studentId,
+  grade: { year, semester, term, subject, score },
+}: Pick<StudentInfo, 'studentId'> & {
+  grade: GradeItem;
+}): Promise<void> => {
+  const response = await fetch(`${FETCH_PREFIX_TEACHER}/grades/${studentId}`, {
+    method: 'PUT',
+    headers: {
+      Cookie: (await cookies()).toString(),
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      year,
+      semester: (semester === 1
+        ? 'firstSemester'
+        : 'lastSemester') satisfies Semester,
+      term: (term === 'mid' ? 'midterm' : 'finalterm') satisfies Term,
+      subject,
+      score,
+    }),
+  });
+
+  if (!response.ok) throw new Error(response.statusText);
+};
+
+export const deleteGrade = async ({
+  studentId,
+  grade: { year, semester, term, subject },
+}: Pick<StudentInfo, 'studentId'> & {
+  grade: GradeItem;
+}): Promise<void> => {
+  const response = await fetch(
+    `${FETCH_PREFIX_TEACHER}/grades/${studentId}/${year}/${subject}/${
+      (semester === 1 ? 'firstSemester' : 'lastSemester') satisfies Semester
+    }/${(term === 'mid' ? 'midterm' : 'finalterm') satisfies Term}`,
+    {
+      method: 'DELETE',
+      headers: {
+        Cookie: (await cookies()).toString(),
+      },
+    },
+  );
+
+  if (!response.ok) throw new Error(response.statusText);
+};
+
+export const revalidateGradePage = async (path: string): Promise<void> => {
+  revalidatePath(path);
 };

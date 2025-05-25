@@ -12,7 +12,7 @@ export const SUBJECTS = {
 export const TERMS = {
   mid: '중간고사',
   final: '기말고사',
-};
+} as const;
 
 export const GRADE_COLUMNS: NonNullable<
   React.ComponentPropsWithoutRef<typeof Table<GradeItem>>['columns']
