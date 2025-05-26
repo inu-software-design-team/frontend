@@ -8,7 +8,6 @@ export const API_PREFIX = {
   student: `${API_BASE_URL}/student`,
   parent: `${API_BASE_URL}/parent`,
 } as const;
-
 export const USER_ROLES = {
   teacher: '교사',
   student: '학생',
