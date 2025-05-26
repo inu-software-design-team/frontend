@@ -2,14 +2,14 @@
 
 import { cookies } from 'next/headers';
 
-import { FETCH_PREFIX_TEACHER } from 'data';
+import { API_PREFIX } from 'data';
 
 import type { ClassInfo, SnakeCaseKeys, StrictOmit, StudentInfo } from 'types';
 
 export const getYearListForStudent = async (): Promise<
   { id: string; year: number }[]
 > => {
-  const response = await fetch(`${FETCH_PREFIX_TEACHER}/studentsList`, {
+  const response = await fetch(`${API_PREFIX.teacher}/studentsList`, {
     headers: {
       Cookie: (await cookies()).toString(),
     },
@@ -31,7 +31,7 @@ export const getStudentList = async ({
 }: {
   year: number;
 }): Promise<StudentInfo[]> => {
-  const response = await fetch(`${FETCH_PREFIX_TEACHER}/studentsList/${year}`, {
+  const response = await fetch(`${API_PREFIX.teacher}/studentsList/${year}`, {
     headers: {
       Cookie: (await cookies()).toString(),
     },
