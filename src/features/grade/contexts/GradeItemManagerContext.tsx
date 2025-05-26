@@ -24,9 +24,8 @@ interface GradeItemManagerContextProps {
   clear: () => void;
 }
 
-const GradeItemManagerContext = createContext<
-  GradeItemManagerContextProps | undefined
->(undefined);
+const GradeItemManagerContext =
+  createContext<GradeItemManagerContextProps | null>(null);
 
 export const GradeItemManagerProvider = ({
   children,
