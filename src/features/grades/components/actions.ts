@@ -1,11 +1,12 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { cookies } from 'next/headers';
 
 import { API_PREFIX, GRADE_COLUMNS, SUBJECTS, TERMS } from 'data';
 
 import type { GradeItem, StudentInfo, Subject } from 'types';
+
+import { getCookieHeader } from 'features/auth';
 
 import { SelectBox } from 'components/form';
 
@@ -19,7 +20,7 @@ export const getYearListForGrade = async ({
 }: Pick<StudentInfo, 'studentId'>): Promise<number[]> => {
   const response = await fetch(`${API_PREFIX.teacher}/grades/${studentId}`, {
     headers: {
-      Cookie: (await cookies()).toString(),
+      ...(await getCookieHeader()),
     },
   });
 
@@ -44,7 +45,7 @@ export const getGradeList = async ({
       `${API_PREFIX.teacher}/grades/${studentId}/${year}`,
       {
         headers: {
-          Cookie: (await cookies()).toString(),
+          ...(await getCookieHeader()),
         },
       },
     );
@@ -169,7 +170,7 @@ export const createGrade = async ({
   const response = await fetch(`${API_PREFIX.teacher}/grades/${studentId}`, {
     method: 'POST',
     headers: {
-      Cookie: (await cookies()).toString(),
+      ...(await getCookieHeader()),
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
@@ -195,7 +196,7 @@ export const updateGrade = async ({
   const response = await fetch(`${API_PREFIX.teacher}/grades/${studentId}`, {
     method: 'PUT',
     headers: {
-      Cookie: (await cookies()).toString(),
+      ...(await getCookieHeader()),
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
@@ -225,7 +226,7 @@ export const deleteGrade = async ({
     {
       method: 'DELETE',
       headers: {
-        Cookie: (await cookies()).toString(),
+        ...(await getCookieHeader()),
       },
     },
   );
