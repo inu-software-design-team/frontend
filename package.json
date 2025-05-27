@@ -65,10 +65,5 @@
   },
   "overrides": {
     "yaml": "^2.7.1"
-  },
-  "eslintConfig": {
-    "extends": [
-      "plugin:storybook/recommended"
-    ]
   }
 }
