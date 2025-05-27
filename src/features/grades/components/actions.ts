@@ -97,7 +97,7 @@ export const getGradeList = async ({
   return gradeList.toSorted((a, b) => {
     if (a.year !== b.year) return b.year - a.year;
     if (a.semester !== b.semester) return a.semester < b.semester ? 1 : -1;
-    if (a.term !== b.term) return a.term < b.term ? 1 : -1;
+    if (a.term !== b.term) return a.term < b.term ? -1 : 1;
     if (a.subject !== b.subject) {
       const keys = Object.keys(SUBJECTS);
       return keys.indexOf(a.subject) - keys.indexOf(b.subject);
@@ -140,7 +140,7 @@ export const getOptionsForGrade = async ({
     term: [
       { id: crypto.randomUUID(), value: '전체', default: true },
       ...Array.from(new Set(grades.flatMap(({ term }) => TERMS[term])))
-        // .toSorted((a, b) => (a < b ? 1 : -1))
+        .toSorted((a, b) => (a < b ? 1 : -1))
         .map(value => ({
           id: crypto.randomUUID(),
           value,

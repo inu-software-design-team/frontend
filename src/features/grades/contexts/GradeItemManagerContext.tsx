@@ -67,7 +67,7 @@ export const GradeItemManagerProvider = ({
         ...updated,
       ].toSorted((a, b) => {
         if (a.year !== b.year) return b.year - a.year;
-        if (a.semester !== b.semester) return b.semester - a.semester;
+        if (a.semester !== b.semester) return a.semester < b.semester ? 1 : -1;
         if (a.term !== b.term) return a.term < b.term ? 1 : -1;
         if (a.subject !== b.subject) {
           const keys = Object.keys(SUBJECTS);
