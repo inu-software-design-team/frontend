@@ -9,7 +9,7 @@ import {
   getOptionsForGrade,
   getYearListForGrade,
   TableController,
-} from 'features/grade';
+} from 'features/grades';
 import { getStudent, StudentProfile } from 'features/students';
 
 import { IconButton, Table } from 'components/ui';
