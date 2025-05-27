@@ -84,7 +84,7 @@ const exportStatementsForDataIndex = [
         line =>
           line.startsWith('export * from') && !line.endsWith("'./icon';\r"),
       ),
-  ].toSorted((a, b) => (a > b ? 1 : -1)),
+  ].sort((a, b) => (a > b ? 1 : -1)),
   ...fs
     .readFileSync(DATA_INDEX_FILE)
     .toString()
