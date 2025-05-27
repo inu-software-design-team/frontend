@@ -45,7 +45,7 @@ const CreateModal = ({ isCreateMode, onCreate, onClose }: CreateModalProps) => {
         Number(SELECT_OPTIONS.semester.find(option => option.default)!.value),
     ) as Semester,
   );
-  const [newTerm, setNewTerm] = useState<Term>('midTerm');
+  const [newTerm, setNewTerm] = useState<Term>('midterm');
   const [newSubject, setNewSubject] = useState<Subject>('korean');
   const [newScore, setNewScore] = useState(0);
 
