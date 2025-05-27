@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 
-import { GRADE_COLUMNS, SUBJECTS, TERMS } from 'data';
+import { GRADE_COLUMNS, SEMESTERS, SUBJECTS, TERMS } from 'data';
 
 import type { IdParams, SearchParams } from 'types';
 
@@ -9,7 +9,7 @@ import {
   getOptionsForGrade,
   getYearListForGrade,
   TableController,
-} from 'features/grade';
+} from 'features/grades';
 import { getStudent, StudentProfile } from 'features/students';
 
 import { IconButton, Table } from 'components/ui';
@@ -72,7 +72,7 @@ export default async function Grade({
   const filteredGrades = grades.filter(
     grade =>
       (year ? grade.year === Number(year) : true) &&
-      (semester ? grade.semester === Number(semester) : true) &&
+      (semester ? SEMESTERS[grade.semester] === Number(semester) : true) &&
       (term ? TERMS[grade.term] === decodeURIComponent(term) : true) &&
       (subject
         ? SUBJECTS[grade.subject] === decodeURIComponent(subject)

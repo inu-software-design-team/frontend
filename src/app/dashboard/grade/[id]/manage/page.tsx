@@ -7,7 +7,7 @@ import {
   getYearListForGrade,
   GradeItemManagerProvider,
   ManageCloseButton,
-} from 'features/grade';
+} from 'features/grades';
 import { StudentProfile } from 'features/students';
 
 export default async function GradeManage({

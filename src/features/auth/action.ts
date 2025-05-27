@@ -7,6 +7,12 @@ import { API_BASE_URL } from 'data';
 
 import type { Session, UserInfo, UserRole } from 'types/auth';
 
+export const getCookieHeader = async (): Promise<{ Cookie: string }> => {
+  return {
+    Cookie: (await cookies()).toString(),
+  };
+};
+
 export const checkUserId = async ({
   role: activeTab,
   id,
@@ -80,7 +86,7 @@ export const login = async (): Promise<void> => {
 export const getUserName = async (): Promise<string> => {
   const response = await fetch(`${API_BASE_URL}/dashboard`, {
     headers: {
-      Cookie: (await cookies()).toString(),
+      ...(await getCookieHeader()),
     },
   });
 
@@ -93,7 +99,7 @@ export const getUserName = async (): Promise<string> => {
 export const checkSession = async (): Promise<Session> => {
   const response = await fetch(`${API_BASE_URL}/session-check`, {
     headers: {
-      Cookie: (await cookies()).toString(),
+      ...(await getCookieHeader()),
     },
   });
 
@@ -115,7 +121,7 @@ export const getUserInfo = async (): Promise<UserInfo> => {
 export const getCSRFToken = async (): Promise<string> => {
   const response = await fetch(`${API_BASE_URL}/csrf-token`, {
     headers: {
-      Cookie: (await cookies()).toString(),
+      ...(await getCookieHeader()),
     },
   });
 
