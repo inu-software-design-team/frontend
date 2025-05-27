@@ -1,105 +1,38 @@
+import type { Metadata } from 'next';
+
+import { GRADE_COLUMNS, SEMESTERS, SUBJECTS, TERMS } from 'data';
+
 import type { IdParams, SearchParams } from 'types';
 
-import { SelectBox } from 'components/form';
+import {
+  getGradeList,
+  getOptionsForGrade,
+  getYearListForGrade,
+  TableController,
+} from 'features/grades';
+import { getStudent, StudentProfile } from 'features/students';
+
 import { IconButton, Table } from 'components/ui';
-
-const dummyGradeData = Array.from({ length: 5 }, (_, i) => {
-  const randomScore = Math.floor(Math.random() * 30) + 70;
-
-  return {
-    id: crypto.randomUUID(),
-    year: 2025,
-    semester: 1,
-    subject:
-      i % 5 === 0
-        ? '국어'
-        : i % 5 === 1
-          ? '영어'
-          : i % 5 === 2
-            ? '수학'
-            : i % 5 === 3
-              ? '사회'
-              : '과학',
-    score: randomScore,
-    level: randomScore >= 90 ? 1 : randomScore >= 80 ? 2 : 3,
-  };
-}) satisfies Parameters<typeof Table>[0]['data'];
-
-const statsFromGradeData = {
-  total: {
-    label: '총점',
-    value: dummyGradeData.reduce((acc, cur) => acc + cur.score, 0),
-  },
-  avg_score: {
-    label: '평균 점수',
-    value:
-      dummyGradeData.reduce((acc, cur) => acc + cur.score, 0) /
-      dummyGradeData.length,
-  },
-  avg_level: {
-    label: '평균 등급',
-    value:
-      dummyGradeData.reduce((acc, cur) => acc + cur.level, 0) /
-      dummyGradeData.length,
-  },
-};
-
-const optionsFromGradeData = {
-  year: {
-    label: '연도',
-    options: [
-      {
-        id: crypto.randomUUID(),
-        value: '전체',
-      },
-      ...Array.from(
-        new Set(dummyGradeData.map(({ year }) => year.toString())),
-      ).map(value => ({
-        id: crypto.randomUUID(),
-        value,
-      })),
-    ],
-  },
-  semester: {
-    label: '학기',
-    options: [
-      {
-        id: crypto.randomUUID(),
-        value: '전체',
-      },
-      ...Array.from(
-        new Set(dummyGradeData.map(({ semester }) => semester.toString())),
-      ).map(value => ({
-        id: crypto.randomUUID(),
-        value,
-      })),
-    ],
-  },
-  subject: {
-    label: '과목',
-    options: [
-      {
-        id: crypto.randomUUID(),
-        value: '전체',
-      },
-      ...Array.from(new Set(dummyGradeData.map(({ subject }) => subject))).map(
-        value => ({
-          id: crypto.randomUUID(),
-          value,
-        }),
-      ),
-    ],
-  },
-};
 
 export async function generateMetadata({
   params,
+  searchParams,
 }: {
   params: Promise<IdParams>;
-}) {
+  searchParams: Promise<SearchParams>;
+}): Promise<Metadata> {
   const { id } = await params;
+  const { studentYear } = await searchParams;
 
-  console.log(id);
+  const { name, classInfo } = await getStudent({
+    year: Number(studentYear),
+    studentId: Number(id),
+  });
+
+  return {
+    title: `${classInfo.grade}-${classInfo.class} ${name} | 성적`,
+    description: `${classInfo.grade}학년 ${classInfo.class}반 ${name} 학생의 성적 페이지 입니다.`,
+  };
 }
 
 export default async function Grade({
@@ -110,17 +43,68 @@ export default async function Grade({
   searchParams: Promise<SearchParams>;
 }) {
   const { id } = await params;
-  const { year } = await searchParams;
+  const {
+    studentYear,
+    year,
+    semester,
+    term,
+    subject,
+  }: {
+    studentYear?: string;
+    year?: string;
+    semester?: string;
+    term?: string;
+    subject?: string;
+  } = await searchParams;
+  const studentId = Number(id);
 
-  console.log(year);
+  const years = await getYearListForGrade({
+    studentId,
+  });
+  const grades = await getGradeList({
+    studentId,
+    years,
+  });
+  const options = await getOptionsForGrade({
+    years,
+    grades,
+  });
+  const filteredGrades = grades.filter(
+    grade =>
+      (year ? grade.year === Number(year) : true) &&
+      (semester ? SEMESTERS[grade.semester] === Number(semester) : true) &&
+      (term ? TERMS[grade.term] === decodeURIComponent(term) : true) &&
+      (subject
+        ? SUBJECTS[grade.subject] === decodeURIComponent(subject)
+        : true),
+  );
+  const statsFromGrades = {
+    total_score: {
+      label: '총점',
+      value: grades.reduce((acc, { score }) => acc + score, 0),
+    },
+    average_score: {
+      label: '평균 점수',
+      value: Number(
+        (
+          grades.reduce((acc, { score }) => acc + score, 0) / grades.length
+        ).toFixed(2),
+      ),
+    },
+    average_level: {
+      label: '평균 등급',
+      value: Number(
+        (
+          grades.reduce((acc, { level }) => acc + level, 0) / grades.length
+        ).toFixed(2),
+      ),
+    },
+  };
 
   return (
     <>
       <div className="flex w-full justify-between">
-        <div className="flex w-full flex-col gap-y-1">
-          <strong className="text-title4">이름</strong>
-          <p>{`${id[0]}학년 ${parseInt(id.substring(1, 3))}반 ${parseInt(id.substring(3))}번`}</p>
-        </div>
+        <StudentProfile year={Number(studentYear)} studentId={studentId} />
         <IconButton
           icon="edit"
           size="sm"
@@ -128,41 +112,21 @@ export default async function Grade({
           color="primary"
           spacing="compact"
           href={{
-            pathname: `/dashboard/grade/${id}/manage`,
+            pathname: `/dashboard/grade/${id}/manage?studentYear=${studentYear}`,
           }}
         />
       </div>
       <div className="h-[calc(100vh-(4rem+8rem)-(2rem*2)-3.625rem-3rem)] w-full space-y-8 overflow-y-auto">
-        <div className="flex w-full flex-wrap items-end justify-between">
-          <div className="flex items-center gap-x-2 *:w-40">
-            <SelectBox {...optionsFromGradeData.year} />
-            <SelectBox {...optionsFromGradeData.semester} />
-            <SelectBox {...optionsFromGradeData.subject} />
-          </div>
-          <div className="flex items-center gap-x-2">
-            <IconButton icon="filter" variant="outlined" color="primary" />
-            <IconButton icon="sort" variant="outlined" color="primary" />
+        <div className="w-full space-y-8">
+          <TableController options={options} />
+          <div className="w-full overflow-x-auto">
+            <Table data={filteredGrades} columns={GRADE_COLUMNS} />
           </div>
         </div>
-        <Table
-          data={dummyGradeData}
-          columns={[
-            {
-              key: 'year',
-              label: '연도',
-              render: value => <div className="w-250">{value}년</div>,
-            },
-            { key: 'semester', label: '학기' },
-            { key: 'subject', label: '과목' },
-            { key: 'score', label: '점수' },
-            { key: 'level', label: '등급' },
-          ]}
-        />
-        {/* <ViewTable grades={getGrades()} /> */}
         <div className="grid w-full grid-cols-1 items-center justify-center gap-4 md:grid-cols-2">
           <div className="bg-primary-light-hover aspect-[10/9]">차트</div>
           <ul className="mx-auto w-full max-w-[25rem]">
-            {Object.entries(statsFromGradeData).map(
+            {Object.entries(statsFromGrades).map(
               ([key, { label, value }], index) => (
                 <li key={key} className="w-full">
                   {index !== 0 && (
@@ -173,7 +137,7 @@ export default async function Grade({
                       {label}
                     </span>
                     <strong className="text-title4 text-primary">
-                      {value}
+                      {isNaN(value) ? 0 : value}
                     </strong>
                   </div>
                 </li>

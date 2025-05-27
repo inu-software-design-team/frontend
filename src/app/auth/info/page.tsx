@@ -2,13 +2,18 @@
 
 import { useEffect, useState } from 'react';
 
-import { useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+
+import type { UserRole } from 'types/auth';
+
+import { registerUser } from 'features/auth';
 
 import { Input } from 'components';
 
 export default function Info() {
+  const pathname = usePathname();
   const searchParams = useSearchParams();
-  const router = useRouter();
+  const { replace } = useRouter();
 
   const role = searchParams.get('role') ?? '';
   const linked = searchParams.get('linked') ?? '';
@@ -29,12 +34,14 @@ export default function Info() {
 
   // 인증 정보 없으면 인증 페이지로 돌아감
   useEffect(() => {
-    if (kakaoId.length === 0) router.replace('/');
-
-    if (role.length === 0 || linked.length === 0) router.push('/auth');
-  }, [role, linked, router, kakaoId]);
+    if (kakaoId.length === 0) replace('/');
+    if (role.length === 0 || linked.length === 0) replace('/auth');
+  }, [replace, role, linked, kakaoId]);
 
   const handleSubmit = async () => {
+    replace(`${pathname}?${searchParams.toString()}&status=loading`);
+    await new Promise(resolve => setTimeout(resolve, 500));
+
     if (!email.trim()) {
       setErrors(prev => ({ ...prev, email: '이메일을 입력해주세요.' }));
       return;
@@ -48,24 +55,14 @@ export default function Info() {
       return;
     }
 
-    const response = await fetch('http://localhost:4000/api/v1/users/sign-up', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        role,
-        linked: [parseInt(linked)],
-        kakaoId,
-        email,
-        phone,
-        address,
-      }),
+    await registerUser({
+      role: role as UserRole,
+      linked: [Number(linked)],
+      kakaoId,
+      email,
+      phone,
+      address,
     });
-
-    if (!response.ok) throw new Error(response.statusText);
-    // 성공적으로 처리 후 리디렉션
-    router.push('/dashboard', { scroll: false });
   };
 
   return (

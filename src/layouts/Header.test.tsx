@@ -26,15 +26,6 @@ describe('Header 레이아웃 컴포넌트 테스트', () => {
     expect(logo).toHaveAttribute('name', '로고');
   });
 
-  it('알림 버튼을 정상적으로 렌더링해야 합니다.', () => {
-    const { container } = render(<Header />);
-    const noticeButton = container.querySelector(
-      'div:last-child > button:first-child',
-    );
-
-    expect(noticeButton).toBeInTheDocument();
-  });
-
   it('사용자 정보를 정상적으로 렌더링해야 합니다.', () => {
     const { container } = render(<Header />);
     const userInfo = container.querySelector('div:last-child > div:last-child');

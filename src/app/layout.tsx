@@ -18,7 +18,7 @@ export default async function RootLayout({
   return (
     <html lang="ko" className={Pretendard.variable}>
       <body
-        className={`font-pretendard bg-secondary ${
+        className={`font-pretendard bg-secondary has-[dialog[open]]:overflow-hidden has-[dialog[open]]:*:first:z-0 has-[dialog[open]]:**:[aside]:z-0 has-[dialog[open]]:**:[main]:*:last:**:[button]:z-0 ${
           !isMain ? 'flex h-screen w-screen flex-col' : ''
         }`}
       >
