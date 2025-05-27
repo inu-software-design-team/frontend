@@ -1,4 +1,7 @@
+'use client';
+        
 import { useState, useEffect } from 'react';
+
 import { SelectBox } from 'components/form';
 import { IconButton, Table } from 'components/ui';
 import { X } from 'assets/icons';
@@ -334,13 +337,13 @@ const StudentAttendance = ({ id: studentId }: Props) => {
           <div className="flex flex-1 justify-center gap-3">
             <button
               onClick={handleSave}
-              className="w-30 h-10 rounded-[6px] border border-black bg-white px-2 py-1 text-xs"
+              className="h-10 w-30 rounded-[6px] border border-black bg-white px-2 py-1 text-xs"
             >
               저장
             </button>
             <button
               onClick={handleCancel}
-              className="w-30 h-10 rounded-[6px] bg-[#FB2C36] text-white px-2 py-1 text-xs"
+              className="h-10 w-30 rounded-[6px] bg-[#FB2C36] px-2 py-1 text-xs text-white"
             >
               취소
             </button>

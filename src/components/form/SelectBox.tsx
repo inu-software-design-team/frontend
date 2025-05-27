@@ -10,7 +10,7 @@ import { DropdownMenu } from '..';
 
 interface SelectBoxProps
   extends WithElementSize,
-    Omit<React.ComponentPropsWithoutRef<'form'>, 'children' | 'onChange'>,
+    Omit<React.ComponentPropsWithoutRef<'div'>, 'children' | 'onChange'>,
     Pick<
       Parameters<typeof DropdownMenu>[0],
       'onChangeSelectedId' | 'onChangeMenuOpen'
@@ -37,8 +37,8 @@ const SelectBox = ({
   );
 
   useEffect(() => {
-    onChangeMenuOpen?.(isMenuOpen);
-  }, [onChangeMenuOpen, isMenuOpen]);
+    if (status !== 'disabled') onChangeMenuOpen?.(isMenuOpen);
+  }, [status, onChangeMenuOpen, isMenuOpen]);
 
   // onChangeSelectedId 호출을 useEffect에서 제거
   // 대신 setSelectedId 호출 시 직접 실행
@@ -54,7 +54,6 @@ const SelectBox = ({
   return (
     <DropdownMenu
       {...props}
-      as="form"
       options={options}
       status={status}
       size={size}

@@ -1,6 +1,6 @@
-import Link from 'next/link';
+import { Logo } from 'assets';
 
-import { Logo, 카카오 } from 'assets';
+import { LoginButton } from 'features/auth';
 
 export default function Start() {
   return (
@@ -8,14 +8,7 @@ export default function Start() {
       {/* 로고 */}
       <Logo className="h-[135px] w-96" />
 
-      <div className="flex w-full justify-center">
-        <div className="flex w-full justify-center gap-8">
-          {/* 카카오 로그인 API 호출 */}
-          <Link href="http://localhost:4000/api/v1/users/kakao/login">
-            <카카오 className="size-full" />
-          </Link>
-        </div>
-      </div>
+      <LoginButton />
     </div>
   );
 }

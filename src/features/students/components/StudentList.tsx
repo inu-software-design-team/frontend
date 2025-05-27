@@ -9,12 +9,12 @@ import { StudentInfo } from 'types';
 import { SelectBox } from 'components/form';
 import { IconButton } from 'components/ui';
 
-import { getStudentList, getYearList } from './actions';
+import { getStudentList, getYearListForStudent } from './actions';
 import SearchBox from './SearchBox';
 import StudentCard from './StudentCard';
 
 interface StudentListProps {
-  years: Awaited<ReturnType<typeof getYearList>>;
+  years: Awaited<ReturnType<typeof getYearListForStudent>>;
   students: Awaited<ReturnType<typeof getStudentList>>;
 }
 
@@ -24,10 +24,15 @@ const StudentList = ({ years, students }: StudentListProps) => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const shouldShowStudentList = pathname !== '/dashboard';
-  const yearParam = searchParams.get('year') ?? '';
-  const nameParam = searchParams.get('name') ?? '';
+  const yearParam = searchParams.get('studentYear') ?? '';
+  const nameParam = searchParams.get('studentName') ?? '';
 
   const [studentList, setStudentList] = useState<StudentInfo[]>(students);
+  const yearList = useMemo(
+    () => years,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
+  );
   const filteredStudentList = useMemo(
     () =>
       nameParam.length === 0
@@ -42,7 +47,7 @@ const StudentList = ({ years, students }: StudentListProps) => {
     if (yearParam.length === 0) setStudentList(students);
     else
       getStudentList({
-        year: parseInt(yearParam),
+        year: Number(yearParam),
       }).then(students => setStudentList(students));
   }, [yearParam, students, years, shouldShowStudentList]);
 
@@ -97,25 +102,26 @@ const StudentList = ({ years, students }: StudentListProps) => {
           <SelectBox
             label="연도"
             size="sm"
-            options={years.map(({ id, year }) => ({
+            options={yearList.map(({ id, year }) => ({
               id,
               value: year.toString(),
+              default: year.toString() === yearParam,
             }))}
             onChangeSelectedId={id => {
-              const selectedYear = years
+              const selectedYear = yearList
                 .find(year => year.id === id)
                 ?.year.toString();
 
               if (
                 shouldShowStudentList &&
                 selectedYear &&
-                selectedYear?.length > 0 &&
+                selectedYear.length > 0 &&
                 yearParam !== selectedYear
               )
                 replace(
                   `${pathname}?${new URLSearchParams({
                     ...Object.fromEntries(searchParams.entries()),
-                    year: selectedYear,
+                    studentYear: selectedYear,
                   }).toString()}`,
                   {
                     scroll: false,
@@ -154,7 +160,14 @@ const StudentList = ({ years, students }: StudentListProps) => {
           </p>
         ) : (
           filteredStudentList.map(({ id, ...props }) => (
-            <StudentCard key={id} pathname={pathname} {...props} />
+            <StudentCard
+              key={id}
+              pathname={pathname}
+              year={
+                yearParam.length === 0 ? yearList[0].year.toString() : yearParam
+              }
+              {...props}
+            />
           ))
         )}
       </div>

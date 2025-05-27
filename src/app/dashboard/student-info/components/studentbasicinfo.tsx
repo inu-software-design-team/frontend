@@ -1,11 +1,14 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Address, Call, CircleUser, ProfileImg } from 'assets/icons';
-import { IconButton } from 'components/ui';
+
 import { GetStudentInfo } from 'api/teacher/student-info/getStudentInfo';
-import { PatchStudentName } from 'api/teacher/student-info/patchStudentName';
 import { PatchStudentInfo } from 'api/teacher/student-info/patchStudentInfo';
+import { PatchStudentName } from 'api/teacher/student-info/patchStudentName';
+
+import { Address, Call, CircleUser, ProfileImg } from 'assets/icons';
+
+import { IconButton } from 'components/ui';
 
 interface Props {
   id: string;
@@ -26,7 +29,6 @@ const StudentBasicInfo = ({ id }: Props) => {
   const [editedPhoneNumber, setEditedPhoneNumber] = useState('');
   const [address, setAddress] = useState('');
   const [editedAddress, setEditedAddress] = useState('');
-
 
   const [homeroomTeacher, setHomeroomTeacher] = useState('');
   const [teacherSubject, setTeacherSubject] = useState('');
@@ -69,14 +71,14 @@ const StudentBasicInfo = ({ id }: Props) => {
   }, [id]);
 
   const handleSave = async () => {
-  try {
-    await PatchStudentName(id, editedName); 
-    setStudentName(editedName);            
-    setIsEditingBasicInfo(false);           
-  } catch (error) {
-    console.error('이름 수정 실패:', error);
-    alert('이름 수정에 실패했습니다. 다시 시도해주세요.');
-  }
+    try {
+      await PatchStudentName(id, editedName);
+      setStudentName(editedName);
+      setIsEditingBasicInfo(false);
+    } catch (error) {
+      console.error('이름 수정 실패:', error);
+      alert('이름 수정에 실패했습니다. 다시 시도해주세요.');
+    }
   };
 
   const handleCancel = () => {
@@ -85,19 +87,24 @@ const StudentBasicInfo = ({ id }: Props) => {
   };
 
   const handleSavePersonalInfo = async () => {
-  try {
-    await PatchStudentInfo(id, editedGender, editedRegistrationNumber, editedPhoneNumber, editedAddress); 
-    setGender(editedGender);
-    setPhoneNumber(editedPhoneNumber); 
-    setRegistrationNumber(editedRegistrationNumber); 
-    setAddress(editedAddress);                      
-    setIsEditingPersonalInfo(false);           
-  } catch (error) {
-    console.error('학생 정보 수정 실패:', error);
-    alert('학생 정보 수정에 실패했습니다. 다시 시도해주세요.');
-  }
+    try {
+      await PatchStudentInfo(
+        id,
+        editedGender,
+        editedRegistrationNumber,
+        editedPhoneNumber,
+        editedAddress,
+      );
+      setGender(editedGender);
+      setPhoneNumber(editedPhoneNumber);
+      setRegistrationNumber(editedRegistrationNumber);
+      setAddress(editedAddress);
+      setIsEditingPersonalInfo(false);
+    } catch (error) {
+      console.error('학생 정보 수정 실패:', error);
+      alert('학생 정보 수정에 실패했습니다. 다시 시도해주세요.');
+    }
   };
-
 
   const handleCancelPersonalInfo = () => {
     setIsEditingPersonalInfo(false);
@@ -106,7 +113,9 @@ const StudentBasicInfo = ({ id }: Props) => {
   return (
     <div className="flex h-full w-full flex-row">
       {/* 프로필 */}
-      <div className={`flex w-3/7 flex-col items-center rounded-[6px] bg-[#E6F0FB] p-3 ${isEditingBasicInfo ? 'h-[490px]' : 'h-[380px]'}`}>
+      <div
+        className={`flex w-3/7 flex-col items-center rounded-[6px] bg-[#E6F0FB] p-3 ${isEditingBasicInfo ? 'h-[490px]' : 'h-[380px]'}`}
+      >
         <IconButton
           icon={isEditingBasicInfo ? 'x' : 'edit'}
           size="xs"
@@ -114,7 +123,9 @@ const StudentBasicInfo = ({ id }: Props) => {
           color="primary"
           spacing="compact"
           className="ml-auto"
-          onClick={() => (isEditingBasicInfo ? handleCancel() : setIsEditingBasicInfo(true))}
+          onClick={() =>
+            isEditingBasicInfo ? handleCancel() : setIsEditingBasicInfo(true)
+          }
         />
         <div className="mt-2 h-28 w-28">
           <ProfileImg className="h-full w-full" />
@@ -136,34 +147,43 @@ const StudentBasicInfo = ({ id }: Props) => {
               <div className="flex flex-row text-sm">
                 <div className="flex flex-col">
                   <p className="mb-1 ml-1">학년</p>
-                  <p className="mb-2 w-20 h-8 rounded-[6px] border-[0.9px] border-black px-2 py-1 text-start ml-1.5">
+                  <p className="mb-2 ml-1.5 h-8 w-20 rounded-[6px] border-[0.9px] border-black px-2 py-1 text-start">
                     {grade}
                   </p>
-                  
                 </div>
                 <div className="flex flex-col">
                   <p className="mb-1 ml-1">반</p>
-                  <p className="mb-2 w-20 h-8 rounded-[6px] border-[0.9px] border-black px-2 py-1 text-start ml-1.5">
+                  <p className="mb-2 ml-1.5 h-8 w-20 rounded-[6px] border-[0.9px] border-black px-2 py-1 text-start">
                     {classNumber}
                   </p>
                 </div>
                 <div className="flex flex-col">
                   <p className="mb-1 ml-1">ID</p>
-                  <p className="mb-2 w-20 h-8 rounded-[6px] border-[0.9px] border-black px-2 py-1 text-start ml-1.5">
+                  <p className="mb-2 ml-1.5 h-8 w-20 rounded-[6px] border-[0.9px] border-black px-2 py-1 text-start">
                     {studentNumber}
                   </p>
                 </div>
               </div>
-              <div className="mt-4 flex gap-2 flex-row items-center justify-center">
-                <button onClick={handleSave} className="h-10 w-30.5 rounded-[6px] border border-black bg-white px-2 py-1 text-xs">저장</button>
-                <button onClick={handleCancel} className="h-10 w-30.5 rounded-[6px] bg-[#FB2C36] px-2 py-1 text-xs text-white">취소</button>
+              <div className="mt-4 flex flex-row items-center justify-center gap-2">
+                <button
+                  onClick={handleSave}
+                  className="h-10 w-30.5 rounded-[6px] border border-black bg-white px-2 py-1 text-xs"
+                >
+                  저장
+                </button>
+                <button
+                  onClick={handleCancel}
+                  className="h-10 w-30.5 rounded-[6px] bg-[#FB2C36] px-2 py-1 text-xs text-white"
+                >
+                  취소
+                </button>
               </div>
             </div>
           ) : (
             <>
               <div className="flex flex-col items-center">
                 <strong className="text-title5">{studentName}</strong>
-                <div className="flex flex-row mt-1">
+                <div className="mt-1 flex flex-row">
                   <p className="mb-1 ml-1">{grade}학년</p>
                   <p className="mb-1 ml-1">{classNumber}반</p>
                 </div>
@@ -178,7 +198,9 @@ const StudentBasicInfo = ({ id }: Props) => {
           <div className="mb-1 flex h-14 w-full flex-row items-center justify-start rounded-[6px] bg-white">
             <CircleUser className="mr-3 ml-3 flex h-8 w-8" />
             <p className="font-medium">{homeroomTeacher} 선생님</p>
-            <p className="text-[#4B89DC] text-xs ml-2.5 mt-0.5">과목: {teacherSubject}</p>
+            <p className="mt-0.5 ml-2.5 text-xs text-[#4B89DC]">
+              과목: {teacherSubject}
+            </p>
           </div>
         </div>
       </div>
@@ -188,7 +210,7 @@ const StudentBasicInfo = ({ id }: Props) => {
         {/* 인적 사항 */}
         <div className="flex w-full flex-col rounded-[6px] border border-[#E6F0FB] p-6">
           <div className="flex flex-row justify-between">
-            <p className="font-light text-[17px] text-xs mr-2"> 인적 사항 </p>
+            <p className="mr-2 text-xs text-[17px] font-light"> 인적 사항 </p>
             <IconButton
               icon={isEditingPersonalInfo ? 'x' : 'edit'}
               size="xs"
@@ -196,14 +218,24 @@ const StudentBasicInfo = ({ id }: Props) => {
               color="primary"
               spacing="compact"
               className="ml-auto"
-              onClick={() => (isEditingPersonalInfo ? handleCancelPersonalInfo() : setIsEditingPersonalInfo(true))}
+              onClick={() =>
+                isEditingPersonalInfo
+                  ? handleCancelPersonalInfo()
+                  : setIsEditingPersonalInfo(true)
+              }
             />
           </div>
 
           {/* 성별, 주민등록번호 */}
-          <div className={`mt-6 ml-1 flex flex-row justify-start ${isEditingPersonalInfo ? 'gap-12' : 'gap-52'}`}>
+          <div
+            className={`mt-6 ml-1 flex flex-row justify-start ${isEditingPersonalInfo ? 'gap-12' : 'gap-52'}`}
+          >
             <div className="flex flex-col">
-              <p className={`text-xs ${isEditingPersonalInfo ? 'text-black' : 'text-black/40'}`}>성별</p>
+              <p
+                className={`text-xs ${isEditingPersonalInfo ? 'text-black' : 'text-black/40'}`}
+              >
+                성별
+              </p>
               {isEditingPersonalInfo ? (
                 <input
                   type="text"
@@ -216,7 +248,11 @@ const StudentBasicInfo = ({ id }: Props) => {
               )}
             </div>
             <div className="flex flex-col">
-              <p className={`text-xs ${isEditingPersonalInfo ? 'ml-2 text-black' : 'text-black/40'}`}>주민등록번호</p>
+              <p
+                className={`text-xs ${isEditingPersonalInfo ? 'ml-2 text-black' : 'text-black/40'}`}
+              >
+                주민등록번호
+              </p>
               {isEditingPersonalInfo ? (
                 <input
                   type="text"
@@ -231,8 +267,14 @@ const StudentBasicInfo = ({ id }: Props) => {
           </div>
 
           {/* 연락처, 주소 */}
-          <div className={`flex flex-col ml-1 ${isEditingPersonalInfo ? 'mt-2' : 'mt-5'}`}>
-            <p className={`text-xs ${isEditingPersonalInfo ? 'text-black' : 'text-black/40'}`}>연락처</p>
+          <div
+            className={`ml-1 flex flex-col ${isEditingPersonalInfo ? 'mt-2' : 'mt-5'}`}
+          >
+            <p
+              className={`text-xs ${isEditingPersonalInfo ? 'text-black' : 'text-black/40'}`}
+            >
+              연락처
+            </p>
             <div className="mt-2 flex flex-row items-center">
               <Call className="flex h-3.5 w-3.5" />
               {isEditingPersonalInfo ? (
@@ -248,8 +290,14 @@ const StudentBasicInfo = ({ id }: Props) => {
             </div>
           </div>
 
-          <div className={`flex flex-col ml-1 ${isEditingPersonalInfo ? 'mt-2' : 'mt-5'}`}>
-            <p className={`text-xs ${isEditingPersonalInfo ? 'text-black' : 'text-black/40'}`}>주소</p>
+          <div
+            className={`ml-1 flex flex-col ${isEditingPersonalInfo ? 'mt-2' : 'mt-5'}`}
+          >
+            <p
+              className={`text-xs ${isEditingPersonalInfo ? 'text-black' : 'text-black/40'}`}
+            >
+              주소
+            </p>
             <div className="mt-2 flex flex-row items-center">
               <Address className="flex h-3.5 w-3.5" />
               {isEditingPersonalInfo ? (
@@ -267,42 +315,59 @@ const StudentBasicInfo = ({ id }: Props) => {
 
           {isEditingPersonalInfo && (
             <div className="mt-4 mb-2 flex flex-row justify-center gap-3">
-              <button onClick={handleSavePersonalInfo} className="h-10 w-30 rounded-[6px] border border-black bg-white px-2 py-1 text-xs">저장</button>
-              <button onClick={handleCancelPersonalInfo} className="h-10 w-30 rounded-[6px] bg-[#FB2C36] px-2 py-1 text-xs text-white">취소</button>
+              <button
+                onClick={handleSavePersonalInfo}
+                className="h-10 w-30 rounded-[6px] border border-black bg-white px-2 py-1 text-xs"
+              >
+                저장
+              </button>
+              <button
+                onClick={handleCancelPersonalInfo}
+                className="h-10 w-30 rounded-[6px] bg-[#FB2C36] px-2 py-1 text-xs text-white"
+              >
+                취소
+              </button>
             </div>
           )}
         </div>
 
         {/* 가족 관계 */}
         <div className="mt-5 flex w-full flex-col rounded-[6px] border border-[#E6F0FB] px-8 py-6">
-          <p className="font-medium text-[17px]">가족 관계</p>
-          {[father, mother].map((parent, index) => (
-            parent && (
-              <div key={index}>
-                <div className="mt-6 ml-1 flex flex-row justify-start gap-32">
-                  <div className="flex flex-col">
-                    <p className="text-xs text-black/40">관계</p>
-                    <p className="mt-2 text-sm text-black">{index === 0 ? '부' : '모'}</p>
-                    <p className="mt-5 text-xs text-black/40">연락처</p>
-                    <div className="mt-2 flex flex-row items-center">
-                      <Call className="flex h-3.5 w-3.5" />
-                      <p className="ml-3 text-sm text-black">{parent.phone}</p>
+          <p className="text-[17px] font-medium">가족 관계</p>
+          {[father, mother].map(
+            (parent, index) =>
+              parent && (
+                <div key={index}>
+                  <div className="mt-6 ml-1 flex flex-row justify-start gap-32">
+                    <div className="flex flex-col">
+                      <p className="text-xs text-black/40">관계</p>
+                      <p className="mt-2 text-sm text-black">
+                        {index === 0 ? '부' : '모'}
+                      </p>
+                      <p className="mt-5 text-xs text-black/40">연락처</p>
+                      <div className="mt-2 flex flex-row items-center">
+                        <Call className="flex h-3.5 w-3.5" />
+                        <p className="ml-3 text-sm text-black">
+                          {parent.phone}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex flex-col">
+                      <p className="text-xs text-black/40">성명</p>
+                      <p className="mt-2 text-sm text-black">{parent.name}</p>
+                      <p className="mt-4.5 text-xs text-black/40">직업</p>
+                      <p className="mt-2 text-sm text-black">
+                        {parent.occupation}
+                      </p>
                     </div>
                   </div>
-                  <div className="flex flex-col">
-                    <p className="text-xs text-black/40">성명</p>
-                    <p className="mt-2 text-sm text-black">{parent.name}</p>
-                    <p className="mt-4.5 text-xs text-black/40">직업</p>
-                    <p className="mt-2 text-sm text-black">{parent.occupation}</p>
-                  </div>
+                  {/* 부와 모 사이에만 구분선 넣기 */}
+                  {index === 0 && (
+                    <div className="mt-5 h-px w-full bg-[#E6F0FB]" />
+                  )}
                 </div>
-                {/* 부와 모 사이에만 구분선 넣기 */}
-                {index === 0 && (
-                  <div className="mt-5 h-px w-full bg-[#E6F0FB]" />
-                )}
-              </div>
-            )
-          ))}
+              ),
+          )}
         </div>
       </div>
     </div>

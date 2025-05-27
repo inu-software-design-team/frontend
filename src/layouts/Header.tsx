@@ -2,7 +2,7 @@
 
 import { HeaderLogo } from 'assets';
 
-import IconButton from '../components/ui/IconButton';
+import { IconButton } from '../components/ui';
 import { getNavConfig, setNavConfig } from './actions';
 
 const Header = () => {
@@ -27,7 +27,6 @@ const Header = () => {
         <HeaderLogo name="로고" className="h-full" />
       </div>
       <div className="flex flex-1 items-center justify-end gap-x-4 pr-4">
-        <IconButton icon="bell" size="md" spacing="compact" shape="circle" />
         <div className="flex items-center gap-x-2 p-1">
           <div className="text-primary-hover bg-primary-light-hover flex size-8 items-center justify-center rounded-full">
             {username[0].toUpperCase()}

@@ -2,17 +2,22 @@
 
 import { useEffect, useState } from 'react';
 
-import { useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+
+import { USER_ROLES } from 'data';
+
+import type { UserRole } from 'types/auth';
+
+import { checkUserId } from 'features/auth';
 
 import { Input } from 'components';
 
-type Role = 'Teacher' | 'Student' | 'Parents';
-
 export default function Auth() {
+  const pathname = usePathname();
   const searchParams = useSearchParams();
   const kakaoId = searchParams.get('kakaoId') ?? '';
 
-  const [activeTab, setActiveTab] = useState<Role>('Teacher');
+  const [activeTab, setActiveTab] = useState<UserRole>('teacher');
   const [teacherId, setTeacherId] = useState('');
   const [teacherName, setTeacherName] = useState('');
   const [studentId, setStudentId] = useState('');
@@ -24,19 +29,22 @@ export default function Auth() {
     name: '',
   });
 
-  const { push, replace } = useRouter();
+  const { replace } = useRouter();
 
   const handleSignup = async () => {
+    replace(`${pathname}?${searchParams.toString()}&status=loading`);
+    await new Promise(resolve => setTimeout(resolve, 500));
+
     let id = '',
       name = '';
     const newErrors = { id: '', name: '' };
 
-    if (activeTab === 'Teacher') {
+    if (activeTab === 'teacher') {
       id = teacherId.trim();
       name = teacherName.trim();
       if (!id) newErrors.id = '교번을 입력해주세요.';
       if (!name) newErrors.name = '이름을 입력해주세요.';
-    } else if (activeTab === 'Student') {
+    } else if (activeTab === 'student') {
       id = studentId.trim();
       name = studentName.trim();
       if (!id) newErrors.id = '학번을 입력해주세요.';
@@ -54,33 +62,12 @@ export default function Auth() {
     }
 
     try {
-      const response = await fetch(
-        'http://localhost:4000/api/v1/users/check-id',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            role:
-              activeTab === 'Teacher'
-                ? 'teacher'
-                : activeTab === 'Student'
-                  ? 'student'
-                  : 'parent',
-            number: [parseInt(id)],
-            name,
-          }),
-        },
-      );
-
-      if (!response.ok) throw new Error(response.statusText);
-
-      const { role, linked }: { role: string; linked: number } =
-        await response.json();
-      push(
-        `/auth/info?role=${role}&linked=${encodeURIComponent(linked)}&kakaoId=${encodeURIComponent(kakaoId)}`,
-      );
+      await checkUserId({
+        role: activeTab,
+        id: Number(id),
+        name,
+        kakaoId,
+      });
     } catch (error) {
       console.error(error instanceof Error ? error.message : String(error));
     }
@@ -89,10 +76,10 @@ export default function Auth() {
   const isFormValid = () => {
     let id = '',
       name = '';
-    if (activeTab === 'Teacher') {
+    if (activeTab === 'teacher') {
       id = teacherId.trim();
       name = teacherName.trim();
-    } else if (activeTab === 'Student') {
+    } else if (activeTab === 'student') {
       id = studentId.trim();
       name = studentName.trim();
     } else {
@@ -110,128 +97,109 @@ export default function Auth() {
     <div className="flex h-[430px] w-md flex-col items-center rounded-[6px] border border-[#F1F5F9] bg-white p-4">
       <p className="mt-8 text-2xl font-bold">사용자 인증</p>
 
-      <div className="mt-7 flex h-12 w-96 flex-row items-start rounded-[6px] border-[0.5px] border-[#E6F0FB] bg-white p-1">
-        {(['Teacher', 'Student', 'Parents'] as Role[]).map(role => (
-          <button
-            key={role}
-            onClick={() => {
-              setActiveTab(role);
-              setErrors({ id: '', name: '' });
-            }}
-            className={`flex h-10 w-[232px] items-center justify-center rounded-[6px] p-4 text-sm font-normal transition-all ${
-              activeTab === role ? 'bg-[#E6F0FB] text-[#4B89DC]' : ''
-            }`}
-          >
-            {role === 'Teacher'
-              ? '교사'
-              : role === 'Student'
-                ? '학생'
-                : '학부모'}
-          </button>
-        ))}
+      <div className="mt-7 flex h-12 w-96 items-center rounded-[6px] border-[0.5px] border-[#E6F0FB] bg-white p-1">
+        {Object.keys(USER_ROLES).map(role => {
+          const userRole = role as UserRole;
+
+          return (
+            <button
+              key={role}
+              onClick={() => {
+                setActiveTab(userRole);
+                setErrors({ id: '', name: '' });
+              }}
+              className={`flex h-10 w-[232px] items-center justify-center rounded-[6px] p-4 text-sm font-normal transition-all ${
+                activeTab === role ? 'bg-[#E6F0FB] text-[#4B89DC]' : ''
+              }`}
+            >
+              {USER_ROLES[userRole]}
+            </button>
+          );
+        })}
       </div>
 
-      {/* 교사 */}
-      {activeTab === 'Teacher' && (
-        <div className="flex w-92 flex-col items-center">
-          <Input
-            className="mt-4 w-full"
-            label="이름"
-            type="text"
-            placeholder="이름을 입력해주세요."
-            value={teacherName}
-            onChange={e => setTeacherName(e.target.value)}
-            validate={true}
-            errorMessage={errors.name}
-          />
-          <Input
-            className="mt-4 w-full"
-            label="교번"
-            type="text"
-            placeholder="교번을 입력해주세요."
-            value={teacherId}
-            onChange={e => setTeacherId(e.target.value)}
-            validate={true}
-            errorMessage={errors.id}
-          />
-          <button
-            onClick={handleSignup}
-            className={`mt-8 mb-2 h-9 w-full rounded-[6px] text-sm text-white ${
-              isFormValid() ? 'bg-[#4B89DC]' : 'bg-[#4B89DC] opacity-38'
-            }`}
-          >
-            가입하기
-          </button>
-        </div>
-      )}
+      <div className="flex w-92 flex-col items-center">
+        <Input
+          className="mt-4 w-full"
+          label="이름"
+          type="text"
+          placeholder="이름을 입력해주세요."
+          value={
+            activeTab === 'teacher'
+              ? teacherName
+              : activeTab === 'student'
+                ? studentName
+                : parentsName
+          }
+          onChange={e => {
+            const name = e.target.value;
 
-      {/* 학생 */}
-      {activeTab === 'Student' && (
-        <div className="flex w-92 flex-col items-center">
-          <Input
-            className="mt-4 w-full"
-            label="이름"
-            type="text"
-            placeholder="이름을 입력해주세요."
-            value={studentName}
-            onChange={e => setStudentName(e.target.value)}
-            validate={true}
-            errorMessage={errors.name}
-          />
-          <Input
-            className="mt-4 w-full"
-            label="학번"
-            type="text"
-            placeholder="학번을 입력해주세요."
-            value={studentId}
-            onChange={e => setStudentId(e.target.value)}
-            validate={true}
-            errorMessage={errors.id}
-          />
-          <button
-            onClick={handleSignup}
-            className={`mt-8 mb-2 h-9 w-full rounded-[6px] text-sm text-white ${
-              isFormValid() ? 'bg-[#4B89DC]' : 'bg-[#4B89DC] opacity-38'
-            }`}
-          >
-            가입하기
-          </button>
-        </div>
-      )}
+            switch (activeTab) {
+              case 'teacher':
+                setTeacherName(name);
+                break;
+              case 'student':
+                setStudentName(name);
+                break;
+              case 'parent':
+                setParentsName(name);
+                break;
+            }
+          }}
+          validate={true}
+          errorMessage={errors.name}
+        />
+        <Input
+          className="mt-4 w-full"
+          label={
+            activeTab === 'teacher'
+              ? '교번'
+              : activeTab === 'student'
+                ? '학번'
+                : '자녀 학번'
+          }
+          type="text"
+          placeholder={`${
+            activeTab === 'teacher'
+              ? '교번'
+              : activeTab === 'student'
+                ? '학번'
+                : '자녀의 학번'
+          }을 입력해주세요.`}
+          value={
+            activeTab === 'teacher'
+              ? teacherId
+              : activeTab === 'student'
+                ? studentId
+                : parentsId
+          }
+          onChange={e => {
+            const id = e.target.value;
 
-      {/* 학부모 */}
-      {activeTab === 'Parents' && (
-        <div className="flex w-92 flex-col items-center">
-          <Input
-            className="mt-4 w-full"
-            label="이름"
-            type="text"
-            placeholder="이름을 입력해주세요."
-            value={parentsName}
-            onChange={e => setParentsName(e.target.value)}
-            validate={true}
-            errorMessage={errors.name}
-          />
-          <Input
-            className="mt-4 w-full"
-            label="자녀 학번"
-            type="text"
-            placeholder="자녀의 학번을 입력해주세요."
-            value={parentsId}
-            onChange={e => setParentsId(e.target.value)}
-            validate={true}
-            errorMessage={errors.id}
-          />
-          <button
-            onClick={handleSignup}
-            className={`mt-8 mb-2 h-9 w-full rounded-[6px] text-sm text-white ${
-              isFormValid() ? 'bg-[#4B89DC]' : 'bg-[#4B89DC] opacity-38'
-            }`}
-          >
-            가입하기
-          </button>
-        </div>
-      )}
+            switch (activeTab) {
+              case 'teacher':
+                setTeacherId(id);
+                break;
+              case 'student':
+                setStudentId(id);
+                break;
+              case 'parent':
+                setParentsId(id);
+                break;
+            }
+          }}
+          validate={true}
+          errorMessage={errors.id}
+        />
+        <button
+          onClick={handleSignup}
+          className={`mt-8 mb-2 h-9 w-full rounded-[6px] text-sm text-white ${
+            isFormValid() ? 'bg-[#4B89DC]' : 'bg-[#4B89DC] opacity-38'
+          }`}
+        >
+          가입하기
+        </button>
+      </div>
     </div>
   );
 }
