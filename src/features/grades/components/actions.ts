@@ -24,7 +24,7 @@ export const getYearListForGrade = async ({
   if (!response.ok) throw new Error(response.statusText);
   const { yearSelection }: { yearSelection: number[] } = await response.json();
 
-  return yearSelection.toSorted((a, b) => b - a);
+  return yearSelection.sort((a, b) => b - a);
 };
 
 export const getGradeList = async ({
@@ -94,7 +94,7 @@ export const getGradeList = async ({
     );
   }
 
-  return gradeList.toSorted((a, b) => {
+  return gradeList.sort((a, b) => {
     if (a.year !== b.year) return b.year - a.year;
     if (a.semester !== b.semester) return a.semester < b.semester ? 1 : -1;
     if (a.term !== b.term) return a.term < b.term ? -1 : 1;
@@ -122,7 +122,7 @@ export const getOptionsForGrade = async ({
     year: [
       { id: crypto.randomUUID(), value: '전체', default: true },
       ...Array.from(new Set(years))
-        .toSorted((a, b) => b - a)
+        .sort((a, b) => b - a)
         .map(year => ({
           id: crypto.randomUUID(),
           value: year.toString(),
@@ -140,7 +140,7 @@ export const getOptionsForGrade = async ({
     term: [
       { id: crypto.randomUUID(), value: '전체', default: true },
       ...Array.from(new Set(grades.flatMap(({ term }) => TERMS[term])))
-        .toSorted((a, b) => (a < b ? 1 : -1))
+        .sort((a, b) => (a < b ? 1 : -1))
         .map(value => ({
           id: crypto.randomUUID(),
           value,

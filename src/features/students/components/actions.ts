@@ -19,7 +19,7 @@ export const getYearListForStudent = async (): Promise<
   const { yearSelection }: { yearSelection: number[] } = await response.json();
 
   return yearSelection
-    .toSorted((a, b) => b - a)
+    .sort((a, b) => b - a)
     .map(year => ({
       id: crypto.randomUUID(),
       year,
