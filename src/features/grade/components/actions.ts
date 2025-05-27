@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 
-import { FETCH_PREFIX_TEACHER, GRADE_COLUMNS, SUBJECTS, TERMS } from 'data';
+import { API_PREFIX, GRADE_COLUMNS, SUBJECTS, TERMS } from 'data';
 
 import type { GradeItem, StudentInfo, Subject } from 'types';
 
@@ -17,7 +17,7 @@ type Term = 'midterm' | 'finalterm';
 export const getYearListForGrade = async ({
   studentId,
 }: Pick<StudentInfo, 'studentId'>): Promise<number[]> => {
-  const response = await fetch(`${FETCH_PREFIX_TEACHER}/grades/${studentId}`, {
+  const response = await fetch(`${API_PREFIX.teacher}/grades/${studentId}`, {
     headers: {
       Cookie: (await cookies()).toString(),
     },
@@ -41,7 +41,7 @@ export const getGradeList = async ({
 
   for (const year of years) {
     const response = await fetch(
-      `${FETCH_PREFIX_TEACHER}/grades/${studentId}/${year}`,
+      `${API_PREFIX.teacher}/grades/${studentId}/${year}`,
       {
         headers: {
           Cookie: (await cookies()).toString(),
@@ -166,7 +166,7 @@ export const createGrade = async ({
 }: Pick<StudentInfo, 'studentId'> & {
   grade: GradeItem;
 }): Promise<void> => {
-  const response = await fetch(`${FETCH_PREFIX_TEACHER}/grades/${studentId}`, {
+  const response = await fetch(`${API_PREFIX.teacher}/grades/${studentId}`, {
     method: 'POST',
     headers: {
       Cookie: (await cookies()).toString(),
@@ -192,7 +192,7 @@ export const updateGrade = async ({
 }: Pick<StudentInfo, 'studentId'> & {
   grade: GradeItem;
 }): Promise<void> => {
-  const response = await fetch(`${FETCH_PREFIX_TEACHER}/grades/${studentId}`, {
+  const response = await fetch(`${API_PREFIX.teacher}/grades/${studentId}`, {
     method: 'PUT',
     headers: {
       Cookie: (await cookies()).toString(),
@@ -219,7 +219,7 @@ export const deleteGrade = async ({
   grade: GradeItem;
 }): Promise<void> => {
   const response = await fetch(
-    `${FETCH_PREFIX_TEACHER}/grades/${studentId}/${year}/${subject}/${
+    `${API_PREFIX.teacher}/grades/${studentId}/${year}/${subject}/${
       (semester === 1 ? 'firstSemester' : 'lastSemester') satisfies Semester
     }/${(term === 'mid' ? 'midterm' : 'finalterm') satisfies Term}`,
     {

@@ -65,8 +65,7 @@ const importStatementsForMap = `import {
 } from 'assets/icons';`;
 const iconMapObject = `export const ICONS = {
   ${iconFiles.map(name => `${/[-\s]/.test(name) ? `'${name}'` : name}: ${pascalCase(name)}`).join(',\n  ')}
-} as const;
-`;
+} as const;`;
 
 const dataIconContent = `// 자동 생성된 파일입니다. 수정하지 마세요.
 ${importStatementsForMap}
@@ -75,16 +74,24 @@ ${iconMapObject}
 `;
 
 const exportStatementsForDataIndex = [
-  ...new Set([
+  ...[
     "export * from './icon';\r",
     ...fs
       .readFileSync(DATA_INDEX_FILE)
       .toString()
       .split('\n')
-      .filter(line => line),
-  ]),
+      .filter(
+        line =>
+          line.startsWith('export * from') && !line.endsWith("'./icon';\r"),
+      ),
+  ].toSorted((a, b) => (a > b ? 1 : -1)),
+  ...fs
+    .readFileSync(DATA_INDEX_FILE)
+    .toString()
+    .split('\n')
+    .filter(line => !line.startsWith('export * from')),
 ];
-const dataIndexContent = `${exportStatementsForDataIndex.join('\n')}\n`;
+const dataIndexContent = `${exportStatementsForDataIndex.join('\n')}`;
 
 fs.writeFileSync(DATA_ICON_FILE, dataIconContent);
 fs.writeFileSync(DATA_INDEX_FILE, dataIndexContent);

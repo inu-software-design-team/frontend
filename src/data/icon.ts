@@ -68,4 +68,3 @@ export const ICONS = {
   user: User,
   x: X
 } as const;
-
