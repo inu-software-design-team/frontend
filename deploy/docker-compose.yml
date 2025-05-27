@@ -1,0 +1,58 @@
+services:
+  nginx:
+    image: nginx:stable-alpine
+    container_name: nginx
+    platform: linux/amd64  # x86_64 아키텍처로 강제 설정
+    ports:
+      - "80:80"
+      # - "443:443"  # HTTPS 포트 추가
+    volumes:
+      - ./infra/nginx/nginx.conf:/etc/nginx/conf.d/default.conf # deploy-repo 기준 경로
+      # - certbot-etc:/etc/letsencrypt        # 인증서 공유
+      # - certbot-var:/var/lib/letsencrypt    # 인증 경로 공
+    depends_on:
+      - frontend
+      - backend
+    restart: always
+
+  # certbot:
+  #   image: certbot/certbot
+  #   container_name: certbot
+  #   volumes:
+  #     - certbot-etc:/etc/letsencrypt
+  #     - certbot-var:/var/lib/letsencrypt
+  #   entrypoint: "/bin/sh -c 'trap exit TERM; while :; do sleep 12h & wait $${!}; certbot renew; done'"
+
+  frontend:
+    image: rlarltn/cosy_frontend:latest
+    container_name: frontend
+    platform: linux/amd64  # x86_64 아키텍처로 강제 설정
+    ports:
+      - "3000:3000" # 로컬 개발 시 브라우저에서 접근 가능
+    expose:
+      - "3000" # Nginx 등 다른 컨테이너에서 내부 접근 허용
+    depends_on:
+      - backend
+    env_file:
+      - ./.env
+    restart: always
+
+  backend:
+    image: rlarltn/cosy_backend:latest # Docker Hub의 최신 이미지 사용
+    container_name: backend
+    platform: linux/amd64  # x86_64 아키텍처로 강제 설정
+    ports:
+      - "4000:4000" # 로컬 개발 시 브라우저에서 접근 가능
+    expose:
+      - "4000" # Nginx 등 다른 컨테이너에서 내부 접근 허용
+    env_file:
+      - ./.env
+    restart: always
+
+# volumes:
+#   certbot-etc:
+#   certbot-var:
+
+networks:
+  default:
+    driver: bridge

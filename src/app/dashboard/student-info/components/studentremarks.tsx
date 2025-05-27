@@ -129,7 +129,6 @@ const StudentRemarks = ({ id }: Props) => {
         (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
       );
       setRemarks(sortedData);
-
       setIsAdding(false);
       setEditContent({});
     } catch (err) {

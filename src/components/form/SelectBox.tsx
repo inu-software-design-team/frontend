@@ -18,6 +18,8 @@ interface SelectBoxProps
   status?: Exclude<ElementStatus, 'active' | 'loading'>;
   label: string;
   options: { id: string; value: string; default?: boolean }[];
+  value: string;
+  disabled?: boolean;
 }
 
 const SelectBox = ({

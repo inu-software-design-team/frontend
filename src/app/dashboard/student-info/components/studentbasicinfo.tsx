@@ -14,6 +14,32 @@ interface Props {
   id: string;
 }
 
+type ParentInfo = {
+  name: string;
+  gender: string;
+  phone: string;
+  occupation: string;
+};
+
+type ClassInfo = {
+  teacher_name: string;
+  grade: number;
+  class: number;
+  year: number;
+};
+
+type StudentInfo = {
+  student_id: number;
+  name: string;
+  gender: string;
+  registration_number: string;
+  class: ClassInfo;
+  parents: ParentInfo[];
+  teacher_subject: string;
+  address: string;
+  phone: string;
+};
+
 const StudentBasicInfo = ({ id }: Props) => {
   const [isEditingBasicInfo, setIsEditingBasicInfo] = useState(false);
   const [isEditingPersonalInfo, setIsEditingPersonalInfo] = useState(false);
@@ -35,13 +61,13 @@ const StudentBasicInfo = ({ id }: Props) => {
   const [grade, setGrade] = useState('');
   const [classNumber, setClassNumber] = useState('');
   const [studentNumber, setStudentNumber] = useState('');
-  const [father, setFather] = useState<any>(null);
-  const [mother, setMother] = useState<any>(null);
+  const [father, setFather] = useState<ParentInfo | null>(null);
+  const [mother, setMother] = useState<ParentInfo | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await GetStudentInfo(id);
+        const data: StudentInfo = await GetStudentInfo(id);
         setStudentName(data.name);
         setEditedName(data.name);
         setGender(data.gender);
@@ -110,7 +136,7 @@ const StudentBasicInfo = ({ id }: Props) => {
     setIsEditingPersonalInfo(false);
   };
 
-  return (
+   return (
     <div className="flex h-full w-full flex-row">
       {/* 프로필 */}
       <div
