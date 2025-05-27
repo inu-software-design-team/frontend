@@ -2,18 +2,15 @@
 
 import { revalidatePath } from 'next/cache';
 
-import { API_PREFIX, GRADE_COLUMNS, SUBJECTS, TERMS } from 'data';
+import { API_PREFIX, GRADE_COLUMNS, SEMESTERS, SUBJECTS, TERMS } from 'data';
 
-import type { GradeItem, StudentInfo, Subject } from 'types';
+import type { GradeItem, Semester, StudentInfo, Subject, Term } from 'types';
 
 import { getCookieHeader } from 'features/auth';
 
 import { SelectBox } from 'components/form';
 
 import { getLevelFromScore } from '../utils';
-
-type Semester = 'firstSemester' | 'lastSemester';
-type Term = 'midterm' | 'finalterm';
 
 export const getYearListForGrade = async ({
   studentId,
@@ -83,8 +80,8 @@ export const getGradeList = async ({
             acc.push({
               id: crypto.randomUUID(),
               year: grade.year,
-              semester: semester === 'firstSemester' ? 1 : 2,
-              term: term === 'midterm' ? 'mid' : 'final',
+              semester,
+              term,
               subject,
               score,
               level: getLevelFromScore(score),
@@ -99,7 +96,7 @@ export const getGradeList = async ({
 
   return gradeList.toSorted((a, b) => {
     if (a.year !== b.year) return b.year - a.year;
-    if (a.semester !== b.semester) return b.semester - a.semester;
+    if (a.semester !== b.semester) return a.semester < b.semester ? 1 : -1;
     if (a.term !== b.term) return a.term < b.term ? 1 : -1;
     if (a.subject !== b.subject) {
       const keys = Object.keys(SUBJECTS);
@@ -133,20 +130,20 @@ export const getOptionsForGrade = async ({
     ],
     semester: [
       { id: crypto.randomUUID(), value: '전체', default: true },
-      ...Array.from(new Set(grades.flatMap(({ semester }) => semester))).map(
-        value => ({
-          id: crypto.randomUUID(),
-          value: value.toString(),
-        }),
-      ),
+      ...Array.from(
+        new Set(grades.flatMap(({ semester }) => SEMESTERS[semester])),
+      ).map(value => ({
+        id: crypto.randomUUID(),
+        value: value.toString(),
+      })),
     ],
     term: [
       { id: crypto.randomUUID(), value: '전체', default: true },
       ...Array.from(new Set(grades.flatMap(({ term }) => TERMS[term])))
-        .toSorted((a, b) => (b > a ? 1 : -1))
+        // .toSorted((a, b) => (a < b ? 1 : -1))
         .map(value => ({
           id: crypto.randomUUID(),
-          value: value,
+          value,
         })),
     ],
     subject: [
@@ -175,10 +172,8 @@ export const createGrade = async ({
     },
     body: JSON.stringify({
       year,
-      semester: (semester === 1
-        ? 'firstSemester'
-        : 'lastSemester') satisfies Semester,
-      term: (term === 'mid' ? 'midterm' : 'finalterm') satisfies Term,
+      semester,
+      term: term,
       subject,
       score,
     }),
@@ -201,10 +196,8 @@ export const updateGrade = async ({
     },
     body: JSON.stringify({
       year,
-      semester: (semester === 1
-        ? 'firstSemester'
-        : 'lastSemester') satisfies Semester,
-      term: (term === 'mid' ? 'midterm' : 'finalterm') satisfies Term,
+      semester,
+      term,
       subject,
       score,
     }),
@@ -220,9 +213,7 @@ export const deleteGrade = async ({
   grade: GradeItem;
 }): Promise<void> => {
   const response = await fetch(
-    `${API_PREFIX.teacher}/grades/${studentId}/${year}/${subject}/${
-      (semester === 1 ? 'firstSemester' : 'lastSemester') satisfies Semester
-    }/${(term === 'mid' ? 'midterm' : 'finalterm') satisfies Term}`,
+    `${API_PREFIX.teacher}/grades/${studentId}/${year}/${subject}/${semester}/${term}`,
     {
       method: 'DELETE',
       headers: {

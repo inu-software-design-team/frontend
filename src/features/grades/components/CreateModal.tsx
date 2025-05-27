@@ -2,9 +2,9 @@
 
 import { useCallback, useState } from 'react';
 
-import { SUBJECTS, TERMS } from 'data';
+import { SEMESTERS, SUBJECTS, TERMS } from 'data';
 
-import type { GradeItem } from 'types';
+import type { GradeItem, Semester, Subject, Term } from 'types';
 
 import { Input } from 'components';
 import { SelectBox } from 'components/form';
@@ -22,31 +22,31 @@ const SELECT_OPTIONS = {
   semester: Array.from({ length: 2 }, (_, i) => ({
     id: `semester-${i + 1}`,
     value: (i + 1).toString(),
-    default: new Date().getMonth() < 9 ? i === 0 : i === 1,
+    default: new Date().getMonth() + 1 < 8 ? i === 0 : i === 1,
   })),
   term: Array.from({ length: 2 }, (_, i) => ({
     id: `term-${i + 1}`,
-    value: (i === 0
-      ? '중간고사'
-      : '기말고사') satisfies (typeof TERMS)[keyof typeof TERMS],
+    value: (i === 0 ? '중간고사' : '기말고사') satisfies (typeof TERMS)[Term],
     default: i === 0,
   })),
   subject: Object.keys(SUBJECTS).map(subject => ({
     id: `subject-${subject}`,
-    value: SUBJECTS[subject as keyof typeof SUBJECTS],
-    default: (subject as keyof typeof SUBJECTS) === 'korean',
+    value: SUBJECTS[subject as Subject],
+    default: (subject as Subject) === 'korean',
   })),
 };
 
 const CreateModal = ({ isCreateMode, onCreate, onClose }: CreateModalProps) => {
   const [newYear, setNewYear] = useState(new Date().getFullYear());
-  const [newSemester, setNewSemester] = useState<GradeItem['semester']>(
-    Number(
-      SELECT_OPTIONS.semester.find(option => option.default)!.value,
-    ) as GradeItem['semester'],
+  const [newSemester, setNewSemester] = useState<Semester>(
+    Object.keys(SEMESTERS).find(
+      semester =>
+        SEMESTERS[semester as Semester] ===
+        Number(SELECT_OPTIONS.semester.find(option => option.default)!.value),
+    ) as Semester,
   );
-  const [newTerm, setNewTerm] = useState<keyof typeof TERMS>('mid');
-  const [newSubject, setNewSubject] = useState<keyof typeof SUBJECTS>('korean');
+  const [newTerm, setNewTerm] = useState<Term>('midTerm');
+  const [newSubject, setNewSubject] = useState<Subject>('korean');
   const [newScore, setNewScore] = useState(0);
 
   return (
@@ -102,7 +102,12 @@ const CreateModal = ({ isCreateMode, onCreate, onClose }: CreateModalProps) => {
                 )?.value;
 
                 if (!selectedValue) return;
-                setNewSemester(Number(selectedValue) as GradeItem['semester']);
+                setNewSemester(
+                  Object.keys(SEMESTERS).find(
+                    semester =>
+                      SEMESTERS[semester as Semester] === Number(selectedValue),
+                  ) as Semester,
+                );
               }}
             />
             <SelectBox
