@@ -48,6 +48,7 @@ export default async function Page({
   const { id } = await params;
   const { studentYear, tabName }: { studentYear?: string; tabName?: string } =
     await searchParams;
+  const studentId = Number(id);
 
   if (!tabName)
     redirect(
@@ -60,7 +61,9 @@ export default async function Page({
   return (
     <>
       <div className="mb-4 flex w-full justify-between">
-        <StudentProfile year={Number(studentYear)} studentId={Number(id)} />
+        <StudentProfile
+          student={getStudent({ year: Number(studentYear), studentId })}
+        />
       </div>
       <div className="flex h-11 w-full flex-row items-center justify-center rounded-[6px] bg-[#F1F5F9] p-1">
         {TABS.map(({ label }, index) => (

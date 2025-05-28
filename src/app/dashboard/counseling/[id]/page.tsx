@@ -101,11 +101,14 @@ export default async function Counseling({
 }) {
   const { id } = await params;
   const { studentYear } = await searchParams;
+  const studentId = Number(id);
 
   return (
     <>
       <div className="mb-4 flex w-full justify-between">
-        <StudentProfile year={Number(studentYear)} studentId={Number(id)} />
+        <StudentProfile
+          student={getStudent({ year: Number(studentYear), studentId })}
+        />
       </div>
       <div className="flex flex-col overflow-y-auto">
         <div className="flex w-full flex-row items-center">
