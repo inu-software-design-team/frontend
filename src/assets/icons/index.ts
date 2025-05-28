@@ -26,6 +26,11 @@ import Menu from './menu.svg';
 import Plus from './plus.svg';
 import ProfileImg from './profile_img.svg';
 import Refresh from './refresh.svg';
+import ReportAttend from './reportAttend.svg';
+import ReportBtn from './reportBtn.svg';
+import ReportChart from './reportChart.svg';
+import ReportFeedback from './reportFeedback.svg';
+import ReportHeart from './reportHeart.svg';
 import Search from './search.svg';
 import Share from './share.svg';
 import Sort from './sort.svg';
@@ -60,6 +65,11 @@ export {
   Plus,
   ProfileImg,
   Refresh,
+  ReportAttend,
+  ReportBtn,
+  ReportChart,
+  ReportFeedback,
+  ReportHeart,
   Search,
   Share,
   Sort,

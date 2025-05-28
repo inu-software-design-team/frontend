@@ -7,7 +7,8 @@ import { GetFeedBack } from 'api/teacher/feedback/getFeedback';
 import { PostFeedBack } from 'api/teacher/feedback/postFeedback';
 import { PatchFeedBack } from 'api/teacher/feedback/patchFeedback';
 import { DeleteFeedBack } from 'api/teacher/feedback/deleteFeedback';
-import { useParams } from 'next/navigation';
+import { StudentProfile } from 'features/students';
+import { getStudent } from 'features/students';
 
 type FeedBack = {
   _id: string;
@@ -25,9 +26,17 @@ type FeedBack = {
 
 const categoryOption = ['전체', '성적', '출결', '태도'];
 
-const FeedBack = () => {
-  const params = useParams();
-  const id = params?.id as string;
+export default function FeedBack({
+  params,
+  searchParams,
+}: {
+  params: { id: string };
+  searchParams: { studentYear: string };
+}) {
+  
+  const { id } = params;
+  const { studentYear } = searchParams;
+  const studentId = Number(id);
 
   const [feedback, setFeedBack] = useState<FeedBack[]>([]);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -35,10 +44,6 @@ const FeedBack = () => {
   const [ellipsisOpenId, setEllipsisOpenId] = useState<string | null>(null);
   const [isAdding, setIsAdding] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('전체');
-
-  const grade = id?.[0] || '';
-  const classNumber = parseInt(id?.substring(1, 3)) || 0;
-  const number = parseInt(id?.substring(3)) || 0;
 
   useEffect(() => {
     (async () => {
@@ -150,10 +155,9 @@ const FeedBack = () => {
   return (
     <>
       <div className="mb-4 flex w-full justify-between">
-        <div className="flex w-full flex-col gap-y-1">
-          <strong className="text-title4">이름</strong>
-          <p>{`${grade}학년 ${classNumber}반 ${number}번`}</p>
-        </div>
+        <StudentProfile
+          student={getStudent({ year: Number(studentYear), studentId })}
+        />
       </div>
 
       <div className="flex flex-col overflow-y-auto">
@@ -319,5 +323,3 @@ const FeedBack = () => {
     </>
   );
 };
-
-export default FeedBack;
