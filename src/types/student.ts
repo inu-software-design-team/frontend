@@ -39,7 +39,8 @@ export interface CounselingItem
   topic: string;
   title: string;
   content: string;
-  nextDate: Date;
+  nextDate: Date | null;
   nextContent: string;
+  teacherId: number;
   teacherName: string;
 }
