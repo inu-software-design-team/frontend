@@ -43,8 +43,8 @@ const IconButton = ({
         const { pathname } = props.href;
         const shouldReplaceHistory = props.href.replace ?? false;
 
-        if (shouldReplaceHistory) replace(pathname);
-        else push(pathname);
+        if (shouldReplaceHistory) replace(pathname, { scroll: false });
+        else push(pathname, { scroll: false });
       }}
       className={`aspect-square size-max w-max transition-colors ${
         variant === 'contained'

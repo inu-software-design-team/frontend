@@ -47,8 +47,8 @@ const TextButton = ({
         const { pathname } = props.href;
         const shouldReplaceHistory = props.href.replace ?? false;
 
-        if (shouldReplaceHistory) replace(pathname);
-        else push(pathname);
+        if (shouldReplaceHistory) replace(pathname, { scroll: false });
+        else push(pathname, { scroll: false });
       }}
       className={`flex items-center justify-center rounded-md text-center transition-all ${
         variant === 'outlined'
