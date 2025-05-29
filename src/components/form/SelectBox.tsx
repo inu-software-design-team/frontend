@@ -53,7 +53,7 @@ const SelectBox = ({
       onChangeMenuOpen={isOpen => setIsMenuOpen(isOpen)}
       onChangeSelectedId={id => setSelectedId(id)}
     >
-      <label className="block w-full">{label}</label>
+      <label className="block w-full font-semibold">{label}</label>
       <div
         className={`shadow-border bg-default flex cursor-pointer items-center gap-x-4 rounded-md transition-shadow ${
           isMenuOpen ? '' : 'shadow-tertiary'
@@ -66,10 +66,10 @@ const SelectBox = ({
         }`}
       >
         <input
-          disabled={status === 'disabled'}
           readOnly
+          disabled={status === 'disabled'}
           value={options.find(option => option.id === selectedId)?.value ?? ''}
-          className="pointer-events-none w-full outline-none"
+          className="w-full outline-none"
         />
         <Icon
           src="chevron_down"

@@ -2,7 +2,7 @@ import { USER_ROLES } from 'data';
 
 export type UserRole = keyof typeof USER_ROLES;
 export interface UserInfo {
-  id: string;
+  id: number;
   role: UserRole;
   linked: number[];
 }

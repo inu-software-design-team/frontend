@@ -74,15 +74,14 @@ const CreateModal = ({ isCreateMode, onCreate, onClose }: CreateModalProps) => {
             }}
           />
         </div>
-        <div className="w-full space-y-8">
-          <form className="w-full space-y-4">
+        <div className="**:[input]:text-body2 w-full space-y-8">
+          <form className="*:[:first-child,_:last-child]:*:[input]:text-body2 w-full space-y-4 *:[:first-child,_:last-child]:*:[input]:h-12! *:[:first-child,_:last-child]:*:[input]:px-4 *:[:first-child,_:last-child]:*:[input]:py-3">
             <Input
               label="연도"
               min={0}
               max={new Date().getFullYear()}
               value={newYear}
               validate
-              className="*:first:*:font-normal *:last:h-full *:last:px-4 *:last:py-3 *:last:text-base"
               onChange={e => {
                 const value = Number(e.target.value);
 
@@ -150,7 +149,6 @@ const CreateModal = ({ isCreateMode, onCreate, onClose }: CreateModalProps) => {
               max={100}
               value={newScore}
               validate
-              className="*:first:*:font-normal *:last:h-full *:last:px-4 *:last:py-3 *:last:text-base"
               onChange={e => {
                 const value = Number(e.target.value);
 
