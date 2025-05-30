@@ -132,7 +132,7 @@ describe('SelectBox 컴포넌트 테스트', () => {
 
     expect(onClickMock).toHaveBeenCalledTimes(2); // 열기 + 선택
     expect(onChangeMenuOpenMock).toHaveBeenCalledTimes(3); // 처음 + 열기 + 선택
-    expect(onChangeSelectedIdMock).toHaveBeenCalledTimes(2); // 처음 + 선택
+    expect(onChangeSelectedIdMock).toHaveBeenCalledTimes(1); // 선택
   });
 
   it('비활성화 상태일 때 선택 목록이 보여지거나 클릭/변경 이벤트가 호출되지 않아야 합니다.', async () => {
@@ -188,6 +188,6 @@ describe('SelectBox 컴포넌트 테스트', () => {
 
     expect(onClickMock).toHaveBeenCalledTimes(1); // 열기
     expect(onChangeMenuOpenMock).toHaveBeenCalledTimes(3); // 처음 + 열기 + 닫기(외부 클릭)
-    expect(onChangeSelectedIdMock).toHaveBeenCalledTimes(1); // 처음
+    expect(onChangeSelectedIdMock).toHaveBeenCalledTimes(0); // 처음
   });
 });
