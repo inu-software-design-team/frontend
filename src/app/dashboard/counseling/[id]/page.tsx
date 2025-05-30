@@ -1,23 +1,26 @@
 import type { Metadata } from 'next';
 
+import { SEMESTERS } from 'data';
+
 import type { IdParams, SearchParams } from 'types';
 
-import { getStudent, StudentProfile } from 'features/students';
+import { getUserInfo } from 'features/auth';
+import {
+  CounselingCard,
+  getCounseling,
+  getCounselingList,
+  getOptionsForCounseling,
+  ItemModal,
+  ViewController,
+} from 'features/counselings';
+import {
+  checkStudentExistence,
+  getStudent,
+  StudentProfile,
+} from 'features/students';
 
-import { SelectBox } from 'components/form';
-
-type RemarkData = {
-  id: string;
-  year: number;
-  semester: number;
-  reason: string;
-  title: string;
-  content: string;
-  author: string;
-  date: string;
-  nextDate: string;
-  nextPlan: string;
-};
+import { Empty } from 'components';
+import { TextButton } from 'components/ui';
 
 export async function generateMetadata({
   params,
@@ -40,58 +43,6 @@ export async function generateMetadata({
   };
 }
 
-const dummyGradeData: RemarkData[] = Array.from({ length: 4 }, (_, i) => {
-  const day = 6 + i;
-  const reasons = ['학업', '개인', '행동'];
-  const reason = reasons[i % reasons.length];
-
-  return {
-    id: crypto.randomUUID(),
-    year: 2025,
-    semester: 1,
-    reason,
-    title: `상담 제목`,
-    content: `${reason} 에 관해 상담을 했습니다.`,
-    author: `oo 선생님`,
-    date: `2025-05-${String(day).padStart(2, '0')}`,
-    nextDate: `2025-06-${String(day).padStart(2, '0')}`,
-    nextPlan: `${reason} 관련 진척 상황 확인 예정`,
-  };
-});
-
-const optionsFromGradeData = {
-  year: {
-    label: '연도',
-    options: [
-      { id: crypto.randomUUID(), value: '전체' },
-      ...Array.from(new Set(dummyGradeData.map(d => d.year.toString()))).map(
-        value => ({ id: crypto.randomUUID(), value }),
-      ),
-    ],
-  },
-  semester: {
-    label: '학기',
-    options: [
-      { id: crypto.randomUUID(), value: '전체' },
-      ...Array.from(
-        new Set(dummyGradeData.map(d => d.semester.toString())),
-      ).map(value => ({ id: crypto.randomUUID(), value })),
-    ],
-  },
-  subject: {
-    label: '사유',
-    options: [
-      { id: crypto.randomUUID(), value: '전체' },
-      ...Array.from(new Set(dummyGradeData.map(d => d.reason))).map(
-        subject => ({
-          id: crypto.randomUUID(),
-          value: subject,
-        }),
-      ),
-    ],
-  },
-};
-
 export default async function Counseling({
   params,
   searchParams,
@@ -100,56 +51,81 @@ export default async function Counseling({
   searchParams: Promise<SearchParams>;
 }) {
   const { id } = await params;
-  const { studentYear } = await searchParams;
+  const {
+    studentYear,
+    year,
+    semester,
+    topic,
+    status,
+    id: counselingId,
+  }: {
+    studentYear?: string;
+    year?: string;
+    semester?: string;
+    topic?: string;
+    status?: string;
+    id?: string;
+  } = await searchParams;
   const studentId = Number(id);
+
+  await checkStudentExistence({
+    studentId,
+    studentYear: Number(studentYear),
+    category: 'counseling',
+  });
+
+  const counselings = await getCounselingList({
+    studentId,
+  });
+  const options = await getOptionsForCounseling({
+    counselings,
+  });
+  const filteredCounselings = counselings.filter(
+    counseling =>
+      (year ? counseling.year === Number(year) : true) &&
+      (semester ? SEMESTERS[counseling.semester] === Number(semester) : true) &&
+      (topic ? counseling.topic === topic : true),
+  );
 
   return (
     <>
-      <div className="mb-4 flex w-full justify-between">
+      <ItemModal
+        isActive={status === 'create' || status === 'edit'}
+        studentYear={Number(studentYear)}
+        topics={options.topic.filter(({ value }) => value !== '전체')}
+        counseling={getCounseling({ studentId, id: counselingId ?? '' })}
+      />
+      <div className="flex items-start justify-between">
         <StudentProfile
           studentId={studentId}
           studentYear={Number(studentYear)}
         />
+        <TextButton
+          label="상담일지 추가"
+          leftIcon="plus"
+          color="primary"
+          spacing="compact"
+          className="whitespace-nowrap"
+          href={{
+            pathname: `/dashboard/counseling/${id}?studentYear=${Number(studentYear)}&status=create`,
+          }}
+        />
       </div>
-      <div className="flex flex-col overflow-y-auto">
-        <div className="flex w-full flex-row items-center">
-          <div className="flex w-full">
-            <div className="flex items-center gap-2">
-              <SelectBox {...optionsFromGradeData.year} />
-              <SelectBox {...optionsFromGradeData.semester} />
-              <SelectBox {...optionsFromGradeData.subject} />
-            </div>
-          </div>
-        </div>
-        {dummyGradeData.map(item => (
-          <div
-            key={item.id}
-            className="mt-4 flex w-full flex-col rounded-[6px] border border-[#E6F0FB] p-4"
-          >
-            <div className="mb-4">
-              <div className="flex flex-row items-center text-center">
-                <p className="mr-1.5 text-[#4B89DC]">{item.reason}</p>
-                <p className="text-lg font-semibold">ㆍ {item.title}</p>
-              </div>
-              <p className="mt-6">{item.content}</p>
-              <div className="mt-8 flex flex-row items-center text-center text-sm">
-                <p className="mr-4 text-black/40">작성자</p>
-                <p>{item.author}</p>
-                <p className="ml-auto text-black/40">{item.date}</p>
-              </div>
-            </div>
-
-            <div className="mt-2 border-[0.5px] border-[#E6F0FB]" />
-            <div className="mt-2 ml-1 flex flex-row items-center text-center text-sm font-light">
-              <p className="mr-4 text-[#4B89DC]">다음 상담 예정일</p>
-              <p>{item.nextDate}</p>
-            </div>
-            <div className="mt-2 ml-1 flex flex-row items-center text-center text-sm font-light">
-              <p className="mr-4 text-sm text-[#4B89DC]">다음 상담 계획</p>
-              <p>{item.nextPlan}</p>
-            </div>
-          </div>
-        ))}
+      <div className="h-[calc(100vh-(4rem+8rem)-(2rem*2)-3.625rem-3rem)] space-y-4 overflow-y-auto">
+        {filteredCounselings.length === 0 ? (
+          <Empty />
+        ) : (
+          <>
+            <ViewController options={options} />
+            {filteredCounselings.map(item => (
+              <CounselingCard
+                key={item.id}
+                userInfo={getUserInfo()}
+                {...item}
+              />
+            ))}
+          </>
+        )}
       </div>
     </>
   );

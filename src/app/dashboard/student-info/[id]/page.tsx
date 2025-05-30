@@ -4,7 +4,11 @@ import { redirect } from 'next/navigation';
 
 import type { IdParams, SearchParams } from 'types';
 
-import { getStudent, StudentProfile } from 'features/students';
+import {
+  checkStudentExistence,
+  getStudent,
+  StudentProfile,
+} from 'features/students';
 
 import StudentAttendance from '../components/studentattendance';
 import StudentBasicInfo from '../components/studentbasicinfo';
@@ -50,6 +54,12 @@ export default async function Page({
     await searchParams;
   const studentId = Number(id);
 
+  await checkStudentExistence({
+    studentId,
+    studentYear: Number(studentYear),
+    category: 'student-info',
+  });
+
   if (!tabName)
     redirect(
       `/dashboard/student-info/${id}?studentYear=${studentYear}&tabName=${encodeURIComponent(TABS[0].label)}`,
@@ -60,7 +70,7 @@ export default async function Page({
 
   return (
     <>
-      <div className="mb-4 flex w-full justify-between">
+      <div className="flex w-full justify-between">
         <StudentProfile
           studentId={studentId}
           studentYear={Number(studentYear)}

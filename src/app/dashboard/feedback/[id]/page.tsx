@@ -2,7 +2,11 @@ import type { Metadata } from 'next';
 
 import type { IdParams, SearchParams } from 'types';
 
-import { getStudent, StudentProfile } from 'features/students';
+import {
+  checkStudentExistence,
+  getStudent,
+  StudentProfile,
+} from 'features/students';
 
 import FeedbackList from '../components/FeedbackList';
 
@@ -37,6 +41,12 @@ export default async function FeedBack({
   const { id } = await params;
   const { studentYear } = await searchParams;
   const studentId = Number(id);
+
+  await checkStudentExistence({
+    studentId,
+    studentYear: Number(studentYear),
+    category: 'feedback',
+  });
 
   return (
     <div className="space-y-12">

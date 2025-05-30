@@ -8,7 +8,7 @@ import {
   GradeItemManagerProvider,
   ManageCloseButton,
 } from 'features/grades';
-import { StudentProfile } from 'features/students';
+import { checkStudentExistence, StudentProfile } from 'features/students';
 
 export default async function GradeManage({
   params,
@@ -20,6 +20,12 @@ export default async function GradeManage({
   const { id } = await params;
   const { studentYear }: { studentYear?: string } = await searchParams;
   const studentId = Number(id);
+
+  await checkStudentExistence({
+    studentId,
+    studentYear: Number(studentYear),
+    category: 'grade/manage',
+  });
 
   const years = await getYearListForGrade({
     studentId,

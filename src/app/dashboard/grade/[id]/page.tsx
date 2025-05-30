@@ -2,16 +2,22 @@ import type { Metadata } from 'next';
 
 import { GRADE_COLUMNS, SEMESTERS, SUBJECTS, TERMS } from 'data';
 
-import type { IdParams, SearchParams } from 'types';
+import type { IdParams, SearchParams, Subject } from 'types';
 
 import {
   getGradeList,
   getOptionsForGrade,
   getYearListForGrade,
+  RadarChart,
   TableController,
 } from 'features/grades';
-import { getStudent, StudentProfile } from 'features/students';
+import {
+  checkStudentExistence,
+  getStudent,
+  StudentProfile,
+} from 'features/students';
 
+import { Empty } from 'components';
 import { IconButton, Table } from 'components/ui';
 
 export async function generateMetadata({
@@ -57,6 +63,12 @@ export default async function Grade({
     subject?: string;
   } = await searchParams;
   const studentId = Number(id);
+
+  await checkStudentExistence({
+    studentId,
+    studentYear: Number(studentYear),
+    category: 'grade',
+  });
 
   const years = await getYearListForGrade({
     studentId,
@@ -119,36 +131,66 @@ export default async function Grade({
           }}
         />
       </div>
-      <div className="h-[calc(100vh-(4rem+8rem)-(2rem*2)-3.625rem-3rem)] w-full space-y-8 overflow-y-auto">
-        <div className="w-full space-y-8">
-          <TableController options={options} />
-          <div className="w-full overflow-x-auto">
-            <Table data={filteredGrades} columns={GRADE_COLUMNS} />
+      {grades.length === 0 ? (
+        <Empty />
+      ) : (
+        <div className="h-[calc(100vh-(4rem+8rem)-(2rem*2)-3.625rem-3rem)] w-full space-y-8 overflow-y-auto">
+          <div className="w-full space-y-8">
+            <TableController options={options} />
+            <div className="h-full w-full overflow-x-auto">
+              <Table data={filteredGrades} columns={GRADE_COLUMNS} />
+            </div>
+          </div>
+          {filteredGrades.length === 0 && (
+            <Empty className="flex h-max flex-col" />
+          )}
+          <div className="grid w-full grid-cols-1 items-center justify-center gap-4 md:grid-cols-2">
+            <RadarChart
+              className="mx-auto"
+              labels={Object.values(SUBJECTS)}
+              data={Object.values(
+                grades.reduce(
+                  (acc, grade) => {
+                    if (grade.subject in acc) {
+                      acc[grade.subject].score += grade.score;
+                      acc[grade.subject].length += 1;
+                    } else {
+                      acc[grade.subject] = {
+                        score: grade.score,
+                        length: 1,
+                      };
+                    }
+
+                    return acc;
+                  },
+                  {} as {
+                    [subject in Subject]: { score: number; length: number };
+                  },
+                ),
+              ).map(({ score, length }) => Number((score / length).toFixed(2)))}
+            />
+            <ul className="mx-auto w-full max-w-[25rem]">
+              {Object.entries(statsFromGrades).map(
+                ([key, { label, value }], index) => (
+                  <li key={key} className="w-full">
+                    {index !== 0 && (
+                      <hr className="border-primary-light-hover w-full" />
+                    )}
+                    <div className="flex w-full justify-between py-4">
+                      <span className="text-body1 whitespace-nowrap">
+                        {label}
+                      </span>
+                      <strong className="text-title4 text-primary">
+                        {isNaN(value) ? 0 : value}
+                      </strong>
+                    </div>
+                  </li>
+                ),
+              )}
+            </ul>
           </div>
         </div>
-        <div className="grid w-full grid-cols-1 items-center justify-center gap-4 md:grid-cols-2">
-          <div className="bg-primary-light-hover aspect-[10/9]">차트</div>
-          <ul className="mx-auto w-full max-w-[25rem]">
-            {Object.entries(statsFromGrades).map(
-              ([key, { label, value }], index) => (
-                <li key={key} className="w-full">
-                  {index !== 0 && (
-                    <hr className="border-primary-light-hover w-full" />
-                  )}
-                  <div className="flex w-full justify-between py-4">
-                    <span className="text-body1 whitespace-nowrap">
-                      {label}
-                    </span>
-                    <strong className="text-title4 text-primary">
-                      {isNaN(value) ? 0 : value}
-                    </strong>
-                  </div>
-                </li>
-              ),
-            )}
-          </ul>
-        </div>
-      </div>
+      )}
     </>
   );
 }

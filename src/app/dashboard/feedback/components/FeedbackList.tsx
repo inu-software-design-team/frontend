@@ -8,6 +8,7 @@ import { PatchFeedBack } from 'api/teacher/feedback/patchFeedback';
 import { PostFeedBack } from 'api/teacher/feedback/postFeedback';
 import { Edit, Ellipsis, X } from 'lucide-react';
 
+import { Empty } from 'components';
 import { SelectBox } from 'components/form';
 
 type FeedBack = {
@@ -218,104 +219,111 @@ const FeedbackList = ({ id }: { id: string }) => {
       {(selectedCategory === '전체'
         ? feedback
         : feedback.filter(fb => fb.category === selectedCategory)
-      ).map(item => (
-        <div
-          key={item._id}
-          className={`relative mt-4 flex w-full flex-col rounded-md ${
-            editingId === item._id ? '' : 'border border-[#E6F0FB] p-4'
-          }`}
-        >
-          {editingId === item._id ? (
-            <>
-              <div className="mb-2 flex flex-row items-center justify-center gap-2">
-                <SelectBox
-                  className="mb-2 w-30"
-                  label=""
-                  size="sm"
-                  options={categoryOption.map(categ => ({
-                    id: categ,
-                    value: categ,
-                    default: categ === editContent.category,
-                  }))}
-                  onChangeSelectedId={(id: string) =>
-                    handleChange('category', id)
-                  }
+      ).length === 0 ? (
+        <Empty />
+      ) : (
+        (selectedCategory === '전체'
+          ? feedback
+          : feedback.filter(fb => fb.category === selectedCategory)
+        ).map(item => (
+          <div
+            key={item._id}
+            className={`relative mt-4 flex w-full flex-col rounded-md ${
+              editingId === item._id ? '' : 'border border-[#E6F0FB] p-4'
+            }`}
+          >
+            {editingId === item._id ? (
+              <>
+                <div className="mb-2 flex flex-row items-center justify-center gap-2">
+                  <SelectBox
+                    className="mb-2 w-30"
+                    label=""
+                    size="sm"
+                    options={categoryOption.map(categ => ({
+                      id: categ,
+                      value: categ,
+                      default: categ === editContent.category,
+                    }))}
+                    onChangeSelectedId={(id: string) =>
+                      handleChange('category', id)
+                    }
+                  />
+                  <input
+                    type="text"
+                    className="h-10 w-full rounded-md border border-[#E2E8F0] p-2 text-sm outline-none"
+                    value={editContent.title || ''}
+                    onChange={e => handleChange('title', e.target.value)}
+                  />
+                </div>
+                <textarea
+                  className="mb-2 h-24 w-full rounded-md border border-[#E2E8F0] p-2 text-sm outline-none"
+                  value={editContent.content || ''}
+                  onChange={e => handleChange('content', e.target.value)}
                 />
-                <input
-                  type="text"
-                  className="h-10 w-full rounded-md border border-[#E2E8F0] p-2 text-sm outline-none"
-                  value={editContent.title || ''}
-                  onChange={e => handleChange('title', e.target.value)}
-                />
-              </div>
-              <textarea
-                className="mb-2 h-24 w-full rounded-md border border-[#E2E8F0] p-2 text-sm outline-none"
-                value={editContent.content || ''}
-                onChange={e => handleChange('content', e.target.value)}
-              />
-              <div className="flex flex-row items-center justify-center gap-2">
-                <button
-                  onClick={() => handleSave(id, item._id)}
-                  className="h-10 w-30 rounded-[6px] border border-black bg-white px-2 py-1 text-sm"
-                >
-                  저장
-                </button>
-                <button
-                  onClick={() => setEditingId(null)}
-                  className="h-10 w-30 rounded-[6px] bg-[#FB2C36] px-2 py-1 text-sm text-white"
-                >
-                  취소
-                </button>
-              </div>
-            </>
-          ) : (
-            <>
-              <div className="absolute top-4 right-4">
-                <button
-                  onClick={() =>
-                    setEllipsisOpenId(prev =>
-                      prev === item._id ? null : item._id,
-                    )
-                  }
-                >
-                  <Ellipsis className="h-5 w-5" />
-                </button>
+                <div className="flex flex-row items-center justify-center gap-2">
+                  <button
+                    onClick={() => handleSave(id, item._id)}
+                    className="h-10 w-30 rounded-[6px] border border-black bg-white px-2 py-1 text-sm"
+                  >
+                    저장
+                  </button>
+                  <button
+                    onClick={() => setEditingId(null)}
+                    className="h-10 w-30 rounded-[6px] bg-[#FB2C36] px-2 py-1 text-sm text-white"
+                  >
+                    취소
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="absolute top-4 right-4">
+                  <button
+                    onClick={() =>
+                      setEllipsisOpenId(prev =>
+                        prev === item._id ? null : item._id,
+                      )
+                    }
+                  >
+                    <Ellipsis className="h-5 w-5" />
+                  </button>
 
-                {ellipsisOpenId === item._id && (
-                  <div className="absolute right-0 z-10 mt-1 flex flex-col rounded-[6px] bg-white p-1 shadow-[0_2px_4px_rgba(0,0,0,0.38)]">
-                    <button
-                      onClick={() => handleEdit(item._id)}
-                      className="flex w-40 items-center gap-2 rounded-md px-3 py-2 text-left text-[#4B89DC] hover:bg-[#F1F5F9]"
-                    >
-                      <Edit className="h-4 w-4" />
-                      수정
-                    </button>
-                    <button
-                      onClick={() => handleDelete(id, item._id)}
-                      className="flex w-40 items-center gap-2 rounded-md px-3 py-2 text-left text-[#FB2C36] hover:bg-[#F1F5F9]"
-                    >
-                      <X className="h-4 w-4" />
-                      삭제
-                    </button>
-                  </div>
-                )}
-              </div>
+                  {ellipsisOpenId === item._id && (
+                    <div className="absolute right-0 z-10 mt-1 flex flex-col rounded-[6px] bg-white p-1 shadow-[0_2px_4px_rgba(0,0,0,0.38)]">
+                      <button
+                        onClick={() => handleEdit(item._id)}
+                        className="flex w-40 items-center gap-2 rounded-md px-3 py-2 text-left text-[#4B89DC] hover:bg-[#F1F5F9]"
+                      >
+                        <Edit className="h-4 w-4" />
+                        수정
+                      </button>
+                      <button
+                        onClick={() => handleDelete(id, item._id)}
+                        className="flex w-40 items-center gap-2 rounded-md px-3 py-2 text-left text-[#FB2C36] hover:bg-[#F1F5F9]"
+                      >
+                        <X className="h-4 w-4" />
+                        삭제
+                      </button>
+                    </div>
+                  )}
+                </div>
 
-              <div className="flex flex-row items-center text-center">
-                <p className="mr-1.5 text-[#4B89DC]">{item.category}</p>
-                <p className="text-lg font-semibold">ㆍ {item.title}</p>
-              </div>
-              <p className="mt-6 text-sm">{item.content}</p>
-              <div className="mt-8 flex flex-row items-center text-center text-sm text-black/40">
-                <p className="mr-3">작성자</p>
-                <p className="mr-2 text-[#4B89DC]"> {item.teacher_subject}</p>
-                <p className="text-black">{item.teacher_name} 선생님</p>
-                <p className="ml-auto">{item.date.slice(0, 10)}</p>
-              </div>
-            </>
-          )}
-        </div>
-      ))}
+                <div className="flex flex-row items-center text-center">
+                  <p className="mr-1.5 text-[#4B89DC]">{item.category}</p>
+                  <p className="text-lg font-semibold">ㆍ {item.title}</p>
+                </div>
+                <p className="mt-6 text-sm">{item.content}</p>
+                <div className="mt-8 flex flex-row items-center text-center text-sm text-black/40">
+                  <p className="mr-3">작성자</p>
+                  <p className="mr-2 text-[#4B89DC]"> {item.teacher_subject}</p>
+                  <p className="text-black">{item.teacher_name} 선생님</p>
+                  <p className="ml-auto">{item.date.slice(0, 10)}</p>
+                </div>
+              </>
+            )}
+          </div>
+        ))
+      )}
     </>
   );
 };

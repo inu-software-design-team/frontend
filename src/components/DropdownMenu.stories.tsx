@@ -49,7 +49,7 @@ const DropdownMenuRender = ({
           setSelectedId(id);
           props.onChange?.(id);
         }}
-        className="mx-auto cursor-pointer"
+        className="cursor-pointer text-center"
       >
         {children}
       </DropdownMenu>
