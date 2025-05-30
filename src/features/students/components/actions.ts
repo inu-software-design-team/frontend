@@ -11,7 +11,7 @@ import { getCookieHeader } from 'features/auth';
 export const getYearListForStudent = async (): Promise<
   { id: string; year: number }[]
 > => {
-  const response = await fetch(`${API_PREFIX.teacher}/studentsList`, {
+  const response = await fetch(`${API_PREFIX.teacher}/studentslist`, {
     headers: {
       ...(await getCookieHeader()),
     },
@@ -33,7 +33,7 @@ export const getStudentList = async ({
 }: {
   year: number;
 }): Promise<StudentInfo[]> => {
-  const response = await fetch(`${API_PREFIX.teacher}/studentsList/${year}`, {
+  const response = await fetch(`${API_PREFIX.teacher}/studentslist/${year}`, {
     headers: {
       ...(await getCookieHeader()),
     },
