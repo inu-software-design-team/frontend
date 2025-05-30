@@ -105,7 +105,8 @@ export default async function Grade({
     <>
       <div className="flex w-full justify-between">
         <StudentProfile
-          student={getStudent({ year: Number(studentYear), studentId })}
+          studentId={studentId}
+          studentYear={Number(studentYear)}
         />
         <IconButton
           icon="edit"

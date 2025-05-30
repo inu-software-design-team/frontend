@@ -1,13 +1,16 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { SelectBox } from 'components/form';
-import { Ellipsis, Edit, X } from 'assets/icons';
+import { useEffect, useState } from 'react';
+
+import { GetStudentInfo } from 'api/teacher/student-info/getStudentInfo';
+import { DeleteStudentRemarks } from 'api/teacher/student-remarks/deleteStudentRemarks';
 import { GetStudentRemarks } from 'api/teacher/student-remarks/getStudentRemarks';
 import { PatchStudentRemarks } from 'api/teacher/student-remarks/patchStudentRemarks';
-import { DeleteStudentRemarks } from 'api/teacher/student-remarks/deleteStudentRemarks';
 import { PostStudentRemarks } from 'api/teacher/student-remarks/postStudentRemarks';
-import { GetStudentInfo } from 'api/teacher/student-info/getStudentInfo';
+
+import { Edit, Ellipsis, X } from 'assets/icons';
+
+import { SelectBox } from 'components/form';
 
 interface Props {
   id: string;
@@ -45,7 +48,7 @@ const StudentRemarks = ({ id }: Props) => {
         // 특기사항 받아오기
         const data: StudentRemark[] = await GetStudentRemarks(id);
         const sortedData = data.sort(
-          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
         );
         setRemarks(sortedData);
       } catch (err) {
@@ -70,7 +73,11 @@ const StudentRemarks = ({ id }: Props) => {
     const item = remarks.find(r => r._id === _id);
     if (item) {
       setEditingId(_id);
-      setEditContent({ title: item.title, content: item.content, subject: item.subject });
+      setEditContent({
+        title: item.title,
+        content: item.content,
+        subject: item.subject,
+      });
     }
     setEllipsisOpenId(null);
     setIsAdding(false);
@@ -83,12 +90,12 @@ const StudentRemarks = ({ id }: Props) => {
         new Date().toISOString(),
         editContent.subject || '',
         editContent.title || '',
-        editContent.content || ''
+        editContent.content || '',
       );
 
       const data: StudentRemark[] = await GetStudentRemarks(id);
       const sortedData = data.sort(
-        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
       );
       setRemarks(sortedData);
 
@@ -126,7 +133,7 @@ const StudentRemarks = ({ id }: Props) => {
 
       const data: StudentRemark[] = await GetStudentRemarks(id);
       const sortedData = data.sort(
-        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
       );
       setRemarks(sortedData);
       setIsAdding(false);
@@ -154,17 +161,19 @@ const StudentRemarks = ({ id }: Props) => {
             <SelectBox
               size="sm"
               label="과목"
-              options={subjects.map(subj => ({ id: subj, value: subj }))}
-              value={selectedSubject}            
+              options={subjects.map(subj => ({
+                id: subj,
+                value: subj,
+                default: subj === selectedSubject,
+              }))}
               onChangeSelectedId={(id: string) => setSelectedSubject(id)}
-              disabled={false}
             />
           </div>
           <button
             onClick={handleAddClick}
-            className="flex items-center justify-center gap-3 w-36 h-10 rounded-[6px] border bg-[#4B89DC] px-3 text-white mt-5"
+            className="mt-5 flex h-10 w-36 items-center justify-center gap-3 rounded-[6px] border bg-[#4B89DC] px-3 text-white"
           >
-            <span className="text-xl font-extralight mb-0.5"> + </span>
+            <span className="mb-0.5 text-xl font-extralight"> + </span>
             <span className="text-sm"> 새 특기사항 추가 </span>
           </button>
         </div>
@@ -177,14 +186,22 @@ const StudentRemarks = ({ id }: Props) => {
               className="mb-2 w-30"
               label=""
               size="sm"
-              options={teacherSubject ? [{ id: teacherSubject, value: teacherSubject }] : []}
-              value={teacherSubject || ''}
+              options={
+                teacherSubject
+                  ? [
+                      {
+                        id: teacherSubject,
+                        value: teacherSubject,
+                        default: true,
+                      },
+                    ]
+                  : []
+              }
               onChangeSelectedId={() => {}}
-              disabled={true}
             />
             <input
               type="text"
-              className="w-full h-10 mb-1 border p-2 rounded-md border-[#E2E8F0] text-sm outline-none"
+              className="mb-1 h-10 w-full rounded-md border border-[#E2E8F0] p-2 text-sm outline-none"
               placeholder="제목"
               value={editContent.title || ''}
               onChange={e => handleChange('title', e.target.value)}
@@ -192,7 +209,7 @@ const StudentRemarks = ({ id }: Props) => {
           </div>
 
           <textarea
-            className="w-full h-30 mb-2 border p-2 rounded-md border-[#E2E8F0] text-sm outline-none"
+            className="mb-2 h-30 w-full rounded-md border border-[#E2E8F0] p-2 text-sm outline-none"
             placeholder="내용"
             value={editContent.content || ''}
             onChange={e => handleChange('content', e.target.value)}
@@ -214,7 +231,10 @@ const StudentRemarks = ({ id }: Props) => {
         </div>
       )}
 
-      {(selectedSubject === '전체' ? remarks : remarks.filter(r => r.subject === selectedSubject)).map(item => (
+      {(selectedSubject === '전체'
+        ? remarks
+        : remarks.filter(r => r.subject === selectedSubject)
+      ).map(item => (
         <div
           key={item._id}
           className={`relative mt-4 flex w-full flex-col rounded-md ${editingId === item._id ? '' : 'border border-[#E6F0FB] p-4'}`}
@@ -231,19 +251,20 @@ const StudentRemarks = ({ id }: Props) => {
                     value: subj,
                     default: subj === (editContent.subject || subjects[0]),
                   }))}
-                  value={editContent.subject || ''}
-                  onChangeSelectedId={(id: string) => handleChange('subject', id)}
+                  onChangeSelectedId={(id: string) =>
+                    handleChange('subject', id)
+                  }
                 />
                 <input
                   type="text"
-                  className="w-full h-10 mb-1 border p-2 rounded-md border-[#E2E8F0] text-sm outline-none"
+                  className="mb-1 h-10 w-full rounded-md border border-[#E2E8F0] p-2 text-sm outline-none"
                   value={editContent.title || ''}
                   onChange={e => handleChange('title', e.target.value)}
                 />
               </div>
 
               <textarea
-                className="w-full h-30 mb-2 border p-2 rounded-md border-[#E2E8F0] text-sm outline-none"
+                className="mb-2 h-30 w-full rounded-md border border-[#E2E8F0] p-2 text-sm outline-none"
                 value={editContent.content || ''}
                 onChange={e => handleChange('content', e.target.value)}
               />
@@ -266,24 +287,30 @@ const StudentRemarks = ({ id }: Props) => {
             <>
               {/* 작성자 teacher_subject와 담임 과목이 같을 때만 Ellipsis 버튼 보여줌 */}
               {item.teacher_subject === teacherSubject && (
-                <div className="absolute right-4 top-4">
-                  <button onClick={() => setEllipsisOpenId(prev => (prev === item._id ? null : item._id))}>
-                    <Ellipsis className="w-5 h-5" />
+                <div className="absolute top-4 right-4">
+                  <button
+                    onClick={() =>
+                      setEllipsisOpenId(prev =>
+                        prev === item._id ? null : item._id,
+                      )
+                    }
+                  >
+                    <Ellipsis className="h-5 w-5" />
                   </button>
                   {ellipsisOpenId === item._id && (
-                    <div className="absolute right-0 mt-1 p-1 flex flex-col rounded-[6px] bg-white z-10 shadow-[0_2px_4px_rgba(0,0,0,0.38)]">
+                    <div className="absolute right-0 z-10 mt-1 flex flex-col rounded-[6px] bg-white p-1 shadow-[0_2px_4px_rgba(0,0,0,0.38)]">
                       <button
                         onClick={() => handleEdit(item._id)}
-                        className="flex items-center gap-2 w-40 text-left px-3 py-2 hover:bg-[#F1F5F9] rounded-md"
+                        className="flex w-40 items-center gap-2 rounded-md px-3 py-2 text-left hover:bg-[#F1F5F9]"
                       >
-                        <Edit className="w-4 h-4 text-[#4B89DC]" />
+                        <Edit className="h-4 w-4 text-[#4B89DC]" />
                         <span className="text-sm text-[#4B89DC]">수정</span>
                       </button>
                       <button
                         onClick={() => handleDelete(item._id)}
-                        className="flex items-center gap-2 w-40 text-left px-3 py-2 hover:bg-[#F1F5F9] rounded-md"
+                        className="flex w-40 items-center gap-2 rounded-md px-3 py-2 text-left hover:bg-[#F1F5F9]"
                       >
-                        <X className="w-4 h-4 text-[#FB2C36]" />
+                        <X className="h-4 w-4 text-[#FB2C36]" />
                         <span className="text-sm text-[#FB2C36]">삭제</span>
                       </button>
                     </div>
@@ -298,7 +325,7 @@ const StudentRemarks = ({ id }: Props) => {
               <p className="mt-6 text-sm">{item.content}</p>
               <div className="mt-8 flex flex-row items-center text-center text-sm text-black/40">
                 <p className="mr-3">작성자</p>
-                <p className="text-[#4B89DC] mr-2"> {item.teacher_subject}</p>
+                <p className="mr-2 text-[#4B89DC]"> {item.teacher_subject}</p>
                 <p className="text-black">{item.teacher_name} 선생님</p>
                 <p className="ml-auto">{item.date.slice(0, 10)}</p>
               </div>

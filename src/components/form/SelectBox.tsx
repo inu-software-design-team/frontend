@@ -6,7 +6,7 @@ import type { ElementStatus, WithElementSize } from 'types';
 
 import { Icon } from 'components/ui';
 
-import { DropdownMenu } from '..';
+import DropdownMenu from '../DropdownMenu';
 
 interface SelectBoxProps
   extends WithElementSize,
@@ -18,8 +18,6 @@ interface SelectBoxProps
   status?: Exclude<ElementStatus, 'active' | 'loading'>;
   label: string;
   options: { id: string; value: string; default?: boolean }[];
-  value: string;
-  disabled?: boolean;
 }
 
 const SelectBox = ({

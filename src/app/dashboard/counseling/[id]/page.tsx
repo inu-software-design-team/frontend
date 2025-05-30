@@ -107,7 +107,8 @@ export default async function Counseling({
     <>
       <div className="mb-4 flex w-full justify-between">
         <StudentProfile
-          student={getStudent({ year: Number(studentYear), studentId })}
+          studentId={studentId}
+          studentYear={Number(studentYear)}
         />
       </div>
       <div className="flex flex-col overflow-y-auto">

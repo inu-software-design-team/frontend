@@ -62,7 +62,8 @@ export default async function Page({
     <>
       <div className="mb-4 flex w-full justify-between">
         <StudentProfile
-          student={getStudent({ year: Number(studentYear), studentId })}
+          studentId={studentId}
+          studentYear={Number(studentYear)}
         />
       </div>
       <div className="flex h-11 w-full flex-row items-center justify-center rounded-[6px] bg-[#F1F5F9] p-1">

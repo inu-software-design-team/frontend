@@ -1,14 +1,16 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
-import { SelectBox } from 'components/form';
-import { IconButton, Table } from 'components/ui';
-import { X } from 'assets/icons';
+import { DeleteStudentAttendance } from 'api/teacher/student-attendance/deleteStudentAttendance';
 import { GetStudentAttendance } from 'api/teacher/student-attendance/getStudentAttendance';
 import { PatchStudentAttendance } from 'api/teacher/student-attendance/patchStudentAttendance';
 import { PostStudentAttendance } from 'api/teacher/student-attendance/postStudentAttendance';
-import { DeleteStudentAttendance } from 'api/teacher/student-attendance/deleteStudentAttendance';
+
+import { X } from 'assets/icons';
+
+import { SelectBox } from 'components/form';
+import { IconButton, Table } from 'components/ui';
 
 interface Props {
   id: string;
@@ -60,7 +62,7 @@ const countStates = (records: AttendanceRecord[]): StateCount => {
       acc[cur.state] = (acc[cur.state] || 0) + 1;
       return acc;
     },
-    { 출석: 0, 지각: 0, 조퇴: 0, 결석: 0 }
+    { 출석: 0, 지각: 0, 조퇴: 0, 결석: 0 },
   );
 };
 
@@ -72,9 +74,11 @@ const createNewAttendance = (): AttendanceRecord => ({
   file: null,
 });
 
-const transformApiData = (attendance: ApiAttendanceRecord[]): AttendanceRecord[] =>
+const transformApiData = (
+  attendance: ApiAttendanceRecord[],
+): AttendanceRecord[] =>
   attendance
-    .map((item) => ({
+    .map(item => ({
       _id: item._id,
       date: item.date.slice(0, 10),
       state: item.state,
@@ -95,7 +99,7 @@ const calculateAttendanceDays = (records: AttendanceRecord[]): number => {
     totalDays++;
   }
 
-  const absenceCount = records.filter((r) => r.state === '결석').length;
+  const absenceCount = records.filter(r => r.state === '결석').length;
 
   return totalDays - absenceCount;
 };
@@ -109,7 +113,8 @@ const StudentAttendance = ({ id: studentId }: Props) => {
   useEffect(() => {
     (async () => {
       try {
-        const response: GetStudentAttendanceResponse = await GetStudentAttendance(studentId);
+        const response: GetStudentAttendanceResponse =
+          await GetStudentAttendance(studentId);
         if (response?.attendance) {
           setData(transformApiData(response.attendance));
         } else {
@@ -126,45 +131,47 @@ const StudentAttendance = ({ id: studentId }: Props) => {
 
   const toggleEditMode = () => {
     if (!isEditMode) {
-      setEditData(data.map((item) => ({ ...item })));
+      setEditData(data.map(item => ({ ...item })));
     } else {
       setCheckedItems({});
     }
-    setIsEditMode((prev) => !prev);
+    setIsEditMode(prev => !prev);
   };
 
   const toggleChecked = (_id: string) => {
-    setCheckedItems((prev) => ({ ...prev, [_id]: !prev[_id] }));
+    setCheckedItems(prev => ({ ...prev, [_id]: !prev[_id] }));
   };
 
   const handleChange = (
     _id: string,
     field: keyof Omit<AttendanceRecord, '_id' | 'file'>,
-    value: string
+    value: string,
   ) => {
-    setEditData((prev) =>
-      prev.map((item) => (item._id === _id ? { ...item, [field]: value } : item))
+    setEditData(prev =>
+      prev.map(item => (item._id === _id ? { ...item, [field]: value } : item)),
     );
   };
 
   const handleAdd = () => {
     const newAttendance = createNewAttendance();
-    setEditData((prev) => [newAttendance, ...prev]);
-    setCheckedItems((prev) => ({ ...prev, [newAttendance._id]: true }));
+    setEditData(prev => [newAttendance, ...prev]);
+    setCheckedItems(prev => ({ ...prev, [newAttendance._id]: true }));
   };
 
   const handleDelete = async () => {
     const toDelete = editData.filter(
-      (item) => checkedItems[item._id] && data.some((d) => d._id === item._id)
+      item => checkedItems[item._id] && data.some(d => d._id === item._id),
     );
 
     try {
-      await Promise.all(toDelete.map((item) => DeleteStudentAttendance(item._id)));
+      await Promise.all(
+        toDelete.map(item => DeleteStudentAttendance(item._id)),
+      );
       const remainingData = data.filter(
-        (item) => !toDelete.some((d) => d._id === item._id)
+        item => !toDelete.some(d => d._id === item._id),
       );
       setData(remainingData);
-      setEditData(remainingData.map((item) => ({ ...item })));
+      setEditData(remainingData.map(item => ({ ...item })));
       setCheckedItems({});
     } catch (error) {
       console.error('출결 정보 삭제 중 오류 발생:', error);
@@ -173,25 +180,40 @@ const StudentAttendance = ({ id: studentId }: Props) => {
   };
 
   const handleSave = async () => {
-    const newEntries = editData.filter((item) => !data.some((d) => d._id === item._id));
+    const newEntries = editData.filter(
+      item => !data.some(d => d._id === item._id),
+    );
     const updates = editData.filter(
-      (item) => checkedItems[item._id] && data.some((d) => d._id === item._id)
+      item => checkedItems[item._id] && data.some(d => d._id === item._id),
     );
 
     try {
       await Promise.all(
-        newEntries.map((item) =>
-          PostStudentAttendance(studentId, item.date, item.state, item.reason, item.file ?? '')
-        )
+        newEntries.map(item =>
+          PostStudentAttendance(
+            studentId,
+            item.date,
+            item.state,
+            item.reason,
+            item.file ?? '',
+          ),
+        ),
       );
 
       await Promise.all(
-        updates.map((item) =>
-          PatchStudentAttendance(item._id, item.date, item.state, item.reason, item.file ?? '')
-        )
+        updates.map(item =>
+          PatchStudentAttendance(
+            item._id,
+            item.date,
+            item.state,
+            item.reason,
+            item.file ?? '',
+          ),
+        ),
       );
 
-      const response: GetStudentAttendanceResponse = await GetStudentAttendance(studentId);
+      const response: GetStudentAttendanceResponse =
+        await GetStudentAttendance(studentId);
       if (response?.attendance) {
         const refreshed = transformApiData(response.attendance);
         setData(refreshed);
@@ -213,7 +235,7 @@ const StudentAttendance = ({ id: studentId }: Props) => {
   };
 
   // SelectBox에 맞춘 options 구조 및 value 관리 추가
-  const yearOptions = [{ id: crypto.randomUUID(), value: '전체', default: true }];
+  const yearOptions = [{ id: 'all', value: '전체', default: true }];
 
   // SelectBox에서 선택된 값 상태 (필요시)
   const [selectedYearId, setSelectedYearId] = useState(yearOptions[0].id);
@@ -225,16 +247,16 @@ const StudentAttendance = ({ id: studentId }: Props) => {
           <div className="flex gap-2">
             <button
               onClick={handleAdd}
-              className="flex items-center justify-center gap-3 w-36 h-10 rounded-[6px] border bg-[#4B89DC] px-3 text-white"
+              className="flex h-10 w-36 items-center justify-center gap-3 rounded-[6px] border bg-[#4B89DC] px-3 text-white"
             >
-              <span className="text-xl font-extralight mb-0.5"> + </span>
+              <span className="mb-0.5 text-xl font-extralight"> + </span>
               <span className="text-sm"> 새 출결사항 추가 </span>
             </button>
             <button
               onClick={handleDelete}
               className="flex h-10 w-20 items-center justify-center gap-1.5 rounded-[6px] border border-[#FB2C36] bg-white px-3 text-sm text-[#FB2C36]"
             >
-              <X className="text-[#FB2C36] w-4 h-4" />
+              <X className="h-4 w-4 text-[#FB2C36]" />
               삭제
             </button>
           </div>
@@ -242,9 +264,11 @@ const StudentAttendance = ({ id: studentId }: Props) => {
           <div className="flex gap-2">
             <SelectBox
               label="연도"
-              options={yearOptions}
-              value={yearOptions.find((opt) => opt.id === selectedYearId)?.value ?? ''}
-              onChangeSelectedId={setSelectedYearId}
+              options={yearOptions.map(opt => ({
+                ...opt,
+                default: opt.id === selectedYearId,
+              }))}
+              onChangeSelectedId={id => setSelectedYearId(id)}
               size="sm"
             />
             {/* 필요시 학기 SelectBox도 추가 가능 */}
@@ -269,14 +293,16 @@ const StudentAttendance = ({ id: studentId }: Props) => {
 
       {!isEditMode && (
         <div className="mt-4 mb-4 flex h-full w-full flex-row items-center gap-3">
-          {states.map((state) => (
+          {states.map(state => (
             <div
               key={state}
               className={`flex h-20 w-1/4 flex-col items-center justify-center rounded-[6px] ${
                 getStateClass(state).split(' ')[0]
               }`}
             >
-              <p className={`text-xl font-bold ${getStateClass(state).split(' ')[1]}`}>
+              <p
+                className={`text-xl font-bold ${getStateClass(state).split(' ')[1]}`}
+              >
                 {state === '출석' ? attendanceDays : stateCount[state]}
               </p>
               <p className="mt-1 text-xs text-black/48">
@@ -287,9 +313,11 @@ const StudentAttendance = ({ id: studentId }: Props) => {
         </div>
       )}
 
-      <div className={`mt-2 ${isEditMode ? 'overflow-y-auto max-h-[180px]' : ''}`}>
+      <div
+        className={`mt-2 ${isEditMode ? 'max-h-[180px] overflow-y-auto' : ''}`}
+      >
         <Table
-          data={(isEditMode ? editData : data).map((item) => ({
+          data={(isEditMode ? editData : data).map(item => ({
             id: item._id,
             ...item,
             checkbox: isEditMode ? (
@@ -305,29 +333,35 @@ const StudentAttendance = ({ id: studentId }: Props) => {
                 <input
                   type="date"
                   value={item.date}
-                  onChange={(e) => handleChange(item._id, 'date', e.target.value)}
-                  className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
+                  onChange={e => handleChange(item._id, 'date', e.target.value)}
+                  className="w-full rounded border border-gray-300 px-2 py-1 text-sm"
                 />
               ) : (
-                <p className="font-normal text-base"> {item.date} </p>
+                <p className="text-base font-normal"> {item.date} </p>
               ),
             state:
               isEditMode && checkedItems[item._id] ? (
                 <select
                   value={item.state}
-                  onChange={(e) =>
-                    handleChange(item._id, 'state', e.target.value as AttendanceState)
+                  onChange={e =>
+                    handleChange(
+                      item._id,
+                      'state',
+                      e.target.value as AttendanceState,
+                    )
                   }
-                  className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
+                  className="w-full rounded border border-gray-300 px-2 py-1 text-sm"
                 >
-                  {states.map((stateOption) => (
+                  {states.map(stateOption => (
                     <option key={stateOption} value={stateOption}>
                       {stateOption}
                     </option>
                   ))}
                 </select>
               ) : (
-                <span className={`px-3 py-2 text-center text-sm ${getStateClass(item.state)}`}>
+                <span
+                  className={`px-3 py-2 text-center text-sm ${getStateClass(item.state)}`}
+                >
                   {item.state}
                 </span>
               ),
@@ -336,11 +370,13 @@ const StudentAttendance = ({ id: studentId }: Props) => {
                 <input
                   type="text"
                   value={item.reason}
-                  onChange={(e) => handleChange(item._id, 'reason', e.target.value)}
-                  className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
+                  onChange={e =>
+                    handleChange(item._id, 'reason', e.target.value)
+                  }
+                  className="w-full rounded border border-gray-300 px-2 py-1 text-sm"
                 />
               ) : (
-                <p className="font-normal text-[15px]"> {item.reason} </p>
+                <p className="text-[15px] font-normal"> {item.reason} </p>
               ),
             file: item.file ? (
               <a
@@ -362,7 +398,9 @@ const StudentAttendance = ({ id: studentId }: Props) => {
                     key: 'checkbox' as const,
                     label: '',
                     width: 20,
-                    render: (val: React.ReactNode) => <div className="flex justify-center">{val}</div>,
+                    render: (val: React.ReactNode) => (
+                      <div className="flex justify-center">{val}</div>
+                    ),
                   },
                 ]
               : []),
@@ -376,7 +414,7 @@ const StudentAttendance = ({ id: studentId }: Props) => {
       </div>
 
       {isEditMode && (
-        <div className="flex flex-row mt-4 mb-2 gap-3">
+        <div className="mt-4 mb-2 flex flex-row gap-3">
           <div className="flex flex-1" />
           <div className="flex flex-1 justify-center gap-3">
             <button
