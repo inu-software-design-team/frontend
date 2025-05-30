@@ -10,7 +10,11 @@ import {
   getYearListForGrade,
   TableController,
 } from 'features/grades';
-import { getStudent, StudentProfile } from 'features/students';
+import {
+  checkStudentExistence,
+  getStudent,
+  StudentProfile,
+} from 'features/students';
 
 import { Empty } from 'components';
 import { IconButton, Table } from 'components/ui';
@@ -58,6 +62,12 @@ export default async function Grade({
     subject?: string;
   } = await searchParams;
   const studentId = Number(id);
+
+  await checkStudentExistence({
+    studentId,
+    studentYear: Number(studentYear),
+    category: 'grade',
+  });
 
   const years = await getYearListForGrade({
     studentId,

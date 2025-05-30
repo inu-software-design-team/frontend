@@ -13,7 +13,11 @@ import {
   ItemModal,
   ViewController,
 } from 'features/counselings';
-import { getStudent, StudentProfile } from 'features/students';
+import {
+  checkStudentExistence,
+  getStudent,
+  StudentProfile,
+} from 'features/students';
 
 import { Empty } from 'components';
 import { TextButton } from 'components/ui';
@@ -64,6 +68,12 @@ export default async function Counseling({
   } = await searchParams;
   const studentId = Number(id);
 
+  await checkStudentExistence({
+    studentId,
+    studentYear: Number(studentYear),
+    category: 'counseling',
+  });
+
   const counselings = await getCounselingList({
     studentId,
   });
@@ -85,7 +95,7 @@ export default async function Counseling({
         topics={options.topic.filter(({ value }) => value !== '전체')}
         counseling={getCounseling({ studentId, id: counselingId ?? '' })}
       />
-      <div className="flex w-full items-start justify-between gap-x-4">
+      <div className="flex items-start justify-between">
         <StudentProfile
           student={getStudent({ year: Number(studentYear), studentId })}
         />
