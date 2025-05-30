@@ -32,7 +32,7 @@ const Input: React.FC<InputProps> = ({
   }, [validate, errorMessage]);
 
   return (
-    <div className={`flex flex-col gap-y-2 ${className ?? ''}`}>
+    <div className={`flex flex-col gap-y-1 ${className ?? ''}`}>
       {(label.length > 0 || isInvalid) && (
         <div className="flex items-center">
           {label.length > 0 && (
@@ -51,11 +51,11 @@ const Input: React.FC<InputProps> = ({
         value={value}
         onChange={onChange}
         placeholder={placeholder}
-        className={`h-9 w-full rounded-md border bg-[#F1F5F9] px-3 text-xs ${
+        className={`shadow-border bg-secondary h-9 w-full rounded-md px-3 text-xs ${
           isInvalid
-            ? 'border-[#FB2C36] text-[#121212]/38'
-            : 'border-[#E2E8F0] text-[#121212]'
-        } focus:ring-0 focus:outline-none`}
+            ? 'shadow-danger text-black-off'
+            : 'shadow-tertiary text-black focus:shadow-black'
+        } transition-shadow focus:ring-0 focus:outline-none`}
       />
     </div>
   );

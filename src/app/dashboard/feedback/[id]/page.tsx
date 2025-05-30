@@ -2,7 +2,11 @@ import type { Metadata } from 'next';
 
 import type { IdParams, SearchParams } from 'types';
 
-import { getStudent, StudentProfile } from 'features/students';
+import {
+  checkStudentExistence,
+  getStudent,
+  StudentProfile,
+} from 'features/students';
 
 import { SelectBox } from 'components/form';
 
@@ -99,9 +103,15 @@ export default async function FeedBack({
   const { studentYear } = await searchParams;
   const studentId = Number(id);
 
+  await checkStudentExistence({
+    studentId,
+    studentYear: Number(studentYear),
+    category: 'feedback',
+  });
+
   return (
     <>
-      <div className="mb-4 flex w-full justify-between">
+      <div className="flex w-full justify-between">
         <StudentProfile
           student={getStudent({ year: Number(studentYear), studentId })}
         />
