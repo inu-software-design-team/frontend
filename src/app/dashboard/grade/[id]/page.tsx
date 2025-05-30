@@ -2,12 +2,13 @@ import type { Metadata } from 'next';
 
 import { GRADE_COLUMNS, SEMESTERS, SUBJECTS, TERMS } from 'data';
 
-import type { IdParams, SearchParams } from 'types';
+import type { IdParams, SearchParams, Subject } from 'types';
 
 import {
   getGradeList,
   getOptionsForGrade,
   getYearListForGrade,
+  RadarChart,
   TableController,
 } from 'features/grades';
 import {
@@ -141,7 +142,32 @@ export default async function Grade({
               </div>
             </div>
             <div className="grid w-full grid-cols-1 items-center justify-center gap-4 md:grid-cols-2">
-              <div className="bg-primary-light-hover aspect-[10/9]">차트</div>
+              <RadarChart
+                className="mx-auto"
+                labels={Object.values(SUBJECTS)}
+                data={Object.values(
+                  grades.reduce(
+                    (acc, grade) => {
+                      if (grade.subject in acc) {
+                        acc[grade.subject].score += grade.score;
+                        acc[grade.subject].length += 1;
+                      } else {
+                        acc[grade.subject] = {
+                          score: grade.score,
+                          length: 1,
+                        };
+                      }
+
+                      return acc;
+                    },
+                    {} as {
+                      [subject in Subject]: { score: number; length: number };
+                    },
+                  ),
+                ).map(({ score, length }) =>
+                  Number((score / length).toFixed(2)),
+                )}
+              />
               <ul className="mx-auto w-full max-w-[25rem]">
                 {Object.entries(statsFromGrades).map(
                   ([key, { label, value }], index) => (
