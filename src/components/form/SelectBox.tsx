@@ -6,7 +6,7 @@ import type { ElementStatus, WithElementSize } from 'types';
 
 import { Icon } from 'components/ui';
 
-import { DropdownMenu } from '..';
+import DropdownMenu from '../DropdownMenu';
 
 interface SelectBoxProps
   extends WithElementSize,
@@ -40,9 +40,16 @@ const SelectBox = ({
     if (status !== 'disabled') onChangeMenuOpen?.(isMenuOpen);
   }, [status, onChangeMenuOpen, isMenuOpen]);
 
-  useEffect(() => {
-    if (status !== 'disabled') onChangeSelectedId?.(selectedId);
-  }, [status, onChangeSelectedId, selectedId]);
+  // onChangeSelectedId 호출을 useEffect에서 제거
+  // 대신 setSelectedId 호출 시 직접 실행
+  const handleChangeSelectedId = (id: string) => {
+    if (id !== selectedId) {
+      setSelectedId(id);
+      if (status !== 'disabled') {
+        onChangeSelectedId?.(id);
+      }
+    }
+  };
 
   return (
     <DropdownMenu
@@ -51,7 +58,7 @@ const SelectBox = ({
       status={status}
       size={size}
       onChangeMenuOpen={isOpen => setIsMenuOpen(isOpen)}
-      onChangeSelectedId={id => setSelectedId(id)}
+      onChangeSelectedId={handleChangeSelectedId}
     >
       <label className="block w-full font-semibold">{label}</label>
       <div

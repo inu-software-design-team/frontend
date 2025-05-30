@@ -1,0 +1,40 @@
+name: Deploy to EC2
+
+on:
+  # push:
+  #   branches: [main]
+  repository_dispatch:
+    types: [deploy_trigger] # 외부에서 전달되는 deploy 이벤트 감지
+  workflow_dispatch: # 수동 트리거 실행 허용
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. 레포지토리 체크아웃 (v4로 업데이트)
+      - name: Checkout deploy repo
+        uses: actions/checkout@v4
+
+      # # 2. EC2로 docker-compose.yml 전송
+      # - name: Copy files to EC2
+      #   uses: appleboy/scp-action@v0.1.4
+      #   with:
+      #     host: ${{ secrets.EC2_HOST }}
+      #     username: ${{ secrets.EC2_USERNAME }}
+      #     key: ${{ secrets.EC2_SSH_KEY }}
+      #     source: "docker-compose.yml"
+      #     target: "~/app"
+      #     overwrite: true # 덮어쓰기 허용
+
+      # 3. EC2에서 docker-compose 실행
+      - name: SSH and run deploy
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd ~/app
+            docker-compose -p cosy --env-file .env pull
+            docker-compose -p cosy --env-file .env up -d --remove-orphans

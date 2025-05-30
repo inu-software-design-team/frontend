@@ -8,11 +8,7 @@ import {
   GradeItemManagerProvider,
   ManageCloseButton,
 } from 'features/grades';
-import {
-  checkStudentExistence,
-  getStudent,
-  StudentProfile,
-} from 'features/students';
+import { checkStudentExistence, StudentProfile } from 'features/students';
 
 export default async function GradeManage({
   params,
@@ -43,7 +39,8 @@ export default async function GradeManage({
     <div className="flex w-full flex-col gap-y-12">
       <div className="flex w-full justify-between">
         <StudentProfile
-          student={getStudent({ year: Number(studentYear), studentId })}
+          studentId={studentId}
+          studentYear={Number(studentYear)}
         />
         <ManageCloseButton year={Number(studentYear)} studentId={studentId} />
       </div>

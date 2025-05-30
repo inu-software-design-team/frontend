@@ -14,12 +14,6 @@ import StudentAttendance from '../components/studentattendance';
 import StudentBasicInfo from '../components/studentbasicinfo';
 import StudentRemarks from '../components/studentremarks';
 
-const TABS = [
-  { label: '기본 정보', item: StudentBasicInfo },
-  { label: '출결 사항', item: StudentAttendance },
-  { label: '특기 사항', item: StudentRemarks },
-];
-
 export async function generateMetadata({
   params,
   searchParams,
@@ -41,6 +35,12 @@ export async function generateMetadata({
     description: `${classInfo.grade}학년 ${classInfo.class}반 ${name} 학생의 학생부 - ${tabName} 페이지 입니다.`,
   };
 }
+
+const TABS = [
+  { label: '기본 정보', item: StudentBasicInfo },
+  { label: '출결 사항', item: StudentAttendance },
+  { label: '특기 사항', item: StudentRemarks },
+];
 
 export default async function Page({
   params,
@@ -72,7 +72,8 @@ export default async function Page({
     <>
       <div className="flex w-full justify-between">
         <StudentProfile
-          student={getStudent({ year: Number(studentYear), studentId })}
+          studentId={studentId}
+          studentYear={Number(studentYear)}
         />
       </div>
       <div className="flex h-11 w-full flex-row items-center justify-center rounded-[6px] bg-[#F1F5F9] p-1">

@@ -1,100 +1,336 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+
+import { GetStudentInfo } from 'api/teacher/student-info/getStudentInfo';
+import { DeleteStudentRemarks } from 'api/teacher/student-remarks/deleteStudentRemarks';
+import { GetStudentRemarks } from 'api/teacher/student-remarks/getStudentRemarks';
+import { PatchStudentRemarks } from 'api/teacher/student-remarks/patchStudentRemarks';
+import { PostStudentRemarks } from 'api/teacher/student-remarks/postStudentRemarks';
+
+import { Edit, Ellipsis, X } from 'assets/icons';
+
 import { SelectBox } from 'components/form';
 
 interface Props {
   id: string;
 }
 
-type RemarkData = {
-  id: string;
-  year: number;
-  semester: number;
+type StudentRemark = {
+  _id: string;
   subject: string;
   title: string;
   content: string;
-  author: string;
   date: string;
+  teacher_id: number;
+  teacher_name: string;
+  teacher_subject: string;
 };
 
-const dummyGradeData: RemarkData[] = Array.from({ length: 6 }, (_, i) => {
-  const day = 6 + i;
-  const subjects = ['국어', '영어', '수학', '사회', '과학'];
-  const subject = subjects[i % subjects.length];
-  return {
-    id: crypto.randomUUID(),
-    year: 2025,
-    semester: 1,
-    subject,
-    title: `${subject} 학습 내용`,
-    content: `${subject} 수업에서 중요한 개념을 정리했습니다.`,
-    author: `${subject} 선생님`,
-    date: `2025-05-${String(day).padStart(2, '0')}`,
+const subjects = ['전체', '국어', '영어', '수학', '사회', '과학'];
+
+const StudentRemarks = ({ id }: Props) => {
+  const [remarks, setRemarks] = useState<StudentRemark[]>([]);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editContent, setEditContent] = useState<Partial<StudentRemark>>({});
+  const [ellipsisOpenId, setEllipsisOpenId] = useState<string | null>(null);
+  const [isAdding, setIsAdding] = useState(false);
+  const [teacherSubject, setTeacherSubject] = useState<string | null>(null);
+  const [selectedSubject, setSelectedSubject] = useState('전체');
+
+  useEffect(() => {
+    (async () => {
+      try {
+        // 학생 기본 정보에서 담임 과목 받아오기
+        const info = await GetStudentInfo(id);
+        setTeacherSubject(info.teacher_subject);
+
+        // 특기사항 받아오기
+        const data: StudentRemark[] = await GetStudentRemarks(id);
+        const sortedData = data.sort(
+          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+        );
+        setRemarks(sortedData);
+      } catch (err) {
+        console.error('Failed to fetch data', err);
+      }
+    })();
+  }, [id]);
+
+  const handleDelete = async (_id: string) => {
+    try {
+      await DeleteStudentRemarks(_id);
+      setRemarks(prev => prev.filter(item => item._id !== _id));
+      setEllipsisOpenId(null);
+      console.log('특기사항 삭제 성공');
+    } catch (err) {
+      console.error('Failed to delete remark:', err);
+      alert('특기사항 삭제에 실패했습니다.');
+    }
   };
-});
 
-const optionsFromGradeData = {
-  year: {
-    label: '연도',
-    options: [
-      { id: crypto.randomUUID(), value: '전체' },
-      ...Array.from(new Set(dummyGradeData.map(d => d.year.toString()))).map(
-        value => ({ id: crypto.randomUUID(), value }),
-      ),
-    ],
-  },
-  semester: {
-    label: '학기',
-    options: [
-      { id: crypto.randomUUID(), value: '전체' },
-      ...Array.from(
-        new Set(dummyGradeData.map(d => d.semester.toString())),
-      ).map(value => ({ id: crypto.randomUUID(), value })),
-    ],
-  },
-  subject: {
-    label: '과목',
-    options: [
-      { id: crypto.randomUUID(), value: '전체' },
-      ...Array.from(new Set(dummyGradeData.map(d => d.subject))).map(
-        subject => ({
-          id: crypto.randomUUID(),
-          value: subject,
-        }),
-      ),
-    ],
-  },
-};
+  const handleEdit = (_id: string) => {
+    const item = remarks.find(r => r._id === _id);
+    if (item) {
+      setEditingId(_id);
+      setEditContent({
+        title: item.title,
+        content: item.content,
+        subject: item.subject,
+      });
+    }
+    setEllipsisOpenId(null);
+    setIsAdding(false);
+  };
 
-const StudentRemarks = ({}: Props) => {
+  const handleSave = async (_id: string) => {
+    try {
+      await PatchStudentRemarks(
+        _id,
+        new Date().toISOString(),
+        editContent.subject || '',
+        editContent.title || '',
+        editContent.content || '',
+      );
+
+      const data: StudentRemark[] = await GetStudentRemarks(id);
+      const sortedData = data.sort(
+        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+      );
+      setRemarks(sortedData);
+
+      setEditingId(null);
+      setEditContent({});
+    } catch (err) {
+      console.error('Failed to patch remark:', err);
+      alert('특기사항 수정에 실패했습니다.');
+    }
+  };
+
+  const handleAddClick = () => {
+    setIsAdding(true);
+    setEditingId(null);
+    setEditContent({
+      subject: teacherSubject || subjects[0], // 담임 과목만 기본 선택
+      title: '',
+      content: '',
+      date: new Date().toISOString(),
+      teacher_id: 0,
+      teacher_name: '',
+      teacher_subject: '',
+    });
+    setEllipsisOpenId(null);
+  };
+
+  const handleAddSave = async () => {
+    try {
+      const now = new Date().toISOString();
+      const subject = editContent.subject || teacherSubject || subjects[0];
+      const title = editContent.title || '';
+      const content = editContent.content || '';
+
+      await PostStudentRemarks(id, title, content, now, subject);
+
+      const data: StudentRemark[] = await GetStudentRemarks(id);
+      const sortedData = data.sort(
+        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+      );
+      setRemarks(sortedData);
+      setIsAdding(false);
+      setEditContent({});
+    } catch (err) {
+      console.error('Failed to add new remark:', err);
+      alert('특기사항 추가에 실패했습니다.');
+    }
+  };
+
+  const handleAddCancel = () => {
+    setIsAdding(false);
+    setEditContent({});
+  };
+
+  const handleChange = (field: keyof StudentRemark, value: string) => {
+    setEditContent(prev => ({ ...prev, [field]: value }));
+  };
+
   return (
     <div className="flex flex-col">
       <div className="flex h-full w-full flex-row items-center">
-        <div className="flex w-full">
+        <div className="flex w-full justify-between">
           <div className="flex items-center gap-2">
-            <SelectBox size="sm" {...optionsFromGradeData.year} />
-            <SelectBox size="sm" {...optionsFromGradeData.semester} />
-            <SelectBox size="sm" {...optionsFromGradeData.subject} />
+            <SelectBox
+              size="sm"
+              label="과목"
+              options={subjects.map(subj => ({
+                id: subj,
+                value: subj,
+                default: subj === selectedSubject,
+              }))}
+              onChangeSelectedId={(id: string) => setSelectedSubject(id)}
+            />
           </div>
+          <button
+            onClick={handleAddClick}
+            className="mt-5 flex h-10 w-36 items-center justify-center gap-3 rounded-[6px] border bg-[#4B89DC] px-3 text-white"
+          >
+            <span className="mb-0.5 text-xl font-extralight"> + </span>
+            <span className="text-sm"> 새 특기사항 추가 </span>
+          </button>
         </div>
       </div>
-      {dummyGradeData.map(item => (
-        <div
-          key={item.id} // Apply key here to the outer div
-          className="mt-4 flex w-full flex-col rounded-[6px] border border-[#E6F0FB] p-4"
-        >
-          <div className="mb-4">
-            <div className="flex flex-row items-center text-center">
-              <p className="mr-1.5 text-[#4B89DC]">{item.subject}</p>
-              <p className="text-lg font-semibold">ㆍ {item.title}</p>
-            </div>
-            <p className="mt-6 text-sm">{item.content}</p>
-            <div className="mt-8 flex flex-row items-center text-center">
-              <p className="mr-4 text-xs text-black/40">작성자 </p>
-              <p className="text-sm"> {item.author}</p>
-              <p className="ml-auto text-sm text-black/40">{item.date}</p>
-            </div>
+
+      {isAdding && (
+        <div className="relative mt-4 flex w-full flex-col rounded-md">
+          <div className="flex flex-row items-center justify-center gap-2">
+            <SelectBox
+              className="mb-2 w-30"
+              label=""
+              size="sm"
+              options={
+                teacherSubject
+                  ? [
+                      {
+                        id: teacherSubject,
+                        value: teacherSubject,
+                        default: true,
+                      },
+                    ]
+                  : []
+              }
+              onChangeSelectedId={() => {}}
+            />
+            <input
+              type="text"
+              className="mb-1 h-10 w-full rounded-md border border-[#E2E8F0] p-2 text-sm outline-none"
+              placeholder="제목"
+              value={editContent.title || ''}
+              onChange={e => handleChange('title', e.target.value)}
+            />
           </div>
+
+          <textarea
+            className="mb-2 h-30 w-full rounded-md border border-[#E2E8F0] p-2 text-sm outline-none"
+            placeholder="내용"
+            value={editContent.content || ''}
+            onChange={e => handleChange('content', e.target.value)}
+          />
+          <div className="flex flex-row items-center justify-center gap-2">
+            <button
+              onClick={handleAddSave}
+              className="h-10 w-30 rounded-[6px] border border-black bg-white px-2 py-1 text-sm"
+            >
+              저장
+            </button>
+            <button
+              onClick={handleAddCancel}
+              className="h-10 w-30 rounded-[6px] bg-[#FB2C36] px-2 py-1 text-sm text-white"
+            >
+              취소
+            </button>
+          </div>
+        </div>
+      )}
+
+      {(selectedSubject === '전체'
+        ? remarks
+        : remarks.filter(r => r.subject === selectedSubject)
+      ).map(item => (
+        <div
+          key={item._id}
+          className={`relative mt-4 flex w-full flex-col rounded-md ${editingId === item._id ? '' : 'border border-[#E6F0FB] p-4'}`}
+        >
+          {editingId === item._id ? (
+            <>
+              <div className="flex flex-row items-center justify-center gap-2">
+                <SelectBox
+                  className="mb-2 w-30"
+                  label=""
+                  size="sm"
+                  options={subjects.map(subj => ({
+                    id: subj,
+                    value: subj,
+                    default: subj === (editContent.subject || subjects[0]),
+                  }))}
+                  onChangeSelectedId={(id: string) =>
+                    handleChange('subject', id)
+                  }
+                />
+                <input
+                  type="text"
+                  className="mb-1 h-10 w-full rounded-md border border-[#E2E8F0] p-2 text-sm outline-none"
+                  value={editContent.title || ''}
+                  onChange={e => handleChange('title', e.target.value)}
+                />
+              </div>
+
+              <textarea
+                className="mb-2 h-30 w-full rounded-md border border-[#E2E8F0] p-2 text-sm outline-none"
+                value={editContent.content || ''}
+                onChange={e => handleChange('content', e.target.value)}
+              />
+              <div className="flex flex-row items-center justify-center gap-2">
+                <button
+                  onClick={() => handleSave(item._id)}
+                  className="h-10 w-30 rounded-[6px] border border-black bg-white px-2 py-1 text-sm"
+                >
+                  저장
+                </button>
+                <button
+                  onClick={() => setEditingId(null)}
+                  className="h-10 w-30 rounded-[6px] bg-[#FB2C36] px-2 py-1 text-sm text-white"
+                >
+                  취소
+                </button>
+              </div>
+            </>
+          ) : (
+            <>
+              {/* 작성자 teacher_subject와 담임 과목이 같을 때만 Ellipsis 버튼 보여줌 */}
+              {item.teacher_subject === teacherSubject && (
+                <div className="absolute top-4 right-4">
+                  <button
+                    onClick={() =>
+                      setEllipsisOpenId(prev =>
+                        prev === item._id ? null : item._id,
+                      )
+                    }
+                  >
+                    <Ellipsis className="h-5 w-5" />
+                  </button>
+                  {ellipsisOpenId === item._id && (
+                    <div className="absolute right-0 z-10 mt-1 flex flex-col rounded-[6px] bg-white p-1 shadow-[0_2px_4px_rgba(0,0,0,0.38)]">
+                      <button
+                        onClick={() => handleEdit(item._id)}
+                        className="flex w-40 items-center gap-2 rounded-md px-3 py-2 text-left hover:bg-[#F1F5F9]"
+                      >
+                        <Edit className="h-4 w-4 text-[#4B89DC]" />
+                        <span className="text-sm text-[#4B89DC]">수정</span>
+                      </button>
+                      <button
+                        onClick={() => handleDelete(item._id)}
+                        className="flex w-40 items-center gap-2 rounded-md px-3 py-2 text-left hover:bg-[#F1F5F9]"
+                      >
+                        <X className="h-4 w-4 text-[#FB2C36]" />
+                        <span className="text-sm text-[#FB2C36]">삭제</span>
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              <div className="flex flex-row items-center text-center">
+                <p className="mr-1.5 text-[#4B89DC]">{item.subject}</p>
+                <p className="text-lg font-semibold">ㆍ {item.title}</p>
+              </div>
+              <p className="mt-6 text-sm">{item.content}</p>
+              <div className="mt-8 flex flex-row items-center text-center text-sm text-black/40">
+                <p className="mr-3">작성자</p>
+                <p className="mr-2 text-[#4B89DC]"> {item.teacher_subject}</p>
+                <p className="text-black">{item.teacher_name} 선생님</p>
+                <p className="ml-auto">{item.date.slice(0, 10)}</p>
+              </div>
+            </>
+          )}
         </div>
       ))}
     </div>
