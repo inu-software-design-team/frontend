@@ -97,7 +97,28 @@ export default async function Counseling({
       />
       <div className="flex items-start justify-between">
         <StudentProfile
-          student={getStudent({ year: Number(studentYear), studentId })}
+          studentId={studentId}
+          studentYear={Number(studentYear)}
+        />
+        <TextButton
+          label="상담일지 추가"
+          leftIcon="plus"
+          color="primary"
+          spacing="compact"
+          className="whitespace-nowrap"
+          href={{
+            pathname: `/dashboard/counseling/${id}?studentYear=${Number(studentYear)}&status=create`,
+          }}
+        />
+        <TextButton
+          label="상담일지 추가"
+          leftIcon="plus"
+          color="primary"
+          spacing="compact"
+          className="whitespace-nowrap"
+          href={{
+            pathname: `/dashboard/counseling/${id}?studentYear=${Number(studentYear)}&status=create`,
+          }}
         />
         <TextButton
           label="상담일지 추가"

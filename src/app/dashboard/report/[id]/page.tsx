@@ -8,6 +8,8 @@ import {
   StudentProfile,
 } from 'features/students';
 
+import ReportView from '../components/ReportView';
+
 export async function generateMetadata({
   params,
   searchParams,
@@ -24,12 +26,12 @@ export async function generateMetadata({
   });
 
   return {
-    title: `${classInfo.grade}-${classInfo.class} ${name} | 성적`,
-    description: `${classInfo.grade}학년 ${classInfo.class}반 ${name} 학생의 성적 페이지 입니다.`,
+    title: `${classInfo.grade}-${classInfo.class} ${name} | 보고서`,
+    description: `${classInfo.grade}학년 ${classInfo.class}반 ${name} 학생의 보고서 페이지 입니다.`,
   };
 }
 
-export default async function Page({
+export default async function Report({
   params,
   searchParams,
 }: {
@@ -37,26 +39,19 @@ export default async function Page({
   searchParams: Promise<SearchParams>;
 }) {
   const { id } = await params;
-  const {
-    studentYear,
-  }: {
-    studentYear?: string;
-  } = await searchParams;
+  const { studentYear } = await searchParams;
   const studentId = Number(id);
 
   await checkStudentExistence({
     studentId,
     studentYear: Number(studentYear),
-    category: 'grade',
+    category: 'report',
   });
 
   return (
-    <>
-      <div className="flex w-full justify-between">
-        <StudentProfile
-          student={getStudent({ year: Number(studentYear), studentId })}
-        />
-      </div>
-    </>
+    <div className="space-y-12">
+      <StudentProfile studentId={studentId} studentYear={Number(studentYear)} />
+      <ReportView id={id} />
+    </div>
   );
 }

@@ -1,15 +1,16 @@
-'use client';
-
-import { use } from 'react';
+import { StudentInfo } from 'types';
 
 import { getStudent } from './actions';
 
-interface StudentInfoProps {
-  student: ReturnType<typeof getStudent>;
+interface StudentInfoProps extends Pick<StudentInfo, 'studentId'> {
+  studentYear: number;
 }
 
-const StudentProfile = ({ student }: StudentInfoProps) => {
-  const { name, classInfo, studentId } = use(student);
+const StudentProfile = async ({ studentId, studentYear }: StudentInfoProps) => {
+  const { name, classInfo } = await getStudent({
+    studentId,
+    year: studentYear,
+  });
 
   return (
     <div className="flex w-full flex-col gap-y-2">
