@@ -18,6 +18,9 @@ export const GetStudentAttendance = async (student_id: string) => {
     if (axios.isAxiosError(error)) {
       if (error.response) {
         const { status, data } = error.response;
+
+        if (status === 404) return [];
+
         console.error('Error response:', status, data);
         if (status === 401) {
           console.error(
