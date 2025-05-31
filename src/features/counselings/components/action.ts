@@ -13,21 +13,20 @@ import type {
   StudentInfo,
 } from 'types';
 
-import { getCookieHeader } from 'features/auth';
+import { getCookieHeader, getUserInfo } from 'features/auth';
 
 import { SelectBox } from 'components/form';
 
 export const getCounselingList = async ({
   studentId,
 }: Pick<StudentInfo, 'studentId'>): Promise<CounselingItem[]> => {
-  const response = await fetch(
-    `${API_PREFIX.teacher}/counselings/${studentId}`,
-    {
-      headers: {
-        ...(await getCookieHeader()),
-      },
+  const { role } = await getUserInfo();
+
+  const response = await fetch(`${API_PREFIX[role]}/counselings/${studentId}`, {
+    headers: {
+      ...(await getCookieHeader()),
     },
-  );
+  });
 
   if (!response.ok) {
     if (response.status === 404) return [];

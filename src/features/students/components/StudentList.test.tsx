@@ -27,7 +27,7 @@ describe('학생 목록 표시 및 검색 기능 테스트', () => {
   it('컴포넌트를 정상적으로 렌더링해야 합니다.', () => {
     vi.mocked(usePathname).mockReturnValue('/dashboard');
     const { container } = render(
-      <StudentList years={years} students={students} />,
+      <StudentList role="teacher" years={years} students={students} />,
     );
 
     expect(container).toBeInTheDocument();
@@ -36,7 +36,7 @@ describe('학생 목록 표시 및 검색 기능 테스트', () => {
   it('홈(/dashboard)에서는 학생 목록이 표시되지 않아야 합니다.', async () => {
     vi.mocked(usePathname).mockReturnValue('/dashboard');
     const { container } = render(
-      <StudentList years={years} students={students} />,
+      <StudentList role="teacher" years={years} students={students} />,
     );
     const studentList = container.querySelector('article');
 
@@ -45,7 +45,7 @@ describe('학생 목록 표시 및 검색 기능 테스트', () => {
 
   it('props를 정상적으로 전달해야 합니다.', () => {
     vi.mocked(usePathname).mockReturnValue('/dashboard/grade');
-    render(<StudentList years={years} students={students} />);
+    render(<StudentList role="teacher" years={years} students={students} />);
     const studentItems = screen.getAllByRole('link');
 
     studentItems.forEach((item, index) => {

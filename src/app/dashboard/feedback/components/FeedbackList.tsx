@@ -8,6 +8,8 @@ import { PatchFeedBack } from 'api/teacher/feedback/patchFeedback';
 import { PostFeedBack } from 'api/teacher/feedback/postFeedback';
 import { Edit, Ellipsis, X } from 'lucide-react';
 
+import type { UserRole } from 'types/auth';
+
 import { Empty } from 'components';
 import { SelectBox } from 'components/form';
 
@@ -25,9 +27,14 @@ type FeedBack = {
   teacher_subject: string;
 };
 
+interface FeedbackListProps {
+  id: string;
+  role: UserRole;
+}
+
 const categoryOption = ['전체', '성적', '출결', '태도'];
 
-const FeedbackList = ({ id }: { id: string }) => {
+const FeedbackList = ({ id, role }: FeedbackListProps) => {
   const [feedback, setFeedBack] = useState<FeedBack[]>([]);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editContent, setEditContent] = useState<Partial<FeedBack>>({});
@@ -161,16 +168,18 @@ const FeedbackList = ({ id }: { id: string }) => {
             onChangeSelectedId={id => setSelectedCategory(id)}
           />
         </div>
-        <button
-          onClick={handleAddClick}
-          className="ml-auto flex h-10 w-36 items-center justify-center gap-3 rounded-[6px] border bg-[#4B89DC] px-3 text-white"
-        >
-          <span className="mb-0.5 text-xl font-extralight"> + </span>
-          <span className="text-sm"> 새 피드백 추가 </span>
-        </button>
+        {role === 'teacher' && (
+          <button
+            onClick={handleAddClick}
+            className="ml-auto flex h-10 w-36 items-center justify-center gap-3 rounded-[6px] border bg-[#4B89DC] px-3 text-white"
+          >
+            <span className="mb-0.5 text-xl font-extralight"> + </span>
+            <span className="text-sm"> 새 피드백 추가 </span>
+          </button>
+        )}
       </div>
 
-      {isAdding && (
+      {role === 'teacher' && isAdding && (
         <div className="relative mt-4 flex w-full flex-col rounded-md">
           <div className="flex flex-row items-center justify-center gap-2">
             <SelectBox
@@ -232,7 +241,7 @@ const FeedbackList = ({ id }: { id: string }) => {
               editingId === item._id ? '' : 'border border-[#E6F0FB] p-4'
             }`}
           >
-            {editingId === item._id ? (
+            {role === 'teacher' && editingId === item._id ? (
               <>
                 <div className="mb-2 flex flex-row items-center justify-center gap-2">
                   <SelectBox
@@ -277,36 +286,38 @@ const FeedbackList = ({ id }: { id: string }) => {
               </>
             ) : (
               <>
-                <div className="absolute top-4 right-4">
-                  <button
-                    onClick={() =>
-                      setEllipsisOpenId(prev =>
-                        prev === item._id ? null : item._id,
-                      )
-                    }
-                  >
-                    <Ellipsis className="h-5 w-5" />
-                  </button>
+                {role === 'teacher' && (
+                  <div className="absolute top-4 right-4">
+                    <button
+                      onClick={() =>
+                        setEllipsisOpenId(prev =>
+                          prev === item._id ? null : item._id,
+                        )
+                      }
+                    >
+                      <Ellipsis className="h-5 w-5" />
+                    </button>
 
-                  {ellipsisOpenId === item._id && (
-                    <div className="absolute right-0 z-10 mt-1 flex flex-col rounded-[6px] bg-white p-1 shadow-[0_2px_4px_rgba(0,0,0,0.38)]">
-                      <button
-                        onClick={() => handleEdit(item._id)}
-                        className="flex w-40 items-center gap-2 rounded-md px-3 py-2 text-left text-[#4B89DC] hover:bg-[#F1F5F9]"
-                      >
-                        <Edit className="h-4 w-4" />
-                        수정
-                      </button>
-                      <button
-                        onClick={() => handleDelete(id, item._id)}
-                        className="flex w-40 items-center gap-2 rounded-md px-3 py-2 text-left text-[#FB2C36] hover:bg-[#F1F5F9]"
-                      >
-                        <X className="h-4 w-4" />
-                        삭제
-                      </button>
-                    </div>
-                  )}
-                </div>
+                    {ellipsisOpenId === item._id && (
+                      <div className="absolute right-0 z-10 mt-1 flex flex-col rounded-[6px] bg-white p-1 shadow-[0_2px_4px_rgba(0,0,0,0.38)]">
+                        <button
+                          onClick={() => handleEdit(item._id)}
+                          className="flex w-40 items-center gap-2 rounded-md px-3 py-2 text-left text-[#4B89DC] hover:bg-[#F1F5F9]"
+                        >
+                          <Edit className="h-4 w-4" />
+                          수정
+                        </button>
+                        <button
+                          onClick={() => handleDelete(id, item._id)}
+                          className="flex w-40 items-center gap-2 rounded-md px-3 py-2 text-left text-[#FB2C36] hover:bg-[#F1F5F9]"
+                        >
+                          <X className="h-4 w-4" />
+                          삭제
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
 
                 <div className="flex flex-row items-center text-center">
                   <p className="mr-1.5 text-[#4B89DC]">{item.category}</p>

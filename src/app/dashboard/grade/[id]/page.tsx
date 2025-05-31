@@ -4,6 +4,7 @@ import { GRADE_COLUMNS, SEMESTERS, SUBJECTS, TERMS } from 'data';
 
 import type { IdParams, SearchParams, Subject } from 'types';
 
+import { getUserInfo } from 'features/auth';
 import {
   getGradeList,
   getOptionsForGrade,
@@ -29,8 +30,10 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { id } = await params;
   const { studentYear } = await searchParams;
+  const { role } = await getUserInfo();
 
   const { name, classInfo } = await getStudent({
+    role,
     year: Number(studentYear),
     studentId: Number(id),
   });
@@ -63,10 +66,12 @@ export default async function Grade({
     subject?: string;
   } = await searchParams;
   const studentId = Number(id);
+  const { role } = await getUserInfo();
 
   await checkStudentExistence({
+    role,
     studentId,
-    studentYear: Number(studentYear),
+    year: Number(studentYear),
     category: 'grade',
   });
 
@@ -120,16 +125,18 @@ export default async function Grade({
           studentId={studentId}
           studentYear={Number(studentYear)}
         />
-        <IconButton
-          icon="edit"
-          size="sm"
-          variant="outlined"
-          color="primary"
-          spacing="compact"
-          href={{
-            pathname: `/dashboard/grade/${id}/manage?studentYear=${studentYear}`,
-          }}
-        />
+        {role === 'teacher' && (
+          <IconButton
+            icon="edit"
+            size="sm"
+            variant="outlined"
+            color="primary"
+            spacing="compact"
+            href={{
+              pathname: `/dashboard/grade/${id}/manage?studentYear=${studentYear}`,
+            }}
+          />
+        )}
       </div>
       {grades.length === 0 ? (
         <Empty />
