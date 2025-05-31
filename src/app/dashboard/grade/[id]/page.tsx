@@ -4,6 +4,7 @@ import { GRADE_COLUMNS, SEMESTERS, SUBJECTS, TERMS } from 'data';
 
 import type { IdParams, SearchParams, Subject } from 'types';
 
+import { getUserInfo } from 'features/auth';
 import {
   getGradeList,
   getOptionsForGrade,
@@ -70,6 +71,8 @@ export default async function Grade({
     category: 'grade',
   });
 
+  const { role } = await getUserInfo();
+
   const years = await getYearListForGrade({
     studentId,
   });
@@ -120,16 +123,18 @@ export default async function Grade({
           studentId={studentId}
           studentYear={Number(studentYear)}
         />
-        <IconButton
-          icon="edit"
-          size="sm"
-          variant="outlined"
-          color="primary"
-          spacing="compact"
-          href={{
-            pathname: `/dashboard/grade/${id}/manage?studentYear=${studentYear}`,
-          }}
-        />
+        {role === 'teacher' && (
+          <IconButton
+            icon="edit"
+            size="sm"
+            variant="outlined"
+            color="primary"
+            spacing="compact"
+            href={{
+              pathname: `/dashboard/grade/${id}/manage?studentYear=${studentYear}`,
+            }}
+          />
+        )}
       </div>
       {grades.length === 0 ? (
         <Empty />

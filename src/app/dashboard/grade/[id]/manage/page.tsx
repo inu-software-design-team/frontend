@@ -1,5 +1,8 @@
+import { redirect } from 'next/navigation';
+
 import type { IdParams, SearchParams } from 'types';
 
+import { getUserInfo } from 'features/auth';
 import {
   DataController,
   EditableTable,
@@ -26,6 +29,11 @@ export default async function GradeManage({
     studentYear: Number(studentYear),
     category: 'grade/manage',
   });
+
+  const { role } = await getUserInfo();
+  // 교사만 접근 가능
+  if (role !== 'teacher')
+    redirect(`/dashboard/grade/${studentId}?studentYear=${studentYear}`);
 
   const years = await getYearListForGrade({
     studentId,
