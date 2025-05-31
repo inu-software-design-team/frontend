@@ -1,7 +1,9 @@
 import type { Metadata } from 'next';
+import { redirect } from 'next/navigation';
 
 import type { IdParams, SearchParams } from 'types';
 
+import { getUserInfo } from 'features/auth';
 import {
   checkStudentExistence,
   getStudent,
@@ -47,6 +49,11 @@ export default async function Report({
     studentYear: Number(studentYear),
     category: 'report',
   });
+
+  const { role } = await getUserInfo();
+  // 교사만 접근 가능
+  if (role !== 'teacher')
+    redirect(`/dashboard/report/${studentId}?studentYear=${studentYear}`);
 
   return (
     <div className="space-y-12">
