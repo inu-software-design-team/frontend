@@ -1,3 +1,5 @@
+import { lazy, Suspense } from 'react';
+
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
@@ -10,9 +12,11 @@ import {
   StudentProfile,
 } from 'features/students';
 
-import StudentAttendance from '../components/studentattendance';
-import StudentBasicInfo from '../components/studentbasicinfo';
-import StudentRemarks from '../components/studentremarks';
+import { Loader } from 'components';
+
+const StudentBasicInfo = lazy(() => import('../components/studentbasicinfo'));
+const StudentAttendance = lazy(() => import('../components/studentattendance'));
+const StudentRemarks = lazy(() => import('../components/studentremarks'));
 
 export async function generateMetadata({
   params,
@@ -92,8 +96,10 @@ export default async function Page({
           </Link>
         ))}
       </div>
-      <div className="h-full w-full overflow-y-auto">
-        <activeTab.item id={id} />
+      <div className="relative h-full w-full overflow-y-auto">
+        <Suspense fallback={<Loader isLoading />}>
+          <activeTab.item id={id} />
+        </Suspense>
       </div>
     </>
   );

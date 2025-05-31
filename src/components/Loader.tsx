@@ -7,7 +7,7 @@ const Loader = ({ isLoading, ...props }: LoaderProps) => {
     isLoading && (
       <div
         {...props}
-        className={`absolute top-0 left-0 z-999 grid size-full place-items-center ${props.className ?? ''}`}
+        className={`absolute top-0 left-0 z-999 grid size-full place-items-center bg-white/87 ${props.className ?? ''}`}
       >
         <div className="flex items-center gap-x-4">
           {Array.from({ length: 3 }, (_, i) => (
