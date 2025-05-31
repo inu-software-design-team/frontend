@@ -120,16 +120,6 @@ export default async function Counseling({
             pathname: `/dashboard/counseling/${id}?studentYear=${Number(studentYear)}&status=create`,
           }}
         />
-        <TextButton
-          label="상담일지 추가"
-          leftIcon="plus"
-          color="primary"
-          spacing="compact"
-          className="whitespace-nowrap"
-          href={{
-            pathname: `/dashboard/counseling/${id}?studentYear=${Number(studentYear)}&status=create`,
-          }}
-        />
       </div>
       <div className="h-[calc(100vh-(4rem+8rem)-(2rem*2)-3.625rem-3rem)] space-y-4 overflow-y-auto">
         {filteredCounselings.length === 0 ? (
