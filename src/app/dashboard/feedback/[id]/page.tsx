@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 
 import type { IdParams, SearchParams } from 'types';
 
+import { getUserInfo } from 'features/auth';
 import {
   checkStudentExistence,
   getStudent,
@@ -48,12 +49,14 @@ export default async function FeedBack({
     category: 'feedback',
   });
 
+  const { role } = await getUserInfo();
+
   return (
     <div className="space-y-12">
       <StudentProfile studentId={studentId} studentYear={Number(studentYear)} />
 
       <div className="h-[calc(100vh-(4rem+8rem)-(2rem*2)-3.625rem-3rem)] overflow-y-auto">
-        <FeedbackList id={id} />
+        <FeedbackList id={id} role={role} />
       </div>
     </div>
   );
