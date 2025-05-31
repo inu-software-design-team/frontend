@@ -5,8 +5,16 @@ import { notFound, redirect, RedirectType } from 'next/navigation';
 import { API_PREFIX } from 'data';
 
 import type { ClassInfo, SnakeCaseKeys, StrictOmit, StudentInfo } from 'types';
+import type { UserRole } from 'types/auth';
 
 import { getCookieHeader } from 'features/auth';
+
+type RoleBasedParams =
+  | { role: Exclude<UserRole, 'teacher'> }
+  | {
+      role: Extract<UserRole, 'teacher'>;
+      year: number;
+    };
 
 export const getYearListForStudent = async (): Promise<
   { id: string; year: number }[]
@@ -28,16 +36,19 @@ export const getYearListForStudent = async (): Promise<
     }));
 };
 
-export const getStudentList = async ({
-  year,
-}: {
-  year: number;
-}): Promise<StudentInfo[]> => {
-  const response = await fetch(`${API_PREFIX.teacher}/studentslist/${year}`, {
-    headers: {
-      ...(await getCookieHeader()),
+export const getStudentList = async (
+  params: RoleBasedParams,
+): Promise<StudentInfo[]> => {
+  const yearParam = params.role === 'teacher' ? `/${params.year}` : '';
+
+  const response = await fetch(
+    `${API_PREFIX[params.role]}/studentslist${yearParam}`,
+    {
+      headers: {
+        ...(await getCookieHeader()),
+      },
     },
-  });
+  );
 
   if (!response.ok) throw new Error(response.statusText);
   const {
@@ -62,58 +73,52 @@ export const getStudentList = async ({
   }));
 };
 
-export const getStudent = async ({
-  year,
-  studentId,
-}: {
-  year: number;
-  studentId: number;
-}) => {
-  const student = (await getStudentList({ year })).find(
-    student => student.studentId === studentId,
+export const getStudent = async (
+  params: RoleBasedParams & { studentId: number },
+) => {
+  const student = (await getStudentList(params)).find(
+    student => student.studentId === params.studentId,
   );
   if (!student)
-    throw new Error(`학번이 ${studentId}인 학생을 찾을 수 없습니다.`);
+    throw new Error(`학번이 ${params.studentId}인 학생을 찾을 수 없습니다.`);
   return student;
 };
 
-export const checkStudentExistence = async ({
-  studentId,
-  studentYear,
-  category,
-}: Pick<StudentInfo, 'studentId'> & {
-  studentYear: number;
-  category:
-    | 'grade'
-    | 'grade/manage'
-    | 'student-info'
-    | 'feedback'
-    | 'counseling'
-    | 'report';
-}) => {
+export const checkStudentExistence = async (
+  params: RoleBasedParams &
+    Pick<StudentInfo, 'studentId'> & {
+      category:
+        | 'grade'
+        | 'grade/manage'
+        | 'student-info'
+        | 'feedback'
+        | 'counseling'
+        | 'report';
+    },
+) => {
   try {
-    await getStudent({
-      year: studentYear,
-      studentId,
-    });
+    await getStudent(params);
   } catch {
+    if (params.role !== 'teacher') notFound();
+
     const years = await getYearListForStudent();
 
     if (years.length === 0) notFound();
-    const updatedStudentYear = years.some(({ year }) => year === studentYear)
-      ? studentYear
+    const updatedStudentYear = years.some(({ year }) => year === params.year)
+      ? params.year
       : years[0].year;
 
     const students = await getStudentList({
+      role: params.role,
       year: updatedStudentYear,
     });
 
     if (students.length === 0) notFound();
     redirect(
       `/dashboard/${
-        category.endsWith('/manage')
-          ? `${category.replace('/manage', '')}/${students[0].studentId}/manage`
-          : `${category}/${students[0].studentId}`
+        params.category.endsWith('/manage')
+          ? `${params.category.replace('/manage', '')}/${students[0].studentId}/manage`
+          : `${params.category}/${students[0].studentId}`
       }?studentYear=${updatedStudentYear}`,
       RedirectType.replace,
     );

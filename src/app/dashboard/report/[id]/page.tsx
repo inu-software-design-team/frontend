@@ -21,8 +21,10 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { id } = await params;
   const { studentYear } = await searchParams;
+  const { role } = await getUserInfo();
 
   const { name, classInfo } = await getStudent({
+    role,
     year: Number(studentYear),
     studentId: Number(id),
   });
@@ -43,14 +45,15 @@ export default async function Report({
   const { id } = await params;
   const { studentYear } = await searchParams;
   const studentId = Number(id);
+  const { role } = await getUserInfo();
 
   await checkStudentExistence({
+    role,
     studentId,
-    studentYear: Number(studentYear),
+    year: Number(studentYear),
     category: 'report',
   });
 
-  const { role } = await getUserInfo();
   // 교사만 접근 가능
   if (role !== 'teacher')
     redirect(`/dashboard/report/${studentId}?studentYear=${studentYear}`);

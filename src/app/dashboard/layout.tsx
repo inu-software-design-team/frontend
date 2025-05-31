@@ -28,6 +28,7 @@ export default async function DashboardLayout({
     years.length === 0
       ? []
       : await getStudentList({
+          role,
           year: years[0].year,
         })
   ) satisfies StudentInfo[];
@@ -41,9 +42,7 @@ export default async function DashboardLayout({
           <PageHeader />
           <section className="-mt-28 grid w-full grid-cols-1 justify-center gap-x-8 sm:px-4 md:px-8 xl:grid-cols-[minmax(0,_25rem)_minmax(0,_1fr)]">
             <ToggleButton />
-            {role === 'teacher' && (
-              <StudentList years={years} students={students} />
-            )}
+            <StudentList role={role} years={years} students={students} />
             <DashboardContentBox>{children}</DashboardContentBox>
           </section>
         </main>

@@ -32,8 +32,10 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { id } = await params;
   const { studentYear } = await searchParams;
+  const { role } = await getUserInfo();
 
   const { name, classInfo } = await getStudent({
+    role,
     year: Number(studentYear),
     studentId: Number(id),
   });
@@ -68,14 +70,15 @@ export default async function Counseling({
     id?: string;
   } = await searchParams;
   const studentId = Number(id);
+  const { role, linked } = await getUserInfo();
 
   await checkStudentExistence({
+    role,
     studentId,
-    studentYear: Number(studentYear),
+    year: Number(studentYear),
     category: 'counseling',
   });
 
-  const { role, linked } = await getUserInfo();
   // 교사가 아니면서 데이터 관리 페이지에 접근하는 경우
   if (
     role !== 'teacher' &&

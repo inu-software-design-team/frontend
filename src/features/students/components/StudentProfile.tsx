@@ -1,4 +1,6 @@
-import { StudentInfo } from 'types';
+import type { StudentInfo } from 'types';
+
+import { getUserInfo } from 'features/auth';
 
 import { getStudent } from './actions';
 
@@ -7,7 +9,9 @@ interface StudentInfoProps extends Pick<StudentInfo, 'studentId'> {
 }
 
 const StudentProfile = async ({ studentId, studentYear }: StudentInfoProps) => {
+  const { role } = await getUserInfo();
   const { name, classInfo } = await getStudent({
+    role,
     studentId,
     year: studentYear,
   });

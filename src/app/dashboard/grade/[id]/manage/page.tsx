@@ -23,14 +23,15 @@ export default async function GradeManage({
   const { id } = await params;
   const { studentYear }: { studentYear?: string } = await searchParams;
   const studentId = Number(id);
+  const { role } = await getUserInfo();
 
   await checkStudentExistence({
+    role,
     studentId,
-    studentYear: Number(studentYear),
+    year: Number(studentYear),
     category: 'grade/manage',
   });
 
-  const { role } = await getUserInfo();
   // 교사만 접근 가능
   if (role !== 'teacher')
     redirect(`/dashboard/grade/${studentId}?studentYear=${studentYear}`);
