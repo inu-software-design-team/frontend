@@ -1,12 +1,12 @@
 import axios, { AxiosResponse } from 'axios';
 
-const apiUrl = 'http://localhost:4000/api/v1/users/teacher';
+import { API_PREFIX } from 'data';
 
 export const DeleteStudentRemarks = async (_id: string) => {
   axios.defaults.withCredentials = true;
   try {
     const response: AxiosResponse = await axios.delete(
-      `${apiUrl}/user_remark/${_id}`,
+      `${API_PREFIX.teacher}/user_remark/${_id}`,
       {
         withCredentials: true,
       },
