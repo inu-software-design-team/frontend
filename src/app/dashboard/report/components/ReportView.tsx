@@ -134,8 +134,5 @@ const ReportView = ({ id }: { id: string }) => {
   );
 };
 
-<<<<<<< HEAD
 export default ReportView;
-=======
-export default ReportView;
->>>>>>> d734b0e (fix)
+

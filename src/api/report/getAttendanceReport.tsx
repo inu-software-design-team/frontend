@@ -10,6 +10,7 @@ export const GetAttendanceReport = async (student_id: string): Promise<Blob> => 
       {
         withCredentials: true,
         responseType: 'blob',  
+
       }
     );
 
