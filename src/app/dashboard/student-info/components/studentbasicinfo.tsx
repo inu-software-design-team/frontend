@@ -140,11 +140,11 @@ const StudentBasicInfo = ({ id }: Props) => {
     <div className="flex h-full w-full flex-row">
       {/* 프로필 */}
       <div
-        className={`flex w-3/7 flex-col items-center rounded-[6px] bg-[#E6F0FB] p-3 ${isEditingBasicInfo ? 'h-[490px]' : 'h-[380px]'}`}
+        className={`flex w-3/7 flex-col items-center rounded-[6px] bg-[#E6F0FB] p-3 ${isEditingBasicInfo ? 'h-[490px]' : 'h-[390px]'}`}
       >
         <IconButton
           icon={isEditingBasicInfo ? 'x' : 'edit'}
-          size="xs"
+          size="sm"
           variant="outlined"
           color="primary"
           spacing="compact"
@@ -193,13 +193,13 @@ const StudentBasicInfo = ({ id }: Props) => {
               <div className="mt-4 flex flex-row items-center justify-center gap-2">
                 <button
                   onClick={handleSave}
-                  className="h-10 w-30.5 rounded-[6px] border border-black bg-white px-2 py-1 text-xs"
+                  className="h-10 w-30.5 rounded-[6px] border border-black bg-white px-2 py-1 text-sm"
                 >
                   저장
                 </button>
                 <button
                   onClick={handleCancel}
-                  className="h-10 w-30.5 rounded-[6px] bg-[#FB2C36] px-2 py-1 text-xs text-white"
+                  className="h-10 w-30.5 rounded-[6px] bg-[#FB2C36] px-2 py-1 text-sm text-white"
                 >
                   취소
                 </button>
@@ -224,7 +224,7 @@ const StudentBasicInfo = ({ id }: Props) => {
           <div className="mb-1 flex h-14 w-full flex-row items-center justify-start rounded-[6px] bg-white">
             <CircleUser className="mr-3 ml-3 flex h-8 w-8" />
             <p className="font-medium">{homeroomTeacher} 선생님</p>
-            <p className="mt-0.5 ml-2.5 text-xs text-[#4B89DC]">
+            <p className="mt-0.5 ml-2.5 text-sm text-[#4B89DC]">
               과목: {teacherSubject}
             </p>
           </div>
@@ -236,10 +236,10 @@ const StudentBasicInfo = ({ id }: Props) => {
         {/* 인적 사항 */}
         <div className="flex w-full flex-col rounded-[6px] border border-[#E6F0FB] p-6">
           <div className="flex flex-row justify-between">
-            <p className="mr-2 text-xs text-[17px] font-light"> 인적 사항 </p>
+            <p className="mr-2 text-lg font-medium "> 인적 사항 </p>
             <IconButton
               icon={isEditingPersonalInfo ? 'x' : 'edit'}
-              size="xs"
+              size="sm"
               variant="outlined"
               color="primary"
               spacing="compact"
@@ -254,11 +254,11 @@ const StudentBasicInfo = ({ id }: Props) => {
 
           {/* 성별, 주민등록번호 */}
           <div
-            className={`mt-6 ml-1 flex flex-row justify-start ${isEditingPersonalInfo ? 'gap-12' : 'gap-52'}`}
+            className={`mt-4 ml-1 flex flex-row justify-start ${isEditingPersonalInfo ? 'gap-12' : 'gap-52'}`}
           >
             <div className="flex flex-col">
               <p
-                className={`text-xs ${isEditingPersonalInfo ? 'text-black' : 'text-black/40'}`}
+                className={`text-sm ${isEditingPersonalInfo ? 'text-black' : 'text-black/40'}`}
               >
                 성별
               </p>
@@ -275,7 +275,7 @@ const StudentBasicInfo = ({ id }: Props) => {
             </div>
             <div className="flex flex-col">
               <p
-                className={`text-xs ${isEditingPersonalInfo ? 'ml-2 text-black' : 'text-black/40'}`}
+                className={`text-sm ${isEditingPersonalInfo ? 'ml-2 text-black' : 'text-black/40'}`}
               >
                 주민등록번호
               </p>
@@ -297,7 +297,7 @@ const StudentBasicInfo = ({ id }: Props) => {
             className={`ml-1 flex flex-col ${isEditingPersonalInfo ? 'mt-2' : 'mt-5'}`}
           >
             <p
-              className={`text-xs ${isEditingPersonalInfo ? 'text-black' : 'text-black/40'}`}
+              className={`text-sm ${isEditingPersonalInfo ? 'text-black' : 'text-black/40'}`}
             >
               연락처
             </p>
@@ -320,7 +320,7 @@ const StudentBasicInfo = ({ id }: Props) => {
             className={`ml-1 flex flex-col ${isEditingPersonalInfo ? 'mt-2' : 'mt-5'}`}
           >
             <p
-              className={`text-xs ${isEditingPersonalInfo ? 'text-black' : 'text-black/40'}`}
+              className={`text-sm ${isEditingPersonalInfo ? 'text-black' : 'text-black/40'}`}
             >
               주소
             </p>
@@ -343,13 +343,13 @@ const StudentBasicInfo = ({ id }: Props) => {
             <div className="mt-4 mb-2 flex flex-row justify-center gap-3">
               <button
                 onClick={handleSavePersonalInfo}
-                className="h-10 w-30 rounded-[6px] border border-black bg-white px-2 py-1 text-xs"
+                className="h-10 w-30 rounded-[6px] border border-black bg-white px-2 py-1 text-sm"
               >
                 저장
               </button>
               <button
                 onClick={handleCancelPersonalInfo}
-                className="h-10 w-30 rounded-[6px] bg-[#FB2C36] px-2 py-1 text-xs text-white"
+                className="h-10 w-30 rounded-[6px] bg-[#FB2C36] px-2 py-1 text-sm text-white"
               >
                 취소
               </button>
@@ -359,18 +359,18 @@ const StudentBasicInfo = ({ id }: Props) => {
 
         {/* 가족 관계 */}
         <div className="mt-5 flex w-full flex-col rounded-[6px] border border-[#E6F0FB] px-8 py-6">
-          <p className="text-[17px] font-medium">가족 관계</p>
+          <p className="text-lg font-medium">가족 관계</p>
           {[father, mother].map(
             (parent, index) =>
               parent && (
                 <div key={index}>
-                  <div className="mt-6 ml-1 flex flex-row justify-start gap-32">
+                  <div className="mt-4 ml-1 flex flex-row justify-start gap-32">
                     <div className="flex flex-col">
-                      <p className="text-xs text-black/40">관계</p>
+                      <p className="text-sm text-black/40">관계</p>
                       <p className="mt-2 text-sm text-black">
                         {index === 0 ? '부' : '모'}
                       </p>
-                      <p className="mt-5 text-xs text-black/40">연락처</p>
+                      <p className="mt-5 text-sm text-black/40">연락처</p>
                       <div className="mt-2 flex flex-row items-center">
                         <Call className="flex h-3.5 w-3.5" />
                         <p className="ml-3 text-sm text-black">
@@ -379,9 +379,9 @@ const StudentBasicInfo = ({ id }: Props) => {
                       </div>
                     </div>
                     <div className="flex flex-col">
-                      <p className="text-xs text-black/40">성명</p>
+                      <p className="text-sm text-black/40">성명</p>
                       <p className="mt-2 text-sm text-black">{parent.name}</p>
-                      <p className="mt-4.5 text-xs text-black/40">직업</p>
+                      <p className="mt-4.5 text-sm text-black/40">직업</p>
                       <p className="mt-2 text-sm text-black">
                         {parent.occupation}
                       </p>

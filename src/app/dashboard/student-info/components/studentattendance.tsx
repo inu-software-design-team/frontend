@@ -305,7 +305,7 @@ const StudentAttendance = ({ id: studentId }: Props) => {
               >
                 {state === '출석' ? attendanceDays : stateCount[state]}
               </p>
-              <p className="mt-1 text-xs text-black/48">
+              <p className="mt-1 text-sm text-black/48">
                 {state === '출석' ? '출석일수' : state}
               </p>
             </div>

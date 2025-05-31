@@ -63,7 +63,7 @@ const ReportView = ({ id }: { id: string }) => {
 
   return (
     <div className="flex w-full flex-col items-center justify-end gap-y-5">
-      <div className="grid w-full grid-cols-1 gap-5 md:grid-cols-2">
+      <div className="grid w-full grid-cols-1 gap-5 md:grid-cols-2 mt-7">
         <div className="flex h-full flex-col gap-4 rounded-[6px] border border-[#E6F0FB] px-8 py-6">
           <div className="flex flex-row">
             <ReportChart className="h-16 w-16" />

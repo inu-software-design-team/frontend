@@ -6,7 +6,9 @@ import { DeleteFeedBack } from 'api/teacher/feedback/deleteFeedback';
 import { GetFeedBack } from 'api/teacher/feedback/getFeedback';
 import { PatchFeedBack } from 'api/teacher/feedback/patchFeedback';
 import { PostFeedBack } from 'api/teacher/feedback/postFeedback';
-import { Edit, Ellipsis, X } from 'lucide-react';
+import { GetStudentInfo } from 'api/teacher/student-info/getStudentInfo';
+
+import { Edit, Ellipsis, X } from 'assets/icons';
 
 import { Empty } from 'components';
 import { SelectBox } from 'components/form';
@@ -35,14 +37,19 @@ const FeedbackList = ({ id }: { id: string }) => {
   const [isAdding, setIsAdding] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('전체');
 
+  const [teacherName, setTeacherName] = useState<string | null>(null);
+  const [teacherSubject, setTeacherSubject] = useState<string | null>(null);
+
   useEffect(() => {
     (async () => {
       try {
-        console.log('학생 학번:', id);
-        const data: FeedBack[] = await GetFeedBack(id);
+        const info = await GetStudentInfo(id);
+        setTeacherName(info.class.teacher_name);
+        setTeacherSubject(info.teacher_subject);
 
+        const data: FeedBack[] = await GetFeedBack(id);
         const sortedData = data.sort(
-          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
         );
         setFeedBack(sortedData);
       } catch (err) {
@@ -56,7 +63,6 @@ const FeedbackList = ({ id }: { id: string }) => {
       await DeleteFeedBack(student_id, _id);
       setFeedBack(prev => prev.filter(item => item._id !== _id));
       setEllipsisOpenId(null);
-      console.log('피드백 삭제 성공');
     } catch (err) {
       console.error('Failed to delete remark:', err);
       alert('피드백 삭제에 실패했습니다.');
@@ -90,7 +96,7 @@ const FeedbackList = ({ id }: { id: string }) => {
 
       const data: FeedBack[] = await GetFeedBack(id);
       const sortedData = data.sort(
-        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
       );
       setFeedBack(sortedData);
       setEditingId(null);
@@ -126,7 +132,7 @@ const FeedbackList = ({ id }: { id: string }) => {
 
       const data: FeedBack[] = await GetFeedBack(id);
       const sortedData = data.sort(
-        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
       );
       setFeedBack(sortedData);
       setIsAdding(false);
@@ -145,6 +151,7 @@ const FeedbackList = ({ id }: { id: string }) => {
   const handleChange = (field: keyof FeedBack, value: string) => {
     setEditContent(prev => ({ ...prev, [field]: value }));
   };
+  
 
   return (
     <>
@@ -277,36 +284,39 @@ const FeedbackList = ({ id }: { id: string }) => {
               </>
             ) : (
               <>
-                <div className="absolute top-4 right-4">
-                  <button
-                    onClick={() =>
-                      setEllipsisOpenId(prev =>
-                        prev === item._id ? null : item._id,
-                      )
-                    }
-                  >
-                    <Ellipsis className="h-5 w-5" />
-                  </button>
+                {item.teacher_name === teacherName &&
+                  item.teacher_subject === teacherSubject && (
+                    <div className="absolute top-4 right-4">
+                      <button
+                        onClick={() =>
+                          setEllipsisOpenId(prev =>
+                            prev === item._id ? null : item._id,
+                          )
+                        }
+                      >
+                        <Ellipsis className="h-5 w-5" />
+                      </button>
 
-                  {ellipsisOpenId === item._id && (
-                    <div className="absolute right-0 z-10 mt-1 flex flex-col rounded-[6px] bg-white p-1 shadow-[0_2px_4px_rgba(0,0,0,0.38)]">
-                      <button
-                        onClick={() => handleEdit(item._id)}
-                        className="flex w-40 items-center gap-2 rounded-md px-3 py-2 text-left text-[#4B89DC] hover:bg-[#F1F5F9]"
-                      >
-                        <Edit className="h-4 w-4" />
-                        수정
-                      </button>
-                      <button
-                        onClick={() => handleDelete(id, item._id)}
-                        className="flex w-40 items-center gap-2 rounded-md px-3 py-2 text-left text-[#FB2C36] hover:bg-[#F1F5F9]"
-                      >
-                        <X className="h-4 w-4" />
-                        삭제
-                      </button>
+                      {ellipsisOpenId === item._id && (
+                        <div className="absolute right-0 z-10 mt-1 flex flex-col rounded-[6px] bg-white p-1 shadow-[0_2px_4px_rgba(0,0,0,0.38)]">
+                          <button
+                            onClick={() => handleEdit(item._id)}
+                            className="flex w-40 items-center gap-2 rounded-md px-3 py-2 text-left text-[#4B89DC] hover:bg-[#F1F5F9]"
+                          >
+                            <Edit className="h-4 w-4 text-[#4B89DC]" />
+                            <span className="text-sm text-[#4B89DC]">수정</span>
+                          </button>
+                          <button
+                            onClick={() => handleDelete(id, item._id)}
+                            className="flex w-40 items-center gap-2 rounded-md px-3 py-2 text-left text-[#FB2C36] hover:bg-[#F1F5F9]"
+                          >
+                            <X className="h-4 w-4 text-[#FB2C36]" />
+                            <span className="text-sm text-[#FB2C36]">삭제</span>
+                          </button>
+                        </div>
+                      )}
                     </div>
                   )}
-                </div>
 
                 <div className="flex flex-row items-center text-center">
                   <p className="mr-1.5 text-[#4B89DC]">{item.category}</p>
@@ -315,7 +325,7 @@ const FeedbackList = ({ id }: { id: string }) => {
                 <p className="mt-6 text-sm">{item.content}</p>
                 <div className="mt-8 flex flex-row items-center text-center text-sm text-black/40">
                   <p className="mr-3">작성자</p>
-                  <p className="mr-2 text-[#4B89DC]"> {item.teacher_subject}</p>
+                  <p className="mr-2 text-[#4B89DC]">{item.teacher_subject}</p>
                   <p className="text-black">{item.teacher_name} 선생님</p>
                   <p className="ml-auto">{item.date.slice(0, 10)}</p>
                 </div>
