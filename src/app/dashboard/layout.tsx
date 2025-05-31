@@ -40,7 +40,7 @@ export default async function DashboardLayout({
         <SideNav role={role} initialNavConfig={await getNavConfig()} />
         <main className="relative w-full">
           <PageHeader />
-          <section className="-mt-28 grid w-full grid-cols-1 justify-center gap-x-8 sm:px-4 md:px-8 xl:grid-cols-[minmax(0,_25rem)_minmax(0,_1fr)]">
+          <section className="-mt-28 flex w-full gap-x-8 sm:px-4 md:px-8">
             <ToggleButton />
             <StudentList role={role} years={years} students={students} />
             <DashboardContentBox>{children}</DashboardContentBox>
