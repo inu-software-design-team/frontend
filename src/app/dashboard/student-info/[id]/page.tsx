@@ -81,7 +81,6 @@ export default async function Page({
           <Link
             key={index}
             scroll={false}
-            prefetch
             href={`/dashboard/student-info/${id}?studentYear=${studentYear}&tabName=${encodeURIComponent(label)}`}
             className={`flex-1 px-2 py-1.5 text-center ${
               label === activeTab.label
