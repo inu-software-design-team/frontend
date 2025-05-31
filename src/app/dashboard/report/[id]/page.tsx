@@ -54,4 +54,8 @@ export default async function Report({
       <ReportView id={id} />
     </div>
   );
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> d734b0e (fix)

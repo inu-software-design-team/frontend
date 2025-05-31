@@ -9,7 +9,7 @@ export const GetAttendanceReport = async (student_id: string): Promise<Blob> => 
       `${API_PREFIX.student}/attendanceReport/${student_id}`,
       {
         withCredentials: true,
-        responseType: 'blob',  // 여기 반드시 설정
+        responseType: 'blob',  
       }
     );
 
