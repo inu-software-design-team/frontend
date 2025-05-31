@@ -6,6 +6,7 @@ import { redirect } from 'next/navigation';
 
 import type { IdParams, SearchParams } from 'types';
 
+import { getUserInfo } from 'features/auth';
 import {
   checkStudentExistence,
   getStudent,
@@ -63,6 +64,10 @@ export default async function Page({
     studentYear: Number(studentYear),
     category: 'student-info',
   });
+
+  const { role } = await getUserInfo();
+  // 교사만 접근 가능
+  if (role !== 'teacher') redirect('/dashboard');
 
   if (!tabName)
     redirect(
