@@ -10,6 +10,7 @@ import { debounce } from 'es-toolkit';
 import { NAV_ITEMS } from 'data';
 
 import type { ArrayElementType } from 'types';
+import type { UserRole } from 'types/auth';
 
 import { Icon } from 'components/ui';
 
@@ -28,8 +29,10 @@ function shouldHighlightNavItem(path: string, pathname: string) {
 }
 
 const SideNav = ({
+  role,
   initialNavConfig,
 }: {
+  role: UserRole;
   initialNavConfig: Awaited<ReturnType<typeof getNavConfig>>;
 }) => {
   const pathname = usePathname();
@@ -77,22 +80,27 @@ const SideNav = ({
       }`}
     >
       <nav className="w-full space-y-1">
-        {NAV_ITEMS.map(({ path, title, icon }) => (
-          <Link
-            key={path}
-            scroll={false}
-            href={{
-              pathname: path,
-              query: Object.fromEntries(searchParams.entries()),
-            }}
-            className={`flex w-full items-center gap-x-3 rounded-md p-2 transition-colors xl:group-[.minimized]:w-max ${shouldHighlightNavItem(path, pathname) ? 'bg-primary stroke-white text-white' : 'hover:bg-secondary stroke-current text-black'}`}
-          >
-            <div className="p-0.5">
-              <Icon src={icon} />
-            </div>
-            <span className="xl:group-[.minimized]:hidden">{title}</span>
-          </Link>
-        ))}
+        {NAV_ITEMS.map(({ path, title, icon }) =>
+          role !== 'teacher' &&
+          ['student-info', 'report'].some(item =>
+            path.startsWith(`/dashboard/${item}`),
+          ) ? null : (
+            <Link
+              key={path}
+              scroll={false}
+              href={{
+                pathname: path,
+                query: Object.fromEntries(searchParams.entries()),
+              }}
+              className={`flex w-full items-center gap-x-3 rounded-md p-2 transition-colors xl:group-[.minimized]:w-max ${shouldHighlightNavItem(path, pathname) ? 'bg-primary stroke-white text-white' : 'hover:bg-secondary stroke-current text-black'}`}
+            >
+              <div className="p-0.5">
+                <Icon src={icon} />
+              </div>
+              <span className="xl:group-[.minimized]:hidden">{title}</span>
+            </Link>
+          ),
+        )}
       </nav>
     </aside>
   );

@@ -6,7 +6,7 @@ import { API_PREFIX, GRADE_COLUMNS, SEMESTERS, SUBJECTS, TERMS } from 'data';
 
 import type { GradeItem, Semester, StudentInfo, Subject, Term } from 'types';
 
-import { getCookieHeader } from 'features/auth';
+import { getCookieHeader, getUserInfo } from 'features/auth';
 
 import { SelectBox } from 'components/form';
 
@@ -15,11 +15,18 @@ import { getLevelFromScore } from '../utils';
 export const getYearListForGrade = async ({
   studentId,
 }: Pick<StudentInfo, 'studentId'>): Promise<number[]> => {
-  const response = await fetch(`${API_PREFIX.teacher}/grades/${studentId}`, {
-    headers: {
-      ...(await getCookieHeader()),
+  const { role } = await getUserInfo();
+
+  const response = await fetch(
+    role === 'teacher'
+      ? `${API_PREFIX.teacher}/grades/${studentId}`
+      : `${API_PREFIX[role]}/grades/yearList/${studentId}`,
+    {
+      headers: {
+        ...(await getCookieHeader()),
+      },
     },
-  });
+  );
 
   if (!response.ok) throw new Error(response.statusText);
   const { yearSelection }: { yearSelection: number[] } = await response.json();
@@ -35,11 +42,13 @@ export const getGradeList = async ({
 }): Promise<GradeItem[]> => {
   if (years.length === 0) return [];
 
+  const { role } = await getUserInfo();
+
   const gradeList: GradeItem[] = [];
 
   for (const year of years) {
     const response = await fetch(
-      `${API_PREFIX.teacher}/grades/${studentId}/${year}`,
+      `${API_PREFIX[role]}/grades/${studentId}/${year}`,
       {
         headers: {
           ...(await getCookieHeader()),

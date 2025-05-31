@@ -7,6 +7,7 @@ const meta = {
   tags: ['autodocs'],
   component: SideNav,
   args: {
+    role: 'teacher',
     initialNavConfig: null,
   },
   parameters: {
@@ -21,6 +22,17 @@ export const Default: Story = {
   render: ({ ...props }) => (
     <div className="h-screen">
       <SideNav {...props} />
+    </div>
+  ),
+};
+
+export const NotTeacher: Story = {
+  args: {
+    role: 'student',
+  },
+  render: ({ ...props }) => (
+    <div className="h-screen">
+      <SideNav {...props} role="student" />
     </div>
   ),
 };

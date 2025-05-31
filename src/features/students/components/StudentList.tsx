@@ -5,6 +5,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { StudentInfo } from 'types';
+import type { UserRole } from 'types/auth';
 
 import { SelectBox } from 'components/form';
 import { IconButton } from 'components/ui';
@@ -14,11 +15,12 @@ import SearchBox from './SearchBox';
 import StudentCard from './StudentCard';
 
 interface StudentListProps {
+  role: UserRole;
   years: Awaited<ReturnType<typeof getYearListForStudent>>;
   students: Awaited<ReturnType<typeof getStudentList>>;
 }
 
-const StudentList = ({ years, students }: StudentListProps) => {
+const StudentList = ({ role, years, students }: StudentListProps) => {
   const ref = useRef<HTMLElement>(null);
   const { replace } = useRouter();
   const pathname = usePathname();
@@ -47,9 +49,10 @@ const StudentList = ({ years, students }: StudentListProps) => {
     if (yearParam.length === 0) setStudentList(students);
     else
       getStudentList({
+        role,
         year: Number(yearParam),
       }).then(students => setStudentList(students));
-  }, [yearParam, students, years, shouldShowStudentList]);
+  }, [role, yearParam, students, years, shouldShowStudentList]);
 
   useEffect(() => {
     if (shouldShowStudentList) ref.current?.classList.remove('show');
@@ -97,56 +100,58 @@ const StudentList = ({ years, students }: StudentListProps) => {
           }}
         />
       </div>
-      <div className="w-full space-y-4">
-        <div className="flex w-full flex-wrap items-end justify-between gap-x-2">
-          <SelectBox
-            label="연도"
-            size="sm"
-            options={yearList.map(({ id, year }) => ({
-              id,
-              value: year.toString(),
-              default: year.toString() === yearParam,
-            }))}
-            onChangeSelectedId={id => {
-              const selectedYear = yearList
-                .find(year => year.id === id)
-                ?.year.toString();
+      {role === 'teacher' && (
+        <div className="w-full space-y-4">
+          <div className="flex w-full flex-wrap items-end justify-between gap-x-2">
+            <SelectBox
+              label="연도"
+              size="sm"
+              options={yearList.map(({ id, year }) => ({
+                id,
+                value: year.toString(),
+                default: year.toString() === yearParam,
+              }))}
+              onChangeSelectedId={id => {
+                const selectedYear = yearList
+                  .find(year => year.id === id)
+                  ?.year.toString();
 
-              if (
-                shouldShowStudentList &&
-                selectedYear &&
-                selectedYear.length > 0 &&
-                yearParam !== selectedYear
-              )
-                replace(
-                  `${pathname}?${new URLSearchParams({
-                    ...Object.fromEntries(searchParams.entries()),
-                    studentYear: selectedYear,
-                  }).toString()}`,
-                  {
-                    scroll: false,
-                  },
-                );
-            }}
-            className="w-40"
-          />
-          <div className="flex justify-end gap-x-2">
-            <IconButton
-              icon="filter"
-              variant="outlined"
-              color="primary"
-              spacing="compact"
+                if (
+                  shouldShowStudentList &&
+                  selectedYear &&
+                  selectedYear.length > 0 &&
+                  yearParam !== selectedYear
+                )
+                  replace(
+                    `${pathname}?${new URLSearchParams({
+                      ...Object.fromEntries(searchParams.entries()),
+                      studentYear: selectedYear,
+                    }).toString()}`,
+                    {
+                      scroll: false,
+                    },
+                  );
+              }}
+              className="w-40"
             />
-            <IconButton
-              icon="sort"
-              variant="outlined"
-              color="primary"
-              spacing="compact"
-            />
+            <div className="flex justify-end gap-x-2">
+              <IconButton
+                icon="filter"
+                variant="outlined"
+                color="primary"
+                spacing="compact"
+              />
+              <IconButton
+                icon="sort"
+                variant="outlined"
+                color="primary"
+                spacing="compact"
+              />
+            </div>
           </div>
+          <SearchBox pathname={pathname} />
         </div>
-        <SearchBox pathname={pathname} />
-      </div>
+      )}
       <div
         className={`mt-4 grid size-full min-h-[calc(100vh-(4rem+8rem)-(2rem*2)-(1.875rem+3rem)-(3rem+0.5rem+2.5rem)-1rem)] gap-y-2 overflow-y-auto ${
           filteredStudentList.length > 0

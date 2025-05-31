@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 
 import type { IdParams, SearchParams } from 'types';
 
+import { getUserInfo } from 'features/auth';
 import {
   checkStudentExistence,
   getStudent,
@@ -19,8 +20,10 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { id } = await params;
   const { studentYear } = await searchParams;
+  const { role } = await getUserInfo();
 
   const { name, classInfo } = await getStudent({
+    role,
     year: Number(studentYear),
     studentId: Number(id),
   });
@@ -41,10 +44,12 @@ export default async function FeedBack({
   const { id } = await params;
   const { studentYear } = await searchParams;
   const studentId = Number(id);
+  const { role } = await getUserInfo();
 
   await checkStudentExistence({
+    role,
     studentId,
-    studentYear: Number(studentYear),
+    year: Number(studentYear),
     category: 'feedback',
   });
 
@@ -53,7 +58,7 @@ export default async function FeedBack({
       <StudentProfile studentId={studentId} studentYear={Number(studentYear)} />
 
       <div className="h-[calc(100vh-(4rem+8rem)-(2rem*2)-3.625rem-3rem)] overflow-y-auto">
-        <FeedbackList id={id} />
+        <FeedbackList id={id} role={role} />
       </div>
     </div>
   );

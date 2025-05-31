@@ -6,6 +6,7 @@ import { redirect } from 'next/navigation';
 
 import type { IdParams, SearchParams } from 'types';
 
+import { getUserInfo } from 'features/auth';
 import {
   checkStudentExistence,
   getStudent,
@@ -28,8 +29,10 @@ export async function generateMetadata({
   const { id } = await params;
   const { studentYear, tabName }: { studentYear?: string; tabName?: string } =
     await searchParams;
+  const { role } = await getUserInfo();
 
   const { name, classInfo } = await getStudent({
+    role,
     year: Number(studentYear),
     studentId: Number(id),
   });
@@ -57,12 +60,17 @@ export default async function Page({
   const { studentYear, tabName }: { studentYear?: string; tabName?: string } =
     await searchParams;
   const studentId = Number(id);
+  const { role } = await getUserInfo();
 
   await checkStudentExistence({
+    role,
     studentId,
-    studentYear: Number(studentYear),
+    year: Number(studentYear),
     category: 'student-info',
   });
+
+  // 교사만 접근 가능
+  if (role !== 'teacher') redirect('/dashboard');
 
   if (!tabName)
     redirect(

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { redirect } from 'next/navigation';
 
 import { SEMESTERS } from 'data';
 
@@ -31,8 +32,10 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { id } = await params;
   const { studentYear } = await searchParams;
+  const { role } = await getUserInfo();
 
   const { name, classInfo } = await getStudent({
+    role,
     year: Number(studentYear),
     studentId: Number(id),
   });
@@ -67,12 +70,22 @@ export default async function Counseling({
     id?: string;
   } = await searchParams;
   const studentId = Number(id);
+  const { role, linked } = await getUserInfo();
 
   await checkStudentExistence({
+    role,
     studentId,
-    studentYear: Number(studentYear),
+    year: Number(studentYear),
     category: 'counseling',
   });
+
+  // 교사가 아니면서 데이터 관리 페이지에 접근하는 경우
+  if (
+    role !== 'teacher' &&
+    status &&
+    (status === 'create' || status === 'edit')
+  )
+    redirect(`/dashboard/counseling/${id}?studentYear=${studentYear}`);
 
   const counselings = await getCounselingList({
     studentId,
@@ -89,27 +102,31 @@ export default async function Counseling({
 
   return (
     <>
-      <ItemModal
-        isActive={status === 'create' || status === 'edit'}
-        studentYear={Number(studentYear)}
-        topics={options.topic.filter(({ value }) => value !== '전체')}
-        counseling={getCounseling({ studentId, id: counselingId ?? '' })}
-      />
+      {role === 'teacher' && (
+        <ItemModal
+          isActive={status === 'create' || status === 'edit'}
+          studentYear={Number(studentYear)}
+          topics={options.topic.filter(({ value }) => value !== '전체')}
+          counseling={getCounseling({ studentId, id: counselingId ?? '' })}
+        />
+      )}
       <div className="flex items-start justify-between">
         <StudentProfile
           studentId={studentId}
           studentYear={Number(studentYear)}
         />
-        <TextButton
-          label="상담일지 추가"
-          leftIcon="plus"
-          color="primary"
-          spacing="compact"
-          className="whitespace-nowrap"
-          href={{
-            pathname: `/dashboard/counseling/${id}?studentYear=${Number(studentYear)}&status=create`,
-          }}
-        />
+        {role === 'teacher' && (
+          <TextButton
+            label="상담일지 추가"
+            leftIcon="plus"
+            color="primary"
+            spacing="compact"
+            className="whitespace-nowrap"
+            href={{
+              pathname: `/dashboard/counseling/${id}?studentYear=${Number(studentYear)}&status=create`,
+            }}
+          />
+        )}
       </div>
       <div className="h-[calc(100vh-(4rem+8rem)-(2rem*2)-3.625rem-3rem)] space-y-4 overflow-y-auto">
         {filteredCounselings.length === 0 ? (
@@ -118,11 +135,7 @@ export default async function Counseling({
           <>
             <ViewController options={options} />
             {filteredCounselings.map(item => (
-              <CounselingCard
-                key={item.id}
-                userInfo={getUserInfo()}
-                {...item}
-              />
+              <CounselingCard key={item.id} linked={linked} {...item} />
             ))}
           </>
         )}
