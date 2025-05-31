@@ -16,9 +16,7 @@ export default function AuthLayout({
 
   return (
     <div className="relative size-full">
-      <div
-        className={`flex h-full w-full items-center justify-center ${isLoading ? 'opacity-off' : ''}`}
-      >
+      <div className="flex h-full w-full items-center justify-center">
         <div className="flex w-1/2 flex-col items-end justify-center">
           <Logo className="mr-24 h-[135px] w-0 md:w-80" />
           <div className="mt-[-20px] h-0 w-0 border-[0.2px] border-[#121212] opacity-30 md:w-[420px]" />
