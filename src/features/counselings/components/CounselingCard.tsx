@@ -1,6 +1,6 @@
 'use client';
 
-import { use, useState } from 'react';
+import { useState } from 'react';
 
 import {
   useParams,
@@ -10,7 +10,7 @@ import {
 } from 'next/navigation';
 
 import type { CounselingItem } from 'types';
-import { WithIconName } from 'types/ui';
+import type { WithIconName } from 'types/ui';
 
 import { getUserInfo } from 'features/auth';
 
@@ -18,9 +18,8 @@ import { Icon, IconButton } from 'components/ui';
 
 import { deleteCounseling } from './action';
 
-interface CounselingCardProps extends CounselingItem {
-  userInfo: ReturnType<typeof getUserInfo>;
-}
+type CounselingCardProps = CounselingItem &
+  Pick<Awaited<ReturnType<typeof getUserInfo>>, 'linked'>;
 
 const options: (WithIconName<'icon'> & { id: string; value: string })[] = [
   {
@@ -35,10 +34,9 @@ const options: (WithIconName<'icon'> & { id: string; value: string })[] = [
   },
 ];
 
-const CounselingCard = ({ userInfo, ...item }: CounselingCardProps) => {
+const CounselingCard = ({ linked, ...item }: CounselingCardProps) => {
   const { id: studentId }: { id: string } = useParams();
   const { replace } = useRouter();
-  const userLinked = use(userInfo).linked;
 
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -56,7 +54,7 @@ const CounselingCard = ({ userInfo, ...item }: CounselingCardProps) => {
             </svg>
             <strong className="text-title4 font-semibold">{item.title}</strong>
           </div>
-          {userLinked.includes(item.teacherId) && (
+          {linked.includes(item.teacherId) && (
             <div
               className="relative w-max"
               onClick={() => setIsMenuOpen(prev => !prev)}
