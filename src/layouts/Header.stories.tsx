@@ -6,6 +6,9 @@ const meta = {
   title: 'Layouts/Header',
   tags: ['autodocs'],
   component: Header,
+  args: {
+    username: '이름',
+  },
   parameters: {
     layout: 'fullscreen',
   },

@@ -8,7 +8,7 @@ import {
   SideNav,
 } from 'layouts';
 
-import { getUserInfo } from 'features/auth';
+import { getUserInfo, getUserName } from 'features/auth';
 import {
   getStudentList,
   getYearListForStudent,
@@ -35,7 +35,7 @@ export default async function DashboardLayout({
 
   return (
     <>
-      <Header />
+      <Header username={await getUserName()} />
       <div className="grid w-full grid-cols-[minmax(0,_max-content)_1fr] max-xl:grid-cols-1">
         <SideNav role={role} initialNavConfig={await getNavConfig()} />
         <main className="relative w-full">
