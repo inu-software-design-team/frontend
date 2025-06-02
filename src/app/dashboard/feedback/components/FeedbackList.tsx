@@ -10,6 +10,8 @@ import { GetStudentInfo } from 'api/teacher/student-info/getStudentInfo';
 
 import { Edit, Ellipsis, X } from 'assets/icons';
 
+import { UserRole } from 'types/auth';
+
 import { Empty } from 'components';
 import { SelectBox } from 'components/form';
 
@@ -29,7 +31,7 @@ type FeedBack = {
 
 const categoryOption = ['전체', '성적', '출결', '태도'];
 
-const FeedbackList = ({ id }: { id: string }) => {
+const FeedbackList = ({ id, role }: { id: string; role: UserRole }) => {
   const [feedback, setFeedBack] = useState<FeedBack[]>([]);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editContent, setEditContent] = useState<Partial<FeedBack>>({});
@@ -40,7 +42,12 @@ const FeedbackList = ({ id }: { id: string }) => {
 
   const [teacherName, setTeacherName] = useState<string | null>(null);
   const [teacherSubject, setTeacherSubject] = useState<string | null>(null);
-  const yearOptions = ['전체', ...Array.from(new Set(feedback.map(fb => fb.year))).sort((a, b) => b - a).map(String)];
+  const yearOptions = [
+    '전체',
+    ...Array.from(new Set(feedback.map(fb => fb.year)))
+      .sort((a, b) => b - a)
+      .map(String),
+  ];
 
   useEffect(() => {
     (async () => {
@@ -51,7 +58,7 @@ const FeedbackList = ({ id }: { id: string }) => {
 
         const data: FeedBack[] = await GetFeedBack(id);
         const sortedData = data.sort(
-          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
         );
         setFeedBack(sortedData);
       } catch (err) {
@@ -98,7 +105,7 @@ const FeedbackList = ({ id }: { id: string }) => {
 
       const data: FeedBack[] = await GetFeedBack(id);
       const sortedData = data.sort(
-        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
       );
       setFeedBack(sortedData);
       setEditingId(null);
@@ -134,7 +141,7 @@ const FeedbackList = ({ id }: { id: string }) => {
 
       const data: FeedBack[] = await GetFeedBack(id);
       const sortedData = data.sort(
-        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
       );
       setFeedBack(sortedData);
       setIsAdding(false);
@@ -156,15 +163,16 @@ const FeedbackList = ({ id }: { id: string }) => {
 
   // 필터링 처리
   const filteredFeedback = feedback.filter(fb => {
-    const categoryMatch = selectedCategory === '전체' || fb.category === selectedCategory;
-    const yearMatch = selectedYear === '전체' || fb.year.toString() === selectedYear;
+    const categoryMatch =
+      selectedCategory === '전체' || fb.category === selectedCategory;
+    const yearMatch =
+      selectedYear === '전체' || fb.year.toString() === selectedYear;
     return categoryMatch && yearMatch;
   });
 
   return (
     <>
-      <div className="flex w-full items-center gap-4 mb-4">
-
+      <div className="mb-4 flex w-full items-center gap-4">
         {/* 연도 필터 */}
         <div className="flex items-center gap-2">
           <SelectBox
@@ -193,20 +201,20 @@ const FeedbackList = ({ id }: { id: string }) => {
           />
         </div>
 
-        
-
         {/* 새 피드백 추가 버튼 */}
-        <button
-          onClick={handleAddClick}
-          className="ml-auto flex h-10 w-36 items-center justify-center gap-3 rounded-[6px] border bg-[#4B89DC] px-3 text-white"
-        >
-          <span className="mb-0.5 text-xl font-extralight"> + </span>
-          <span className="text-sm"> 새 피드백 추가 </span>
-        </button>
+        {role === 'teacher' && (
+          <button
+            onClick={handleAddClick}
+            className="ml-auto flex h-10 w-36 items-center justify-center gap-3 rounded-[6px] border bg-[#4B89DC] px-3 text-white"
+          >
+            <span className="mb-0.5 text-xl font-extralight"> + </span>
+            <span className="text-sm"> 새 피드백 추가 </span>
+          </button>
+        )}
       </div>
 
       {/* 새 피드백 추가 폼 */}
-      {isAdding && (
+      {role === 'teacher' && isAdding && (
         <div className="relative mt-4 flex w-full flex-col rounded-md">
           <div className="flex flex-row items-center justify-center gap-2">
             <SelectBox
@@ -263,7 +271,7 @@ const FeedbackList = ({ id }: { id: string }) => {
               editingId === item._id ? '' : 'border border-[#E6F0FB] p-4'
             }`}
           >
-            {editingId === item._id ? (
+            {role === 'teacher' && editingId === item._id ? (
               <>
                 <div className="mb-2 flex flex-row items-center justify-center gap-2">
                   <SelectBox
@@ -308,7 +316,8 @@ const FeedbackList = ({ id }: { id: string }) => {
               </>
             ) : (
               <>
-                {item.teacher_name === teacherName &&
+                {role === 'teacher' &&
+                  item.teacher_name === teacherName &&
                   item.teacher_subject === teacherSubject && (
                     <div className="absolute top-4 right-4">
                       <button
