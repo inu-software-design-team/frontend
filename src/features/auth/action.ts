@@ -13,6 +13,14 @@ export const getCookieHeader = async (): Promise<{ Cookie: string }> => {
   };
 };
 
+export const getCSRFTokenHeader = async (): Promise<{
+  'x-csrf-token': string;
+}> => {
+  return {
+    'x-csrf-token': await getCSRFToken(),
+  };
+};
+
 export const checkUserId = async ({
   role: activeTab,
   id,
@@ -91,7 +99,7 @@ export const getUserName = async (): Promise<string> => {
   });
 
   if (!response.ok) throw new Error(response.statusText);
-  const name: string = await response.json();
+  const { name }: { name: string } = await response.json();
 
   return name;
 };
@@ -129,4 +137,18 @@ export const getCSRFToken = async (): Promise<string> => {
   const { csrfToken }: { csrfToken: string } = await response.json();
 
   return csrfToken;
+};
+
+export const logout = async () => {
+  const response = await fetch(`${API_BASE_URL}/logout`, {
+    method: 'POST',
+    headers: {
+      ...(await getCookieHeader()),
+      ...(await getCSRFTokenHeader()),
+    },
+  });
+
+  if (!response.ok) throw new Error(response.statusText);
+  // // 프론트에서 쿠키 삭제가 필요하다면
+  // (await cookies()).delete('connect.sid');
 };

@@ -6,7 +6,11 @@ import { API_PREFIX, GRADE_COLUMNS, SEMESTERS, SUBJECTS, TERMS } from 'data';
 
 import type { GradeItem, Semester, StudentInfo, Subject, Term } from 'types';
 
-import { getCookieHeader, getUserInfo } from 'features/auth';
+import {
+  getCookieHeader,
+  getCSRFTokenHeader,
+  getUserInfo,
+} from 'features/auth';
 
 import { SelectBox } from 'components/form';
 
@@ -176,8 +180,9 @@ export const createGrade = async ({
   const response = await fetch(`${API_PREFIX.teacher}/grades/${studentId}`, {
     method: 'POST',
     headers: {
-      ...(await getCookieHeader()),
       'Content-Type': 'application/json',
+      ...(await getCookieHeader()),
+      ...(await getCSRFTokenHeader()),
     },
     body: JSON.stringify({
       year,
@@ -200,8 +205,9 @@ export const updateGrade = async ({
   const response = await fetch(`${API_PREFIX.teacher}/grades/${studentId}`, {
     method: 'PUT',
     headers: {
-      ...(await getCookieHeader()),
       'Content-Type': 'application/json',
+      ...(await getCookieHeader()),
+      ...(await getCSRFTokenHeader()),
     },
     body: JSON.stringify({
       year,
@@ -227,6 +233,7 @@ export const deleteGrade = async ({
       method: 'DELETE',
       headers: {
         ...(await getCookieHeader()),
+        ...(await getCSRFTokenHeader()),
       },
     },
   );
