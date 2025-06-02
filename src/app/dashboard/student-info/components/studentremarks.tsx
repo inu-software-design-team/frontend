@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 
 import { GetStudentInfo } from 'api/teacher/student-info/getStudentInfo';
 import { DeleteStudentRemarks } from 'api/teacher/student-remarks/deleteStudentRemarks';
@@ -37,15 +37,14 @@ const StudentRemarks = ({ id }: Props) => {
   const [isAdding, setIsAdding] = useState(false);
   const [teacherSubject, setTeacherSubject] = useState<string | null>(null);
   const [selectedSubject, setSelectedSubject] = useState('전체');
+  const [selectedYear, setSelectedYear] = useState('전체');
 
   useEffect(() => {
     (async () => {
       try {
-        // 학생 기본 정보에서 담임 과목 받아오기
         const info = await GetStudentInfo(id);
         setTeacherSubject(info.teacher_subject);
 
-        // 특기사항 받아오기
         const data: StudentRemark[] = await GetStudentRemarks(id);
         const sortedData = data.sort(
           (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
@@ -57,12 +56,18 @@ const StudentRemarks = ({ id }: Props) => {
     })();
   }, [id]);
 
+  const years = useMemo(() => {
+    const uniqueYears = new Set(
+      remarks.map(r => new Date(r.date).getFullYear().toString()),
+    );
+    return ['전체', ...Array.from(uniqueYears).sort((a, b) => Number(b) - Number(a))];
+  }, [remarks]);
+
   const handleDelete = async (_id: string) => {
     try {
       await DeleteStudentRemarks(_id);
       setRemarks(prev => prev.filter(item => item._id !== _id));
       setEllipsisOpenId(null);
-      console.log('특기사항 삭제 성공');
     } catch (err) {
       console.error('Failed to delete remark:', err);
       alert('특기사항 삭제에 실패했습니다.');
@@ -111,7 +116,7 @@ const StudentRemarks = ({ id }: Props) => {
     setIsAdding(true);
     setEditingId(null);
     setEditContent({
-      subject: teacherSubject || subjects[0], // 담임 과목만 기본 선택
+      subject: teacherSubject || subjects[0],
       title: '',
       content: '',
       date: new Date().toISOString(),
@@ -153,11 +158,27 @@ const StudentRemarks = ({ id }: Props) => {
     setEditContent(prev => ({ ...prev, [field]: value }));
   };
 
+  const filteredRemarks = remarks.filter(r => {
+    const subjectMatch = selectedSubject === '전체' || r.subject === selectedSubject;
+    const yearMatch = selectedYear === '전체' || new Date(r.date).getFullYear().toString() === selectedYear;
+    return subjectMatch && yearMatch;
+  });
+
   return (
     <div className="flex flex-col">
       <div className="flex h-full w-full flex-row items-center">
         <div className="flex w-full justify-between">
           <div className="flex items-center gap-2">
+             <SelectBox
+              size="sm"
+              label="연도"
+              options={years.map(y => ({
+                id: y,
+                value: y,
+                default: y === selectedYear,
+              }))}
+              onChangeSelectedId={(id: string) => setSelectedYear(id)}
+            />
             <SelectBox
               size="sm"
               label="과목"
@@ -231,10 +252,7 @@ const StudentRemarks = ({ id }: Props) => {
         </div>
       )}
 
-      {(selectedSubject === '전체'
-        ? remarks
-        : remarks.filter(r => r.subject === selectedSubject)
-      ).map(item => (
+      {filteredRemarks.map(item => (
         <div
           key={item._id}
           className={`relative mt-4 flex w-full flex-col rounded-md ${editingId === item._id ? '' : 'border border-[#E6F0FB] p-4'}`}
@@ -271,13 +289,13 @@ const StudentRemarks = ({ id }: Props) => {
               <div className="flex flex-row items-center justify-center gap-2">
                 <button
                   onClick={() => handleSave(item._id)}
-                  className="h-10 w-30 rounded-[6px] border border-black bg-white px-2 py-1 text-sm"
+                  className="h-10 w-32 rounded-[6px] border border-black bg-white px-2 py-1 text-sm"
                 >
                   저장
                 </button>
                 <button
                   onClick={() => setEditingId(null)}
-                  className="h-10 w-30 rounded-[6px] bg-[#FB2C36] px-2 py-1 text-sm text-white"
+                  className="h-10 w-32 rounded-[6px] bg-[#FB2C36] px-2 py-1 text-sm text-white"
                 >
                   취소
                 </button>
@@ -285,7 +303,6 @@ const StudentRemarks = ({ id }: Props) => {
             </>
           ) : (
             <>
-              {/* 작성자 teacher_subject와 담임 과목이 같을 때만 Ellipsis 버튼 보여줌 */}
               {item.teacher_subject === teacherSubject && (
                 <div className="absolute top-4 right-4">
                   <button

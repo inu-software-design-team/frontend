@@ -104,11 +104,22 @@ const calculateAttendanceDays = (records: AttendanceRecord[]): number => {
   return totalDays - absenceCount;
 };
 
+const extractYearsFromData = (records: AttendanceRecord[]): string[] => {
+  const years = new Set<string>();
+  records.forEach(record => {
+    const year = record.date.slice(0, 4);
+    years.add(year);
+  });
+  return Array.from(years).sort((a, b) => Number(b) - Number(a));
+};
+
 const StudentAttendance = ({ id: studentId }: Props) => {
   const [data, setData] = useState<AttendanceRecord[]>([]);
   const [isEditMode, setIsEditMode] = useState(false);
   const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>({});
   const [editData, setEditData] = useState<AttendanceRecord[]>([]);
+  const [selectedYearId, setSelectedYearId] = useState('');
+  const [yearOptions, setYearOptions] = useState<{ id: string; value: string }[]>([]);
 
   useEffect(() => {
     (async () => {
@@ -116,9 +127,17 @@ const StudentAttendance = ({ id: studentId }: Props) => {
         const response: GetStudentAttendanceResponse =
           await GetStudentAttendance(studentId);
         if (response?.attendance) {
-          setData(transformApiData(response.attendance));
+          const transformed = transformApiData(response.attendance);
+          setData(transformed);
+
+          const years = extractYearsFromData(transformed);
+          setYearOptions(years.map(y => ({ id: y, value: y })));
+
+          setSelectedYearId(years.includes('2025') ? '2025' : years[0] || '');
         } else {
           setData([]);
+          setYearOptions([]);
+          setSelectedYearId('');
         }
       } catch (error) {
         console.error('출결 데이터를 불러오는 중 오류 발생:', error);
@@ -126,8 +145,10 @@ const StudentAttendance = ({ id: studentId }: Props) => {
     })();
   }, [studentId]);
 
-  const stateCount = countStates(data);
-  const attendanceDays = calculateAttendanceDays(data);
+  const filteredData = data.filter(item => item.date.startsWith(selectedYearId));
+
+  const stateCount = countStates(filteredData);
+  const attendanceDays = calculateAttendanceDays(filteredData);
 
   const toggleEditMode = () => {
     if (!isEditMode) {
@@ -164,9 +185,7 @@ const StudentAttendance = ({ id: studentId }: Props) => {
     );
 
     try {
-      await Promise.all(
-        toDelete.map(item => DeleteStudentAttendance(item._id)),
-      );
+      await Promise.all(toDelete.map(item => DeleteStudentAttendance(item._id)));
       const remainingData = data.filter(
         item => !toDelete.some(d => d._id === item._id),
       );
@@ -234,12 +253,6 @@ const StudentAttendance = ({ id: studentId }: Props) => {
     setCheckedItems({});
   };
 
-  // SelectBox에 맞춘 options 구조 및 value 관리 추가
-  const yearOptions = [{ id: 'all', value: '전체', default: true }];
-
-  // SelectBox에서 선택된 값 상태 (필요시)
-  const [selectedYearId, setSelectedYearId] = useState(yearOptions[0].id);
-
   return (
     <div className="flex flex-col">
       <div className="flex h-full w-full flex-row items-center justify-between">
@@ -254,7 +267,7 @@ const StudentAttendance = ({ id: studentId }: Props) => {
             </button>
             <button
               onClick={handleDelete}
-              className="flex h-10 w-20 items-center justify-center gap-1.5 rounded-[6px] border border-[#FB2C36] bg-white px-3 text-sm text-[#FB2C36]"
+              className="flex h-[39px] w-20 items-center justify-center gap-1.5 rounded-[6px] border border-[#FB2C36] bg-white px-3 text-sm text-[#FB2C36]"
             >
               <X className="h-4 w-4 text-[#FB2C36]" />
               삭제
@@ -263,6 +276,7 @@ const StudentAttendance = ({ id: studentId }: Props) => {
         ) : (
           <div className="flex gap-2">
             <SelectBox
+              key={selectedYearId}
               label="연도"
               options={yearOptions.map(opt => ({
                 ...opt,
@@ -271,14 +285,6 @@ const StudentAttendance = ({ id: studentId }: Props) => {
               onChangeSelectedId={id => setSelectedYearId(id)}
               size="sm"
             />
-            {/* 필요시 학기 SelectBox도 추가 가능 */}
-            {/* <SelectBox
-              label="학기"
-              options={semesterOptions}
-              value={semesterOptions.find((opt) => opt.id === selectedSemesterId)?.value ?? ''}
-              onChangeSelectedId={setSelectedSemesterId}
-              size="sm"
-            /> */}
           </div>
         )}
         <IconButton
@@ -317,7 +323,7 @@ const StudentAttendance = ({ id: studentId }: Props) => {
         className={`mt-2 ${isEditMode ? 'max-h-[180px] overflow-y-auto' : ''}`}
       >
         <Table
-          data={(isEditMode ? editData : data).map(item => ({
+          data={(isEditMode ? editData : filteredData).map(item => ({
             id: item._id,
             ...item,
             checkbox: isEditMode ? (
@@ -414,23 +420,22 @@ const StudentAttendance = ({ id: studentId }: Props) => {
       </div>
 
       {isEditMode && (
-        <div className="mt-4 mb-2 flex flex-row gap-3">
-          <div className="flex flex-1" />
-          <div className="flex flex-1 justify-center gap-3">
+        <div className="mt-4 mb-2 flex flex-row gap-2">
+          <div className="flex flex-grow gap-3 items-center justify-center">
             <button
+              className="h-10 w-32 rounded-[6px] border border-black bg-white px-2 py-1 text-sm"
               onClick={handleSave}
-              className="rounded-md border border-blue-500 bg-blue-500 px-3 py-1 text-white hover:bg-blue-600"
             >
               저장
             </button>
+
             <button
+              className="h-10 w-32 rounded-[6px] bg-[#FB2C36] px-2 py-1 text-sm text-white"
               onClick={handleCancel}
-              className="rounded-md border border-gray-300 bg-white px-3 py-1 hover:bg-gray-100"
             >
               취소
             </button>
           </div>
-          <div className="flex flex-1" />
         </div>
       )}
     </div>

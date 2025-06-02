@@ -6,9 +6,9 @@ import { DeleteFeedBack } from 'api/teacher/feedback/deleteFeedback';
 import { GetFeedBack } from 'api/teacher/feedback/getFeedback';
 import { PatchFeedBack } from 'api/teacher/feedback/patchFeedback';
 import { PostFeedBack } from 'api/teacher/feedback/postFeedback';
-import { Edit, Ellipsis, X } from 'lucide-react';
+import { GetStudentInfo } from 'api/teacher/student-info/getStudentInfo';
 
-import type { UserRole } from 'types/auth';
+import { Edit, Ellipsis, X } from 'assets/icons';
 
 import { Empty } from 'components';
 import { SelectBox } from 'components/form';
@@ -27,29 +27,31 @@ type FeedBack = {
   teacher_subject: string;
 };
 
-interface FeedbackListProps {
-  id: string;
-  role: UserRole;
-}
-
 const categoryOption = ['전체', '성적', '출결', '태도'];
 
-const FeedbackList = ({ id, role }: FeedbackListProps) => {
+const FeedbackList = ({ id }: { id: string }) => {
   const [feedback, setFeedBack] = useState<FeedBack[]>([]);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editContent, setEditContent] = useState<Partial<FeedBack>>({});
   const [ellipsisOpenId, setEllipsisOpenId] = useState<string | null>(null);
   const [isAdding, setIsAdding] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('전체');
+  const [selectedYear, setSelectedYear] = useState('전체');
+
+  const [teacherName, setTeacherName] = useState<string | null>(null);
+  const [teacherSubject, setTeacherSubject] = useState<string | null>(null);
+  const yearOptions = ['전체', ...Array.from(new Set(feedback.map(fb => fb.year))).sort((a, b) => b - a).map(String)];
 
   useEffect(() => {
     (async () => {
       try {
-        console.log('학생 학번:', id);
-        const data: FeedBack[] = await GetFeedBack(id);
+        const info = await GetStudentInfo(id);
+        setTeacherName(info.class.teacher_name);
+        setTeacherSubject(info.teacher_subject);
 
+        const data: FeedBack[] = await GetFeedBack(id);
         const sortedData = data.sort(
-          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
         );
         setFeedBack(sortedData);
       } catch (err) {
@@ -63,7 +65,6 @@ const FeedbackList = ({ id, role }: FeedbackListProps) => {
       await DeleteFeedBack(student_id, _id);
       setFeedBack(prev => prev.filter(item => item._id !== _id));
       setEllipsisOpenId(null);
-      console.log('피드백 삭제 성공');
     } catch (err) {
       console.error('Failed to delete remark:', err);
       alert('피드백 삭제에 실패했습니다.');
@@ -97,7 +98,7 @@ const FeedbackList = ({ id, role }: FeedbackListProps) => {
 
       const data: FeedBack[] = await GetFeedBack(id);
       const sortedData = data.sort(
-        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
       );
       setFeedBack(sortedData);
       setEditingId(null);
@@ -133,7 +134,7 @@ const FeedbackList = ({ id, role }: FeedbackListProps) => {
 
       const data: FeedBack[] = await GetFeedBack(id);
       const sortedData = data.sort(
-        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
       );
       setFeedBack(sortedData);
       setIsAdding(false);
@@ -153,9 +154,32 @@ const FeedbackList = ({ id, role }: FeedbackListProps) => {
     setEditContent(prev => ({ ...prev, [field]: value }));
   };
 
+  // 필터링 처리
+  const filteredFeedback = feedback.filter(fb => {
+    const categoryMatch = selectedCategory === '전체' || fb.category === selectedCategory;
+    const yearMatch = selectedYear === '전체' || fb.year.toString() === selectedYear;
+    return categoryMatch && yearMatch;
+  });
+
   return (
     <>
-      <div className="flex w-full items-center">
+      <div className="flex w-full items-center gap-4 mb-4">
+
+        {/* 연도 필터 */}
+        <div className="flex items-center gap-2">
+          <SelectBox
+            size="sm"
+            label="연도"
+            options={yearOptions.map(year => ({
+              id: year,
+              value: year,
+              default: year === selectedYear,
+            }))}
+            onChangeSelectedId={id => setSelectedYear(id)}
+          />
+        </div>
+
+        {/* 카테고리 필터 */}
         <div className="flex items-center gap-2">
           <SelectBox
             size="sm"
@@ -168,18 +192,21 @@ const FeedbackList = ({ id, role }: FeedbackListProps) => {
             onChangeSelectedId={id => setSelectedCategory(id)}
           />
         </div>
-        {role === 'teacher' && (
-          <button
-            onClick={handleAddClick}
-            className="ml-auto flex h-10 w-36 items-center justify-center gap-3 rounded-[6px] border bg-[#4B89DC] px-3 text-white"
-          >
-            <span className="mb-0.5 text-xl font-extralight"> + </span>
-            <span className="text-sm"> 새 피드백 추가 </span>
-          </button>
-        )}
+
+        
+
+        {/* 새 피드백 추가 버튼 */}
+        <button
+          onClick={handleAddClick}
+          className="ml-auto flex h-10 w-36 items-center justify-center gap-3 rounded-[6px] border bg-[#4B89DC] px-3 text-white"
+        >
+          <span className="mb-0.5 text-xl font-extralight"> + </span>
+          <span className="text-sm"> 새 피드백 추가 </span>
+        </button>
       </div>
 
-      {role === 'teacher' && isAdding && (
+      {/* 새 피드백 추가 폼 */}
+      {isAdding && (
         <div className="relative mt-4 flex w-full flex-col rounded-md">
           <div className="flex flex-row items-center justify-center gap-2">
             <SelectBox
@@ -225,23 +252,18 @@ const FeedbackList = ({ id, role }: FeedbackListProps) => {
         </div>
       )}
 
-      {(selectedCategory === '전체'
-        ? feedback
-        : feedback.filter(fb => fb.category === selectedCategory)
-      ).length === 0 ? (
+      {/* 피드백 리스트 */}
+      {filteredFeedback.length === 0 ? (
         <Empty />
       ) : (
-        (selectedCategory === '전체'
-          ? feedback
-          : feedback.filter(fb => fb.category === selectedCategory)
-        ).map(item => (
+        filteredFeedback.map(item => (
           <div
             key={item._id}
             className={`relative mt-4 flex w-full flex-col rounded-md ${
               editingId === item._id ? '' : 'border border-[#E6F0FB] p-4'
             }`}
           >
-            {role === 'teacher' && editingId === item._id ? (
+            {editingId === item._id ? (
               <>
                 <div className="mb-2 flex flex-row items-center justify-center gap-2">
                   <SelectBox
@@ -286,38 +308,39 @@ const FeedbackList = ({ id, role }: FeedbackListProps) => {
               </>
             ) : (
               <>
-                {role === 'teacher' && (
-                  <div className="absolute top-4 right-4">
-                    <button
-                      onClick={() =>
-                        setEllipsisOpenId(prev =>
-                          prev === item._id ? null : item._id,
-                        )
-                      }
-                    >
-                      <Ellipsis className="h-5 w-5" />
-                    </button>
+                {item.teacher_name === teacherName &&
+                  item.teacher_subject === teacherSubject && (
+                    <div className="absolute top-4 right-4">
+                      <button
+                        onClick={() =>
+                          setEllipsisOpenId(prev =>
+                            prev === item._id ? null : item._id,
+                          )
+                        }
+                      >
+                        <Ellipsis className="h-5 w-5" />
+                      </button>
 
-                    {ellipsisOpenId === item._id && (
-                      <div className="absolute right-0 z-10 mt-1 flex flex-col rounded-[6px] bg-white p-1 shadow-[0_2px_4px_rgba(0,0,0,0.38)]">
-                        <button
-                          onClick={() => handleEdit(item._id)}
-                          className="flex w-40 items-center gap-2 rounded-md px-3 py-2 text-left text-[#4B89DC] hover:bg-[#F1F5F9]"
-                        >
-                          <Edit className="h-4 w-4" />
-                          수정
-                        </button>
-                        <button
-                          onClick={() => handleDelete(id, item._id)}
-                          className="flex w-40 items-center gap-2 rounded-md px-3 py-2 text-left text-[#FB2C36] hover:bg-[#F1F5F9]"
-                        >
-                          <X className="h-4 w-4" />
-                          삭제
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                )}
+                      {ellipsisOpenId === item._id && (
+                        <div className="absolute right-0 z-10 mt-1 flex flex-col rounded-[6px] bg-white p-1 shadow-[0_2px_4px_rgba(0,0,0,0.38)]">
+                          <button
+                            onClick={() => handleEdit(item._id)}
+                            className="flex w-40 items-center gap-2 rounded-md px-3 py-2 text-left text-[#4B89DC] hover:bg-[#F1F5F9]"
+                          >
+                            <Edit className="h-4 w-4 text-[#4B89DC]" />
+                            <span className="text-sm text-[#4B89DC]">수정</span>
+                          </button>
+                          <button
+                            onClick={() => handleDelete(id, item._id)}
+                            className="flex w-40 items-center gap-2 rounded-md px-3 py-2 text-left text-[#FB2C36] hover:bg-[#F1F5F9]"
+                          >
+                            <X className="h-4 w-4 text-[#FB2C36]" />
+                            <span className="text-sm text-[#FB2C36]">삭제</span>
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  )}
 
                 <div className="flex flex-row items-center text-center">
                   <p className="mr-1.5 text-[#4B89DC]">{item.category}</p>
@@ -326,7 +349,7 @@ const FeedbackList = ({ id, role }: FeedbackListProps) => {
                 <p className="mt-6 text-sm">{item.content}</p>
                 <div className="mt-8 flex flex-row items-center text-center text-sm text-black/40">
                   <p className="mr-3">작성자</p>
-                  <p className="mr-2 text-[#4B89DC]"> {item.teacher_subject}</p>
+                  <p className="mr-2 text-[#4B89DC]">{item.teacher_subject}</p>
                   <p className="text-black">{item.teacher_name} 선생님</p>
                   <p className="ml-auto">{item.date.slice(0, 10)}</p>
                 </div>
