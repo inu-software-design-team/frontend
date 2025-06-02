@@ -13,7 +13,11 @@ import type {
   StudentInfo,
 } from 'types';
 
-import { getCookieHeader, getUserInfo } from 'features/auth';
+import {
+  getCookieHeader,
+  getCSRFTokenHeader,
+  getUserInfo,
+} from 'features/auth';
 
 import { SelectBox } from 'components/form';
 
@@ -25,6 +29,7 @@ export const getCounselingList = async ({
   const response = await fetch(`${API_PREFIX[role]}/counselings/${studentId}`, {
     headers: {
       ...(await getCookieHeader()),
+      ...(await getCSRFTokenHeader()),
     },
   });
 
@@ -135,6 +140,7 @@ export const createCounseling = async ({
       headers: {
         'Content-Type': 'application/json',
         ...(await getCookieHeader()),
+        ...(await getCSRFTokenHeader()),
       },
       body: JSON.stringify({
         topic: item.topic,
@@ -169,6 +175,7 @@ export const updateCounseling = async ({
       headers: {
         'Content-Type': 'application/json',
         ...(await getCookieHeader()),
+        ...(await getCSRFTokenHeader()),
       },
       body: JSON.stringify({
         topic: item.topic,
@@ -201,6 +208,7 @@ export const deleteCounseling = async ({
       method: 'DELETE',
       headers: {
         ...(await getCookieHeader()),
+        ...(await getCSRFTokenHeader()),
       },
     },
   );

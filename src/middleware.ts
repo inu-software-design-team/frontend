@@ -30,19 +30,8 @@ export const middleware = async (request: NextRequest) => {
     )
       return NextResponse.redirect(new URL('/dashboard', request.url));
 
-    // if (pathname === '/dashboard' && searchParams.size > 0) {
-    //   return NextResponse.redirect(new URL('/dashboard', request.url));
-    // }
-
-    // 무한 리다이렉션 방지: redirected 쿼리 여부 확인
-    if (
-      pathname === '/dashboard' &&
-      searchParams.size > 0 &&
-      !searchParams.has('redirected')
-    ) {
-      const url = new URL('/dashboard', request.url);
-      url.searchParams.set('redirected', 'true');
-      return NextResponse.redirect(url);
+    if (pathname === '/dashboard' && searchParams.size > 0) {
+      return NextResponse.redirect(new URL('/dashboard', request.url));
     }
   }
 
