@@ -2,7 +2,7 @@ export * from './icon';
 export * from './navigation';
 export * from './student';
 
-export const API_BASE_URL = 'https://cozzy.duckdns.org/api/v1/users';
+export const API_BASE_URL = 'https://cosssy.duckdns.org/api/v1/users';
 export const API_PREFIX = {
   teacher: `${API_BASE_URL}/teacher`,
   student: `${API_BASE_URL}/student`,
