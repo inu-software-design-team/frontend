@@ -1,11 +1,10 @@
 'use client';
 
-import { useMemo } from 'react';
-
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { GRADE_COLUMNS } from 'data';
 
+import { DropdownMenu } from 'components';
 import { SelectBox } from 'components/form';
 import { IconButton } from 'components/ui';
 
@@ -24,15 +23,10 @@ const TableController = ({ options }: TableControllerProps) => {
     semester: searchParams.get('semester') ?? '',
     term: searchParams.get('term') ?? '',
     subject: searchParams.get('subject') ?? '',
+    date: searchParams.get('date') ?? 'desc',
   } satisfies {
     [key in keyof TableControllerProps['options']]: string;
   };
-
-  const optionList = useMemo(
-    () => options,
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [],
-  );
 
   function getChangeHandler({
     key,
@@ -56,9 +50,9 @@ const TableController = ({ options }: TableControllerProps) => {
   }
 
   return (
-    <div className="flex w-full flex-wrap items-end justify-between gap-2">
-      <div className="grid w-full flex-4 grid-cols-[repeat(auto-fit,_minmax(10rem,_auto))] gap-2">
-        {Object.entries(optionList).map(([key, options]) => {
+    <div className="flex w-full flex-wrap items-end justify-between gap-4">
+      <div className="grid w-full grid-cols-[repeat(auto-fit,_minmax(10rem,_auto))] gap-2 md:flex-5">
+        {Object.entries(options).map(([key, optionList]) => {
           const optionKey = key as keyof TableControllerProps['options'];
           const column = GRADE_COLUMNS.find(column => column.key === optionKey);
 
@@ -67,7 +61,7 @@ const TableController = ({ options }: TableControllerProps) => {
               <SelectBox
                 key={crypto.randomUUID()}
                 label={column.label}
-                options={options.map(option => ({
+                options={optionList.map(option => ({
                   ...option,
                   default:
                     option.value ===
@@ -77,8 +71,8 @@ const TableController = ({ options }: TableControllerProps) => {
                   getChangeHandler({
                     key: optionKey,
                     selectedValue:
-                      optionList[optionKey].find(item => item.id === id)
-                        ?.value ?? '',
+                      options[optionKey].find(item => item.id === id)?.value ??
+                      '',
                   })
                 }
               />
@@ -86,9 +80,19 @@ const TableController = ({ options }: TableControllerProps) => {
           );
         })}
       </div>
-      <div className="flex flex-1 items-center justify-end gap-x-2">
-        <IconButton icon="filter" variant="outlined" color="primary" />
-        <IconButton icon="sort" variant="outlined" color="primary" />
+      <div className="flex w-max items-center justify-end gap-x-2 max-md:flex-1">
+        <DropdownMenu
+          options={options.date}
+          onChangeSelectedId={id =>
+            getChangeHandler({
+              key: 'date',
+              selectedValue:
+                options.date.find(item => item.id === id)?.id ?? '',
+            })
+          }
+        >
+          <IconButton icon="sort" variant="outlined" color="primary" />
+        </DropdownMenu>
       </div>
     </div>
   );

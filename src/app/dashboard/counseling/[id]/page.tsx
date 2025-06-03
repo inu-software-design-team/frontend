@@ -59,6 +59,7 @@ export default async function Counseling({
     year,
     semester,
     topic,
+    date,
     status,
     id: counselingId,
   }: {
@@ -66,6 +67,7 @@ export default async function Counseling({
     year?: string;
     semester?: string;
     topic?: string;
+    date?: string;
     status?: string;
     id?: string;
   } = await searchParams;
@@ -93,12 +95,20 @@ export default async function Counseling({
   const options = await getOptionsForCounseling({
     counselings,
   });
-  const filteredCounselings = counselings.filter(
-    counseling =>
-      (year ? counseling.year === Number(year) : true) &&
-      (semester ? SEMESTERS[counseling.semester] === Number(semester) : true) &&
-      (topic ? counseling.topic === topic : true),
-  );
+  const filteredSortedCounselings = counselings
+    .filter(
+      counseling =>
+        (year ? counseling.year === Number(year) : true) &&
+        (semester
+          ? SEMESTERS[counseling.semester] === Number(semester)
+          : true) &&
+        (topic ? counseling.topic === topic : true),
+    )
+    .sort((a, b) =>
+      date === 'asc'
+        ? a.date.getTime() - b.date.getTime()
+        : b.date.getTime() - a.date.getTime(),
+    );
 
   return (
     <>
@@ -129,12 +139,12 @@ export default async function Counseling({
         )}
       </div>
       <div className="h-[calc(100vh-(4rem+8rem)-(2rem*2)-3.625rem-3rem)] space-y-4 overflow-y-auto">
-        {filteredCounselings.length === 0 ? (
+        {filteredSortedCounselings.length === 0 ? (
           <Empty />
         ) : (
           <>
             <ViewController options={options} />
-            {filteredCounselings.map(item => (
+            {filteredSortedCounselings.map(item => (
               <CounselingCard key={item.id} linked={linked} {...item} />
             ))}
           </>

@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { redirect, RedirectType } from 'next/navigation';
 
-import { API_PREFIX, SEMESTERS } from 'data';
+import { API_PREFIX, SEMESTERS, SORT_OPTIONS } from 'data';
 
 import type {
   CounselingItem,
@@ -88,9 +88,9 @@ export const getOptionsForCounseling = async ({
 }: {
   counselings: CounselingItem[];
 }): Promise<{
-  [option in KeysOf<CounselingItem, 'year' | 'semester' | 'topic'>]: Parameters<
-    typeof SelectBox
-  >[0]['options'];
+  [option in
+    | KeysOf<CounselingItem, 'year' | 'semester' | 'topic'>
+    | 'date']: Parameters<typeof SelectBox>[0]['options'];
 }> => {
   return {
     year: [
@@ -120,6 +120,14 @@ export const getOptionsForCounseling = async ({
           value: topic,
         })),
     ],
+    date: Object.keys(SORT_OPTIONS).map(key => {
+      const sortOptionKey = key as keyof typeof SORT_OPTIONS;
+      return {
+        id: sortOptionKey,
+        value: `날짜 - ${SORT_OPTIONS[sortOptionKey]}`,
+        default: sortOptionKey === 'desc',
+      };
+    }),
   };
 };
 

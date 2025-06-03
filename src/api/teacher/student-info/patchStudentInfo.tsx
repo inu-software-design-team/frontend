@@ -2,6 +2,8 @@ import axios, { AxiosResponse } from 'axios';
 
 import { API_PREFIX } from 'data';
 
+import { getCSRFTokenHeader } from 'features/auth';
+
 export const PatchStudentInfo = async (
   student_id: string,
   gender: string,
@@ -17,6 +19,9 @@ export const PatchStudentInfo = async (
 
       {
         withCredentials: true,
+        headers: {
+          ...(await getCSRFTokenHeader()),
+        },
       },
     );
 

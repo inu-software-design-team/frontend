@@ -2,7 +2,14 @@
 
 import { revalidatePath } from 'next/cache';
 
-import { API_PREFIX, GRADE_COLUMNS, SEMESTERS, SUBJECTS, TERMS } from 'data';
+import {
+  API_PREFIX,
+  GRADE_COLUMNS,
+  SEMESTERS,
+  SORT_OPTIONS,
+  SUBJECTS,
+  TERMS,
+} from 'data';
 
 import type { GradeItem, Semester, StudentInfo, Subject, Term } from 'types';
 
@@ -126,10 +133,9 @@ export const getOptionsForGrade = async ({
   years: Awaited<ReturnType<typeof getYearListForGrade>>;
   grades: GradeItem[];
 }): Promise<{
-  [option in Exclude<
-    (typeof GRADE_COLUMNS)[number]['key'],
-    'score' | 'level'
-  >]: Parameters<typeof SelectBox>[0]['options'];
+  [option in
+    | Exclude<(typeof GRADE_COLUMNS)[number]['key'], 'score' | 'level'>
+    | 'date']: Parameters<typeof SelectBox>[0]['options'];
 }> => {
   return {
     year: [
@@ -160,14 +166,22 @@ export const getOptionsForGrade = async ({
         })),
     ],
     subject: [
-      { id: crypto.randomUUID(), value: '전체', default: true },
+      { id: 'all', value: '전체', default: true },
       ...Array.from(
         new Set(grades.flatMap(({ subject }) => SUBJECTS[subject])),
       ).map(value => ({
-        id: crypto.randomUUID(),
+        id: value,
         value: value,
       })),
     ],
+    date: Object.keys(SORT_OPTIONS).map(key => {
+      const sortOptionKey = key as keyof typeof SORT_OPTIONS;
+      return {
+        id: sortOptionKey,
+        value: `날짜 - ${SORT_OPTIONS[sortOptionKey]}`,
+        default: sortOptionKey === 'desc',
+      };
+    }),
   };
 };
 
