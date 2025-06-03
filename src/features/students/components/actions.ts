@@ -31,7 +31,7 @@ export const getYearListForStudent = async (): Promise<
   return yearSelection
     .sort((a, b) => b - a)
     .map(year => ({
-      id: crypto.randomUUID(),
+      id: year.toString(),
       year,
     }));
 };

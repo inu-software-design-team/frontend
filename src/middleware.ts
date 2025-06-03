@@ -30,6 +30,40 @@ export const middleware = async (request: NextRequest) => {
     )
       return NextResponse.redirect(new URL('/dashboard', request.url));
 
+    const sortKeyParam = searchParams.get('sortKey') ?? '';
+    const sortValueParam = searchParams.get('sortValue') ?? '';
+
+    // 카테고리 페이지에서 정렬 파라미터(sortKey & sortValue)가 하나라도 없는 경우
+    if (
+      pathname !== '/dashboard' &&
+      (sortKeyParam.length === 0 || sortValueParam.length === 0)
+    ) {
+      const url = new URL(request.url);
+      url.searchParams.set(
+        'sortKey',
+        sortKeyParam.length === 0 ? 'studentId' : sortKeyParam,
+      );
+      url.searchParams.set(
+        'sortValue',
+        sortValueParam.length === 0 ? 'asc' : sortValueParam,
+      );
+
+      return NextResponse.redirect(url);
+    }
+
+    // 카테고리 페이지에서 날짜 파라미터가 없는 경우
+    if (
+      pathname !== '/dashboard' &&
+      !pathname.endsWith('manage') &&
+      (searchParams.get('date') ?? '').length === 0
+    ) {
+      const url = new URL(request.url);
+      url.searchParams.set('date', 'desc');
+
+      return NextResponse.redirect(url);
+    }
+
+    // 홈 페이지에 쿼리 파라미터가 존재할 경우
     if (pathname === '/dashboard' && searchParams.size > 0) {
       return NextResponse.redirect(new URL('/dashboard', request.url));
     }

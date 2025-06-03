@@ -2,6 +2,8 @@ import axios, { AxiosResponse } from 'axios';
 
 import { API_PREFIX } from 'data';
 
+import { getCSRFTokenHeader } from 'features/auth';
+
 export const PostStudentRemarks = async (
   student_id: string,
   title: string,
@@ -22,6 +24,9 @@ export const PostStudentRemarks = async (
 
       {
         withCredentials: true,
+        headers: {
+          ...(await getCSRFTokenHeader()),
+        },
       },
     );
 
