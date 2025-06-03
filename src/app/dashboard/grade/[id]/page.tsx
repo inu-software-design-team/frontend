@@ -58,12 +58,14 @@ export default async function Grade({
     semester,
     term,
     subject,
+    date,
   }: {
     studentYear?: string;
     year?: string;
     semester?: string;
     term?: string;
     subject?: string;
+    date?: string;
   } = await searchParams;
   const studentId = Number(id);
   const { role } = await getUserInfo();
@@ -86,15 +88,40 @@ export default async function Grade({
     years,
     grades,
   });
-  const filteredGrades = grades.filter(
-    grade =>
-      (year ? grade.year === Number(year) : true) &&
-      (semester ? SEMESTERS[grade.semester] === Number(semester) : true) &&
-      (term ? TERMS[grade.term] === decodeURIComponent(term) : true) &&
-      (subject
-        ? SUBJECTS[grade.subject] === decodeURIComponent(subject)
-        : true),
-  );
+  const filteredGrades = grades
+    .filter(
+      grade =>
+        (year ? grade.year === Number(year) : true) &&
+        (semester ? SEMESTERS[grade.semester] === Number(semester) : true) &&
+        (term ? TERMS[grade.term] === decodeURIComponent(term) : true) &&
+        (subject
+          ? SUBJECTS[grade.subject] === decodeURIComponent(subject)
+          : true),
+    )
+    .sort((a, b) => {
+      const isAscending = decodeURIComponent(date ?? '') === 'asc';
+
+      if (a.year !== b.year)
+        return isAscending ? a.year - b.year : b.year - a.year;
+      if (a.semester !== b.semester)
+        return isAscending
+          ? a.semester < b.semester
+            ? -1
+            : 1
+          : a.semester < b.semester
+            ? 1
+            : -1;
+      if (a.term !== b.term)
+        return isAscending
+          ? a.term < b.term
+            ? 1
+            : -1
+          : a.term < b.term
+            ? -1
+            : 1;
+
+      return 0;
+    });
   const statsFromGrades = {
     total_score: {
       label: '총점',
