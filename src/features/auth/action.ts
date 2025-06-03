@@ -149,6 +149,6 @@ export const logout = async () => {
   });
 
   if (!response.ok) throw new Error(response.statusText);
-  // // 프론트에서 쿠키 삭제가 필요하다면
-  // (await cookies()).delete('connect.sid');
+  (await cookies()).delete('connect.sid');
+  redirect('/', RedirectType.replace);
 };
