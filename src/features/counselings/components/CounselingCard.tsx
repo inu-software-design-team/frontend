@@ -44,7 +44,7 @@ const CounselingCard = ({ linked, ...item }: CounselingCardProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <div className="border-primary-light-hover w-full space-y-4 rounded-md border p-8">
+    <div className="border-primary-light-hover w-full space-y-8 rounded-md border p-8">
       <div className="space-y-8">
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-x-2">
@@ -127,7 +127,7 @@ const CounselingCard = ({ linked, ...item }: CounselingCardProps) => {
         </div>
       </div>
       <hr className="border-primary-light-hover w-full border-[0.5px]" />
-      <div className="*:*:first:text-primary *:*:first:stroke-primary space-y-2 *:flex *:flex-wrap *:items-center *:gap-x-4 *:*:first:flex *:*:first:gap-x-2 *:*:first:whitespace-nowrap">
+      <div className="*:*:first:text-primary *:*:first:stroke-primary space-y-4 *:flex *:flex-wrap *:items-center *:gap-x-4 *:gap-y-2 *:*:first:flex *:*:first:gap-x-2 *:*:first:whitespace-nowrap">
         {item.nextDate && (
           <div>
             <span>
