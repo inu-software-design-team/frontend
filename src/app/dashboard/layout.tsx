@@ -1,5 +1,3 @@
-import type { StudentInfo } from 'types';
-
 import {
   DashboardContentBox,
   getNavConfig,
@@ -24,14 +22,13 @@ export default async function DashboardLayout({
   const { role } = await getUserInfo();
 
   const years = role === 'teacher' ? await getYearListForStudent() : [];
-  const students = (
-    years.length === 0
+  const students =
+    role === 'teacher' && years.length === 0
       ? []
       : await getStudentList({
           role,
           year: years[0].year,
-        })
-  ) satisfies StudentInfo[];
+        });
 
   return (
     <>
