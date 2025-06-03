@@ -2,6 +2,8 @@ import axios, { AxiosResponse } from 'axios';
 
 import { API_PREFIX } from 'data';
 
+import { getCSRFTokenHeader } from 'features/auth';
+
 export const DeleteFeedBack = async (student_id: string, _id: string) => {
   axios.defaults.withCredentials = true;
   try {
@@ -9,6 +11,9 @@ export const DeleteFeedBack = async (student_id: string, _id: string) => {
       `${API_PREFIX.teacher}/feedback/${student_id}/${_id}`,
       {
         withCredentials: true,
+        headers: {
+          ...(await getCSRFTokenHeader()),
+        },
       },
     );
 

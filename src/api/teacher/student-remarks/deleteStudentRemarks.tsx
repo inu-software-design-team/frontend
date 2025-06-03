@@ -2,6 +2,8 @@ import axios, { AxiosResponse } from 'axios';
 
 import { API_PREFIX } from 'data';
 
+import { getCSRFTokenHeader } from 'features/auth';
+
 export const DeleteStudentRemarks = async (_id: string) => {
   axios.defaults.withCredentials = true;
   try {
@@ -9,6 +11,9 @@ export const DeleteStudentRemarks = async (_id: string) => {
       `${API_PREFIX.teacher}/user_remark/${_id}`,
       {
         withCredentials: true,
+        headers: {
+          ...(await getCSRFTokenHeader()),
+        },
       },
     );
 
