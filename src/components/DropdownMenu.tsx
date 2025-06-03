@@ -73,15 +73,31 @@ const DropdownMenu = <T extends React.ElementType = 'div'>({
               setIsDropdownMenuOpen(false);
           }
           function onResize() {
-            if (node)
+            if (node) {
+              const centeredOffset = node.offsetLeft + node.clientWidth / 2;
+              const findWiderContainerWidth = (elem: HTMLElement): number =>
+                !elem.parentElement
+                  ? window.innerWidth
+                  : elem.parentElement.clientWidth > elem.clientWidth
+                    ? elem.parentElement.clientWidth
+                    : findWiderContainerWidth(elem.parentElement);
+
+              // 만약 현재 요소의 너비가 부모 요소 너비의 1/3보다 크면 왼쪽, 오른쪽 정렬만 고려
+              const widerContainerWidth = findWiderContainerWidth(node);
               setDropdownAlign(
-                node.offsetLeft + node.clientWidth / 2 <= window.innerWidth / 3
-                  ? 'left'
-                  : node.offsetLeft + node.clientWidth / 2 >=
-                      (window.innerWidth * 2) / 3
-                    ? 'right'
-                    : 'center',
+                node.clientWidth * 3 > widerContainerWidth
+                  ? centeredOffset < widerContainerWidth / 2
+                    ? 'left'
+                    : 'right'
+                  : centeredOffset <
+                      (widerContainerWidth - node.clientWidth) / 3
+                    ? 'left'
+                    : centeredOffset >
+                        ((widerContainerWidth - node.clientWidth) / 3) * 2
+                      ? 'right'
+                      : 'center',
               );
+            }
           }
 
           onResize();
