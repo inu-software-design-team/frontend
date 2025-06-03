@@ -13,3 +13,7 @@ export const USER_ROLES = {
   student: '학생',
   parent: '학부모',
 } as const;
+export const SORT_OPTIONS = {
+  asc: '오름차순',
+  desc: '내림차순',
+} as const;
