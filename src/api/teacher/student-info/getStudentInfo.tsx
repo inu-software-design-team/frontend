@@ -2,11 +2,15 @@ import axios, { AxiosResponse } from 'axios';
 
 import { API_PREFIX } from 'data';
 
+import { getUserInfo } from 'features/auth';
+
 export const GetStudentInfo = async (student_id: string) => {
+  const { role } = await getUserInfo();
+
   axios.defaults.withCredentials = true;
   try {
     const response: AxiosResponse = await axios.get(
-      `${API_PREFIX.teacher}/user_information/${student_id}`,
+      `${API_PREFIX[role]}/user_information/${student_id}`,
       {
         withCredentials: true,
       },
