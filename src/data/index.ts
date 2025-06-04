@@ -2,7 +2,11 @@ export * from './icon';
 export * from './navigation';
 export * from './student';
 
+<<<<<<< HEAD
 export const API_BASE_URL = 'http://localhost:4000/api/v1/users';
+=======
+export const API_BASE_URL = 'https://cosssy.duckdns.org/api/v1/users';
+>>>>>>> main
 export const API_PREFIX = {
   teacher: `${API_BASE_URL}/teacher`,
   student: `${API_BASE_URL}/student`,
