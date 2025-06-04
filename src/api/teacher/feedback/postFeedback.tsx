@@ -19,7 +19,6 @@ export const PostFeedBack = async (
         title,
         content,
       },
-
       {
         withCredentials: true,
         headers: {

@@ -61,7 +61,17 @@ export const getStudentList = async (
     };
   } = await response.json();
 
-  return studentsList.map(({ id, student_id, name, class_id }) => ({
+  return (
+    params.role === 'student'
+      ? [
+          studentsList as unknown as SnakeCaseKeys<
+            StrictOmit<StudentInfo, 'classInfo'> & {
+              class_id: StudentInfo['classInfo'];
+            }
+          >,
+        ]
+      : studentsList
+  ).map(({ id, student_id, name, class_id }) => ({
     id,
     name,
     studentId: student_id,
