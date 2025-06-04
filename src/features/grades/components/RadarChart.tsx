@@ -8,11 +8,19 @@ import {
   Filler,
   LineElement,
   PointElement,
+  RadarController,
   RadialLinearScale,
   Tooltip,
 } from 'chart.js';
 
-ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip);
+ChartJS.register(
+  RadialLinearScale,
+  PointElement,
+  LineElement,
+  Filler,
+  Tooltip,
+  RadarController,
+);
 
 interface RadarChartProps extends React.ComponentPropsWithoutRef<'div'> {
   labels: string[];
