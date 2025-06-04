@@ -22,7 +22,9 @@ export const PostFeedBack = async (
 
       {
         withCredentials: true,
-        ...(await getCSRFTokenHeader()),
+        headers: {
+          ...(await getCSRFTokenHeader()),
+        },
       },
     );
 
