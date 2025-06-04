@@ -43,6 +43,7 @@ export const checkUserId = async ({
       name,
     }),
   });
+  console.log(response);
 
   if (!response.ok) throw new Error(response.statusText);
   const { role, linked }: { role: string; linked: number } =
