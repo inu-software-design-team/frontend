@@ -19,7 +19,7 @@
     "build-storybook": "npm run generate-icons && storybook build --stats-json"
   },
   "dependencies": {
-    "axios": "^1.10.0",
+    "axios": "^1.11.0",
     "chart.js": "^4.5.0",
     "es-toolkit": "^1.39.7",
     "lucide-react": "^0.525.0",
