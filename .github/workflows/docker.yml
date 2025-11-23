@@ -18,7 +18,7 @@ jobs:
     steps:
       # 1. 레포지토리 코드 체크아웃 (v4)
       - name: Check out code
-        uses: actions/checkout@v5 # Node 16 런타임, 로컬 브랜치 자동 생성 :contentReference[oaicite:0]{index=0}
+        uses: actions/checkout@v6 # Node 16 런타임, 로컬 브랜치 자동 생성 :contentReference[oaicite:0]{index=0}
 
       # 2. Docker Hub에 로그인 (v3)
       - name: Log in to Docker Hub
