@@ -33,7 +33,7 @@ jobs:
 
       # 4. Docker 이미지 빌드 및 푸시 (v6)
       - name: Build and push Docker image
-        uses: docker/build-push-action@v6 # SBOM/Provenance 지원 등 최신 기능 :contentReference[oaicite:3]{index=3}
+        uses: docker/build-push-action@v7 # SBOM/Provenance 지원 등 최신 기능 :contentReference[oaicite:3]{index=3}
         with:
           context: .
           push: true
